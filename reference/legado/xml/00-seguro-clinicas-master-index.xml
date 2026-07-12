@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seguroClinicasMasterIndex version="1.0" generatorVersion="1.0.0">
+  <generation>
+    <generatedAt>2026-07-11T19:28:07.086222+00:00</generatedAt>
+    <rootDirectory>C:\Users\neemi\sigo-clinicas\repositorio-antigo</rootDirectory>
+    <totalRepositories>7</totalRepositories>
+    <totalFilesDiscovered>4054</totalFilesDiscovered>
+    <totalFilesIncluded>3581</totalFilesIncluded>
+    <totalFilesMetadataOnly>277</totalFilesMetadataOnly>
+    <totalFilesExcluded>196</totalFilesExcluded>
+  </generation>
+  <systemOverview>
+    <description>Seguro Clínicas (produto 'Sigo Clínicas'): sistema de gestão para clínicas — API PHP (Zend/Apigility + Doctrine + OAuth2), painel administrativo web, site público e aplicativo Flutter. A família 'bedin' é uma duplicação/white-label dos mesmos repositórios. Ver docs/01-visao-geral-do-sistema.md.</description>
+    <architecturalStyle>API REST central + múltiplos frontends</architecturalStyle>
+    <mainTechnologies>PHP/Zend-Apigility, Doctrine ORM, MySQL, OAuth2, AWS (CloudFormation, ECS, S3, SES, RDS, CloudFront), Flutter, JavaScript (React/Next.js). NÃO há AWS SNS/SQS nem push notifications no código.</mainTechnologies>
+  </systemOverview>
+  <readingOrder>
+    <step order="0">Ler docs/00-leia-primeiro.md e este índice</step>
+    <step order="1">Ler as partes XML de sigo-clinicas-api</step>
+    <step order="2">Ler as partes XML de sigo-clinicas-painel</step>
+    <step order="3">Ler as partes XML de sigo-clinicas-www</step>
+    <step order="4">Ler as partes XML de sigo-clinicas-app</step>
+    <step order="5">Ler as partes XML de bedin-api</step>
+    <step order="6">Ler as partes XML de bedin-painel</step>
+    <step order="7">Ler as partes XML de bedin-www</step>
+  </readingOrder>
+  <xmlParts>
+    <xmlPart>
+      <fileName>01-sigo-clinicas-api-parte-001.xml</fileName>
+      <repository>sigo-clinicas-api</repository>
+      <partNumber>1</partNumber>
+      <fileCount>295</fileCount>
+      <firstFile>.dockerignore</firstFile>
+      <lastFile>src/Apigility/constants.php</lastFile>
+      <sizeBytes>2333004</sizeBytes>
+      <sha256>155124ecd189b1f062b172d4d46318666085bce42b14685d0e06fe08026d6520</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>02-sigo-clinicas-painel-parte-001.xml</fileName>
+      <repository>sigo-clinicas-painel</repository>
+      <partNumber>1</partNumber>
+      <fileCount>1363</fileCount>
+      <firstFile>.babelrc.json</firstFile>
+      <lastFile>yarn.lock</lastFile>
+      <sizeBytes>8111862</sizeBytes>
+      <sha256>8c524b58e2a9a3eb94ea4bed938ce29392970faa8e93c56916f93d792c29337a</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>03-sigo-clinicas-www-parte-001.xml</fileName>
+      <repository>sigo-clinicas-www</repository>
+      <partNumber>1</partNumber>
+      <fileCount>163</fileCount>
+      <firstFile>.babelrc</firstFile>
+      <lastFile>yarn.lock</lastFile>
+      <sizeBytes>2161690</sizeBytes>
+      <sha256>099537e5fde37e46e773b50e835284e6905177bd782d2953daf9399cf3225f88</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>04-sigo-clinicas-app-parte-001.xml</fileName>
+      <repository>sigo-clinicas-app</repository>
+      <partNumber>1</partNumber>
+      <fileCount>216</fileCount>
+      <firstFile>.gitignore</firstFile>
+      <lastFile>test/widget_test.inject.summary</lastFile>
+      <sizeBytes>297154</sizeBytes>
+      <sha256>1fece61d36f1ad2e3ad7483f2cb3991061fe9ee4871aee4e94b46d7baa96f6b1</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>05-bedin-api-parte-001.xml</fileName>
+      <repository>bedin-api</repository>
+      <partNumber>1</partNumber>
+      <fileCount>295</fileCount>
+      <firstFile>.dockerignore</firstFile>
+      <lastFile>src/Apigility/constants.php</lastFile>
+      <sizeBytes>2330612</sizeBytes>
+      <sha256>e2cc5eeaeb9d3264fe704907c02c66553ce2fcf29fc0250c939da13e07e66276</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>06-bedin-painel-parte-001.xml</fileName>
+      <repository>bedin-painel</repository>
+      <partNumber>1</partNumber>
+      <fileCount>1363</fileCount>
+      <firstFile>.babelrc.json</firstFile>
+      <lastFile>yarn.lock</lastFile>
+      <sizeBytes>8100926</sizeBytes>
+      <sha256>0e95a350edf9e8b5be95465e81124b8eb5a19f075cb755d9024a5f135770756f</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+    <xmlPart>
+      <fileName>07-bedin-www-parte-001.xml</fileName>
+      <repository>bedin-www</repository>
+      <partNumber>1</partNumber>
+      <fileCount>163</fileCount>
+      <firstFile>.babelrc</firstFile>
+      <lastFile>yarn.lock</lastFile>
+      <sizeBytes>2137330</sizeBytes>
+      <sha256>9acdc6c5fa1d07372cf6427f40b683ab10abddf8008ac573ce806de1a56b6ff3</sha256>
+      <dependsOn>00-seguro-clinicas-master-index.xml</dependsOn>
+    </xmlPart>
+  </xmlParts>
+  <repositoryRelations>
+    <relation confidence="confirmada">
+      <source>sigo-clinicas-painel</source>
+      <target>sigo-clinicas-api</target>
+      <mechanism>consome API REST (OAuth2)</mechanism>
+    </relation>
+    <relation confidence="confirmada">
+      <source>sigo-clinicas-www</source>
+      <target>sigo-clinicas-api</target>
+      <mechanism>consome API REST</mechanism>
+    </relation>
+    <relation confidence="refutada">
+      <source>sigo-clinicas-app</source>
+      <target>sigo-clinicas-api</target>
+      <mechanism>NÃO integra a API real — aponta para jsonplaceholder.typicode.com (boilerplate/demo, login falso)</mechanism>
+    </relation>
+    <relation confidence="confirmada">
+      <source>bedin-api</source>
+      <target>sigo-clinicas-api</target>
+      <mechanism>mesmo commit — repositório espelho/white-label</mechanism>
+    </relation>
+    <relation confidence="confirmada">
+      <source>bedin-painel</source>
+      <target>sigo-clinicas-painel</target>
+      <mechanism>mesmo commit — repositório espelho/white-label</mechanism>
+    </relation>
+    <relation confidence="confirmada">
+      <source>bedin-www</source>
+      <target>sigo-clinicas-www</target>
+      <mechanism>mesma base, commits divergentes</mechanism>
+    </relation>
+    <relation confidence="inferida">
+      <source>bedin-painel</source>
+      <target>bedin-api</target>
+      <mechanism>consome API REST (OAuth2)</mechanism>
+    </relation>
+    <relation confidence="inferida">
+      <source>bedin-www</source>
+      <target>bedin-api</target>
+      <mechanism>consome API REST</mechanism>
+    </relation>
+  </repositoryRelations>
+  <usageInstructions>Envie primeiro este índice ao Claude Chat, depois as partes XML na ordem de leitura. Cada parte é autossuficiente e identifica seu repositório. Os caminhos dentro de &lt;path&gt; são relativos à raiz do Seguro Clínicas (repositorio/caminho). Conteúdos sensíveis foram substituídos por [REDACTED_SECRET]/[REDACTED]. Consulte inventory/audit-report.md para a auditoria completa.</usageInstructions>
+</seguroClinicasMasterIndex>

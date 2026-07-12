@@ -1,0 +1,355 @@
+﻿repositorio,metodo,rota_ou_url,arquivo_fonte,origem
+bedin-api,DELETE,{{local}}/profissional-intervalos/2,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,DELETE,{{local}}/profissional-servicos/4,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/servico-categorias/5,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/servico-materiais/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,DELETE,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{dev}}/clientes/73,assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/orcamentos-servicos,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/orcamentos-servicos/10,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/orcamentos/1,assets/postman/Orçamentos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/orcamentos?,assets/postman/Orçamentos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/vendas,assets/postman/Vendas.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/vendas-categorias,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/vendas-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/1/vendas/1,assets/postman/Vendas.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/{{clinica}}/clientes,assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/clinicas/{{clinica}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissionais/9,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissionais/{{profissional}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissionais/{{profissional}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissional-intervalos/1,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/profissional-servicos/14,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/user-roles,assets/postman/UserRole.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+bedin-api,GET,{{local}}/usuarios/21,assets/postman/Usuarios.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clientes?query[cpf_email]=11111111111,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clientes?query[cpf_email]=roberto@hotmail.com,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/1/servico-categorias?query[clinica.id]=1,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/clinicas-servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/categorias?query[financeiroscategorias.clinica]=4,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/financeiros?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/servico-categorias?query[servicoCategorias.clinica]=1,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/servicos?query[clinica.id]={{clinica}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/servicos?query[servicos.clinica]={{clinica}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/tabelas-precos,assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,GET,{{url}}/servicos?,assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,PATCH,http://localhost:8089/profissionais/12,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,PATCH,{{local}}/clinicas/1/orcamentos-servicos/10,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+bedin-api,PATCH,{{local}}/clinicas/1/orcamentos/3,assets/postman/Orçamentos.postman_collection.json,postman-collection
+bedin-api,PATCH,{{local}}/clinicas/1/servico-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+bedin-api,PATCH,{{local}}/clinicas/1/vendas/3,assets/postman/Vendas.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{clinica}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{clinica}}/servicos/1,assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PATCH,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,POST,{{dev}}/clinicas/68/orcamentos,assets/postman/Orçamentos.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/clientes,assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/clinicas/1/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/clinicas/1/vendas,assets/postman/Vendas.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/clinicas/{{clinica}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/clinicas/{{clinica}}/vendas-categorias,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,POST,{{local}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/clinicas-servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/financeiros,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/financeiros/categorias,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/servicos,assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/clinicas/{{clinica}}/tabelas-precos,assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/oauth,assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/oauth,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,POST,{{url}}/servicos,assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,PUT,{{dev}}/profissionais/12,assets/postman/Profissionais.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/clinicas/1/orcamentos/3,assets/postman/Orçamentos.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/clinicas/1/vendas-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/clinicas/1/vendas/3,assets/postman/Vendas.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/profissional-intervalos/1,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/profissional-servicos/1,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+bedin-api,PUT,{{local}}/usuarios/21,assets/postman/Usuarios.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/servico-categorias/2,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+bedin-api,PUT,{{url}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+bedin-api,ROUTE,/,module/Application/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clientes[/:id],module/Cliente/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/agenda-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/agendas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/clientes[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/clinicas-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/fichas-anamnese[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/financeiros/categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/financeiros[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/fotos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/grupo-materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/orcamentos-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/orcamentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/servico-materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/tabela-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/tabelas-precos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/venda-pagamentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/vendas-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas/:clinica/vendas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/clinicas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/contato,module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/criar-senha[/:token],module/User/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/recuperar-senha[/:token],module/User/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,/user-roles,module/User/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/clientes/:cliente/fichas-anamnese[/:id],module/Cliente/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/clientes/:cliente/historico,module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/especialidades[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/profissionais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/segmentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/servico-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/servicos-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/clinicas/:clinica]/usuarios[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/profissionais/:profissional]/profissional-intervalos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,[/profissionais/:profissional]/profissional-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+bedin-api,ROUTE,agendamento,module/Application/config/module.config.php,rota-zf-apigility
+bedin-www,GET,/clientes/me,components/Horarios/horariosProfissionais.js,chamada-http-cliente
+bedin-www,GET,/clientes/me,components/Horarios/index.js,chamada-http-cliente
+bedin-www,GET,/clinicas,components/HomeComponent/index.js,chamada-http-cliente
+bedin-www,GET,/especialidades,components/Aside/index.js,chamada-http-cliente
+bedin-www,GET,/especialidades,components/BuscaComponent/index.js,chamada-http-cliente
+bedin-www,GET,/especialidades,components/HomeComponent/index.js,chamada-http-cliente
+bedin-www,PATCH,/clientes/me,components/PerfilComponent/index.js,chamada-http-cliente
+bedin-www,POST,/clientes,components/CadastroComponent/index.js,chamada-http-cliente
+bedin-www,POST,/contato,pages/landing/index.js,chamada-http-cliente
+bedin-www,POST,/recuperar-senha,components/ForgotPasswordComponent/index.js,chamada-http-cliente
+sigo-clinicas-api,DELETE,{{local}}/profissional-intervalos/2,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{local}}/profissional-servicos/4,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/servico-categorias/5,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/servico-materiais/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,DELETE,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{dev}}/clientes/73,assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/orcamentos-servicos,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/orcamentos-servicos/10,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/orcamentos/1,assets/postman/Orçamentos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/orcamentos?,assets/postman/Orçamentos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/vendas,assets/postman/Vendas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/vendas-categorias,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/vendas-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/1/vendas/1,assets/postman/Vendas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/{{clinica}}/clientes,assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/clinicas/{{clinica}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissionais/9,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissionais/{{profissional}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissionais/{{profissional}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissional-intervalos/1,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/profissional-servicos/14,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/user-roles,assets/postman/UserRole.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{local}}/usuarios/21,assets/postman/Usuarios.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clientes?query[cpf_email]=11111111111,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clientes?query[cpf_email]=roberto@hotmail.com,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/1/servico-categorias?query[clinica.id]=1,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/clinicas-servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/categorias?query[financeiroscategorias.clinica]=4,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/financeiros?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/servico-categorias?query[servicoCategorias.clinica]=1,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/servicos?query[clinica.id]={{clinica}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/servicos?query[servicos.clinica]={{clinica}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/tabelas-precos,assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,GET,{{url}}/servicos?,assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,http://localhost:8089/profissionais/12,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{local}}/clinicas/1/orcamentos-servicos/10,assets/postman/OrçamentosServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{local}}/clinicas/1/orcamentos/3,assets/postman/Orçamentos.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{local}}/clinicas/1/servico-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{local}}/clinicas/1/vendas/3,assets/postman/Vendas.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{clinica}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{clinica}}/servicos/1,assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PATCH,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{dev}}/clinicas/68/orcamentos,assets/postman/Orçamentos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/clientes,assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/clinicas/1/profissionais,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/clinicas/1/vendas,assets/postman/Vendas.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/clinicas/{{clinica}}/usuarios,assets/postman/Usuarios.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/clinicas/{{clinica}}/vendas-categorias,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/profissional-intervalos,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{local}}/profissional-servicos,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/clientes,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/clinicas-servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/financeiros,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/financeiros/categorias,assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/servicos,assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/clinicas/{{clinica}}/tabelas-precos,assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/oauth,assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/oauth,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/servico-categorias,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/servicos,assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,POST,{{url}}/servicos,assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{dev}}/profissionais/12,assets/postman/Profissionais.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/clinicas/1/orcamentos/3,assets/postman/Orçamentos.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/clinicas/1/vendas-categorias/1,assets/postman/VendasCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/clinicas/1/vendas/3,assets/postman/Vendas.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/profissional-intervalos/1,assets/postman/ProfissionalIntervalos.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/profissional-servicos/1,assets/postman/ProfissionalServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{local}}/usuarios/21,assets/postman/Usuarios.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clientes/me,assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Clientes.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/clientes/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/clinicas-servicos/{{id}},assets/postman/ClinicaServicos.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/categorias/{{id}},assets/postman/FinanceirosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=pagar&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/financeiros/{{id}}?query[financeiros.tipoConta]=receber&query[financeiros.pendente]=1,assets/postman/Financeiros.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/servico-categorias/2,assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{clinica}}/tabelas-precos/{{id}},assets/postman/Tabela de Preços.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/clinicas/{{id}},assets/postman/Sigo Clínicas.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/servico-categorias/{{id}},assets/postman/ServicosCategorias.postman_collection.json,postman-collection
+sigo-clinicas-api,PUT,{{url}}/servicos/{{id}},assets/postman/Servico.postman_collection.json,postman-collection
+sigo-clinicas-api,ROUTE,/,module/Application/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clientes[/:id],module/Cliente/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/agenda-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/agendas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/clientes[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/clinicas-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/fichas-anamnese[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/financeiros/categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/financeiros[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/fotos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/grupo-materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/orcamentos-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/orcamentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/servico-materiais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/tabela-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/tabelas-precos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/venda-pagamentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/vendas-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas/:clinica/vendas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/clinicas[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/contato,module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/criar-senha[/:token],module/User/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/recuperar-senha[/:token],module/User/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,/user-roles,module/User/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/clientes/:cliente/fichas-anamnese[/:id],module/Cliente/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/clientes/:cliente/historico,module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/especialidades[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/profissionais[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/segmentos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/servico-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/servicos-categorias[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/clinicas/:clinica]/usuarios[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/profissionais/:profissional]/profissional-intervalos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,[/profissionais/:profissional]/profissional-servicos[/:id],module/Clinica/config/module.config.php,rota-zf-apigility
+sigo-clinicas-api,ROUTE,agendamento,module/Application/config/module.config.php,rota-zf-apigility
+sigo-clinicas-www,GET,/clientes/me,components/Horarios/horariosProfissionais.js,chamada-http-cliente
+sigo-clinicas-www,GET,/clientes/me,components/Horarios/index.js,chamada-http-cliente
+sigo-clinicas-www,GET,/clinicas,components/HomeComponent/index.js,chamada-http-cliente
+sigo-clinicas-www,GET,/especialidades,components/Aside/index.js,chamada-http-cliente
+sigo-clinicas-www,GET,/especialidades,components/BuscaComponent/index.js,chamada-http-cliente
+sigo-clinicas-www,GET,/especialidades,components/HomeComponent/index.js,chamada-http-cliente
+sigo-clinicas-www,PATCH,/clientes/me,components/PerfilComponent/index.js,chamada-http-cliente
+sigo-clinicas-www,POST,/clientes,components/CadastroComponent/index.js,chamada-http-cliente
+sigo-clinicas-www,POST,/contato,pages/landing/index.js,chamada-http-cliente
+sigo-clinicas-www,POST,/recuperar-senha,components/ForgotPasswordComponent/index.js,chamada-http-cliente

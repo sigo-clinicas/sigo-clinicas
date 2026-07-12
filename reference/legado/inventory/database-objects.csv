@@ -1,0 +1,175 @@
+﻿repositorio,tipo,nome,arquivo_fonte,origem
+bedin-api,table,agenda,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,agenda,module/Clinica/config/yaml/Clinica.V1.Rest.Agendas.AgendasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,agenda_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,agenda_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.AgendaServicos.AgendaServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,cliente,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,cliente,module/Cliente/config/yaml/Cliente.V1.Rest.Clientes.ClientesEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,cliente_ficha_anamnese,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,cliente_ficha_anamnese,module/Cliente/config/yaml/Cliente.V1.Rest.FichasAnamnese.FichasAnamneseEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,cliente_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica,module/Clinica/config/yaml/Clinica.V1.Rest.Clinicas.ClinicasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,clinica_cliente_status,module/Clinica/config/yaml/Clinica.V1.Rest.Clientes.ClientesStatusEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,clinica_has_cliente,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica_has_especialidade,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica_has_profissional,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.ClinicasServicos.ClinicasServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,clinica_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,clinica_has_usuario,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,endereco,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,endereco,module/Endereco/config/yaml/Endereco.Entity.Endereco.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,especialidade,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,especialidade,module/Clinica/config/yaml/Clinica.V1.Rest.Especialidades.EspecialidadesEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,ficha_anamnese,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,ficha_anamnese,module/Clinica/config/yaml/Clinica.V1.Rest.FichasAnamnese.FichasAnamneseEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,financeiro,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,financeiro,module/Clinica/config/yaml/Clinica.V1.Rest.Financeiros.FinanceirosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,financeirocategoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,financeirocategoria,module/Clinica/config/yaml/Clinica.V1.Rest.FinanceirosCategorias.FinanceirosCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,grupo_material,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,grupo_material,module/Clinica/config/yaml/Clinica.V1.Rest.GrupoMateriais.GrupoMateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,material,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,material,module/Clinica/config/yaml/Clinica.V1.Rest.Materiais.MateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,oauth2_accesstoken,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_accesstoken_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_authorizationcode,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_authorizationcode_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_client,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_client_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_jti,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_jwt,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_publickey,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_refreshtoken,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_refreshtoken_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,oauth2_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,orcamento,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,orcamento,module/Clinica/config/yaml/Clinica.V1.Rest.Orcamentos.OrcamentosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,orcamento_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,orcamento_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,orcamento_servico,module/Clinica/config/yaml/Clinica.V1.Rest.OrcamentosServicos.OrcamentosServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,profissional,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,profissional,module/Clinica/config/yaml/Clinica.V1.Rest.Profissionais.ProfissionaisEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,profissional_has_intervalo,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,profissional_has_intervalo,module/Clinica/config/yaml/Clinica.V1.Rest.ProfissionalIntervalos.ProfissionalIntervalosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,profissional_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,profissional_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.ProfissionalServicos.ProfissionalServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,profissional_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,role,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,role,module/Application/config/yaml/Application.Entity.Role.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,segmento,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,segmento,module/Clinica/config/yaml/Clinica.V1.Rest.Segmentos.SegmentosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,servico,module/Clinica/config/yaml/Clinica.V1.Rest.Servicos.ServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,servico_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,servico_categoria,module/Clinica/config/yaml/Clinica.V1.Rest.ServicoCategorias.ServicoCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,servico_material,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,servico_material,module/Clinica/config/yaml/Clinica.V1.Rest.ServicoMateriais.ServicoMateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,tabela_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,tabela_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.TabelaServicos.TabelaServicosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,tabela_preco,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,tabela_preco,module/Clinica/config/yaml/Clinica.V1.Rest.TabelaPrecos.TabelaPrecosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,telefone,module/Telefone/config/yaml/Telefone.Entity.Telefone.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,user,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,user,module/Application/config/yaml/Application.Entity.User.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,user_has_role,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,usuario,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,usuario,module/Clinica/config/yaml/Clinica.V1.Rest.Usuarios.UsuariosEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,usuario_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda,module/Clinica/config/yaml/Clinica.V1.Rest.Vendas.VendasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,venda_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda_categoria,module/Clinica/config/yaml/Clinica.V1.Rest.VendasCategorias.VendasCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+bedin-api,table,venda_has_agenda,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda_has_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda_has_pagamento,assets/mysql/dump.sql,CREATE TABLE em SQL
+bedin-api,table,venda_has_pagamento,module/Clinica/config/yaml/Clinica.V1.Rest.VendaPagamentos.VendaPagamentosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,agenda,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,agenda,module/Clinica/config/yaml/Clinica.V1.Rest.Agendas.AgendasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,agenda_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,agenda_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.AgendaServicos.AgendaServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,cliente,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,cliente,module/Cliente/config/yaml/Cliente.V1.Rest.Clientes.ClientesEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,cliente_ficha_anamnese,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,cliente_ficha_anamnese,module/Cliente/config/yaml/Cliente.V1.Rest.FichasAnamnese.FichasAnamneseEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,cliente_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica,module/Clinica/config/yaml/Clinica.V1.Rest.Clinicas.ClinicasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,clinica_cliente_status,module/Clinica/config/yaml/Clinica.V1.Rest.Clientes.ClientesStatusEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,clinica_has_cliente,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica_has_especialidade,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica_has_profissional,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.ClinicasServicos.ClinicasServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,clinica_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,clinica_has_usuario,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,endereco,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,endereco,module/Endereco/config/yaml/Endereco.Entity.Endereco.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,especialidade,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,especialidade,module/Clinica/config/yaml/Clinica.V1.Rest.Especialidades.EspecialidadesEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,ficha_anamnese,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,ficha_anamnese,module/Clinica/config/yaml/Clinica.V1.Rest.FichasAnamnese.FichasAnamneseEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,financeiro,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,financeiro,module/Clinica/config/yaml/Clinica.V1.Rest.Financeiros.FinanceirosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,financeirocategoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,financeirocategoria,module/Clinica/config/yaml/Clinica.V1.Rest.FinanceirosCategorias.FinanceirosCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,grupo_material,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,grupo_material,module/Clinica/config/yaml/Clinica.V1.Rest.GrupoMateriais.GrupoMateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,material,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,material,module/Clinica/config/yaml/Clinica.V1.Rest.Materiais.MateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,oauth2_accesstoken,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_accesstoken_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_authorizationcode,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_authorizationcode_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_client,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_client_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_jti,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_jwt,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_publickey,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_refreshtoken,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_refreshtoken_to_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,oauth2_scope,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,orcamento,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,orcamento,module/Clinica/config/yaml/Clinica.V1.Rest.Orcamentos.OrcamentosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,orcamento_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,orcamento_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,orcamento_servico,module/Clinica/config/yaml/Clinica.V1.Rest.OrcamentosServicos.OrcamentosServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,profissional,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,profissional,module/Clinica/config/yaml/Clinica.V1.Rest.Profissionais.ProfissionaisEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,profissional_has_intervalo,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,profissional_has_intervalo,module/Clinica/config/yaml/Clinica.V1.Rest.ProfissionalIntervalos.ProfissionalIntervalosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,profissional_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,profissional_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.ProfissionalServicos.ProfissionalServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,profissional_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,role,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,role,module/Application/config/yaml/Application.Entity.Role.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,segmento,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,segmento,module/Clinica/config/yaml/Clinica.V1.Rest.Segmentos.SegmentosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,servico,module/Clinica/config/yaml/Clinica.V1.Rest.Servicos.ServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,servico_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,servico_categoria,module/Clinica/config/yaml/Clinica.V1.Rest.ServicoCategorias.ServicoCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,servico_material,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,servico_material,module/Clinica/config/yaml/Clinica.V1.Rest.ServicoMateriais.ServicoMateriaisEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,tabela_has_servico,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,tabela_has_servico,module/Clinica/config/yaml/Clinica.V1.Rest.TabelaServicos.TabelaServicosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,tabela_preco,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,tabela_preco,module/Clinica/config/yaml/Clinica.V1.Rest.TabelaPrecos.TabelaPrecosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,telefone,module/Telefone/config/yaml/Telefone.Entity.Telefone.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,user,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,user,module/Application/config/yaml/Application.Entity.User.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,user_has_role,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,usuario,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,usuario,module/Clinica/config/yaml/Clinica.V1.Rest.Usuarios.UsuariosEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,usuario_has_telefone,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda,module/Clinica/config/yaml/Clinica.V1.Rest.Vendas.VendasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,venda_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda_categoria,module/Clinica/config/yaml/Clinica.V1.Rest.VendasCategorias.VendasCategoriasEntity.dcm.yml,mapeamento Doctrine YAML
+sigo-clinicas-api,table,venda_has_agenda,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda_has_categoria,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda_has_pagamento,assets/mysql/dump.sql,CREATE TABLE em SQL
+sigo-clinicas-api,table,venda_has_pagamento,module/Clinica/config/yaml/Clinica.V1.Rest.VendaPagamentos.VendaPagamentosEntity.dcm.yml,mapeamento Doctrine YAML
