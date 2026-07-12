@@ -45,31 +45,82 @@ export default async function ProntuarioPacientePage({
   // numero_carteirinha é do vínculo (convênio por clínica), não do paciente global
   const paciente = { ...pacienteRow, numero_carteirinha: vinculo.numero_carteirinha };
 
-  const [{ data: profissionais }, { data: avaliacoes }, { data: documentos }, { data: convenio }, { data: clinica }] =
-    await Promise.all([
-      supabase
-        .from("profissional")
-        .select("id,nome")
-        .eq("clinica_id", clinicaId)
-        .eq("ativo", true)
-        .order("nome"),
-      supabase
-        .from("avaliacao_clinica")
-        .select("*")
-        .eq("clinica_id", clinicaId)
-        .eq("paciente_id", params.pacienteId)
-        .order("data", { ascending: false }),
-      supabase
-        .from("documento_consentimento")
-        .select("id,tipo,titulo,conteudo,status,data_assinatura,arquivo_path,assinatura_path,observacoes,created_at")
-        .eq("clinica_id", clinicaId)
-        .eq("paciente_id", params.pacienteId)
-        .order("created_at", { ascending: false }),
-      vinculo.convenio_id
-        ? supabase.from("convenio").select("nome").eq("id", vinculo.convenio_id).maybeSingle()
-        : Promise.resolve({ data: null }),
-      supabase.from("clinica").select("tipo").eq("id", clinicaId).single(),
-    ]);
+  const [
+    { data: profissionais },
+    { data: avaliacoes },
+    { data: documentos },
+    { data: convenio },
+    { data: clinica },
+    { data: evolucoesRaw },
+    { data: galeria },
+    { data: itensEstoque },
+    { data: consultas },
+  ] = await Promise.all([
+    supabase
+      .from("profissional")
+      .select("id,nome,nome_conselho,numero_registro")
+      .eq("clinica_id", clinicaId)
+      .eq("ativo", true)
+      .order("nome"),
+    supabase
+      .from("avaliacao_clinica")
+      .select("*")
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .order("data", { ascending: false }),
+    supabase
+      .from("documento_consentimento")
+      .select("id,tipo,titulo,conteudo,status,data_assinatura,arquivo_path,assinatura_path,observacoes,created_at")
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .order("created_at", { ascending: false }),
+    vinculo.convenio_id
+      ? supabase.from("convenio").select("nome").eq("id", vinculo.convenio_id).maybeSingle()
+      : Promise.resolve({ data: null }),
+    supabase.from("clinica").select("tipo,nome").eq("id", clinicaId).single(),
+    supabase
+      .from("evolucao_sessao")
+      .select(
+        "id,data_hora,profissional_id,consulta_id,numero_sessao,descricao_atendimento,reacao_paciente,intercorrencias,orientacoes_pos,prescricao,proxima_sessao_sugerida,fotos"
+      )
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .order("data_hora", { ascending: false }),
+    supabase
+      .from("galeria_foto")
+      .select("id,path,categoria,descricao,data")
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .order("data", { ascending: false }),
+    supabase
+      .from("item_estoque")
+      .select("id,descricao,unidade")
+      .eq("clinica_id", clinicaId)
+      .eq("ativo", true)
+      .order("descricao"),
+    supabase
+      .from("consulta")
+      .select("id,data_hora,profissional_id")
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .eq("status", "concluido")
+      .order("data_hora", { ascending: false }),
+  ]);
+
+  // Insumos das evoluções (tabela normalizada) — anexados a cada evolução
+  const evolucaoIds = (evolucoesRaw ?? []).map((e) => e.id);
+  const { data: insumos } = evolucaoIds.length
+    ? await supabase
+        .from("evolucao_insumo")
+        .select("id,evolucao_id,produto_nome,fabricante,quantidade,lote,validade,item_estoque_id,movimentacao_estoque_id")
+        .in("evolucao_id", evolucaoIds)
+    : { data: [] };
+
+  const evolucoes = (evolucoesRaw ?? []).map((e) => ({
+    ...e,
+    fotos: (e.fotos as AvaliacaoFotos) ?? [],
+    insumos: (insumos ?? []).filter((i) => i.evolucao_id === e.id),
+  }));
 
   const podeEditar =
     ["proprietario", "gerente", "recepcionista", "assistente", "profissional"].includes(
@@ -79,6 +130,7 @@ export default async function ProntuarioPacientePage({
   return (
     <ProntuarioShell
       clinicaId={clinicaId}
+      clinicaNome={clinica?.nome ?? "Clínica"}
       paciente={paciente}
       convenioNome={convenio?.nome ?? null}
       profissionais={profissionais ?? []}
@@ -87,6 +139,10 @@ export default async function ProntuarioPacientePage({
         fotos: (a.fotos as AvaliacaoFotos) ?? [],
       }))}
       documentos={documentos ?? []}
+      evolucoes={evolucoes}
+      itensEstoque={itensEstoque ?? []}
+      consultas={consultas ?? []}
+      fotosGaleria={galeria ?? []}
       termo={TERMINOLOGIA[(clinica?.tipo ?? "medica") as TipoClinica]}
       tipoClinica={(clinica?.tipo ?? "medica") as TipoClinica}
       podeEditar={podeEditar}
