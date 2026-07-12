@@ -1,0 +1,63 @@
+# Gate obrigatório (CLAUDE.md §2/§6): lint + typecheck + testes, incluindo
+# testes de policy RLS contra um Supabase local. Feature sem esse gate verde
+# não é "done".
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Testes unitários
+        run: npm test
+
+  policies-rls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Subir Supabase local (aplica todas as migrations)
+        run: supabase start
+
+      - name: Exportar credenciais locais para os testes
+        run: |
+          supabase status -o env | sed 's/"//g' >> "$GITHUB_ENV"
+
+      - name: Testes de policy RLS / RBAC
+        env:
+          SUPABASE_TEST_URL: ${{ env.API_URL }}
+          SUPABASE_TEST_ANON_KEY: ${{ env.ANON_KEY }}
+          SUPABASE_TEST_SERVICE_ROLE_KEY: ${{ env.SERVICE_ROLE_KEY }}
+        run: npm run test:rls

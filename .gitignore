@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Builds e caches
+dist/
+*.tsbuildinfo
+.eslintcache
+
+# SEGREDOS — nunca commitar (lição R1 do legado: chaves AWS no Dockerfile)
+.env
+.env.*
+!.env.example
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# Vercel
+.vercel/
+
+# Testes / cobertura
+coverage/
+
+# SO / editor
+.DS_Store
+Thumbs.db
