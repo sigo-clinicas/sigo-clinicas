@@ -93,7 +93,12 @@ describe.skipIf(!temAmbiente)("RLS: isolamento entre clínicas", () => {
 
   it("staff da clínica A só enxerga serviços da clínica A", async () => {
     const supA = await clientLogado(emailProprietariaA, senha);
-    const { data, error } = await supA.from("servico").select("clinica_id");
+    // Escopado às clínicas do fixture: serviços PÚBLICOS de outras clínicas
+    // são visíveis por design (marketplace) e não invalidam o isolamento.
+    const { data, error } = await supA
+      .from("servico")
+      .select("clinica_id")
+      .in("clinica_id", [clinicaA, clinicaB]);
 
     expect(error).toBeNull();
     expect(data!.length).toBeGreaterThan(0);
@@ -142,7 +147,10 @@ describe.skipIf(!temAmbiente)("RLS: isolamento entre clínicas", () => {
 
   it("RBAC: recepcionista lê os serviços da própria clínica", async () => {
     const supRecep = await clientLogado(emailRecepcaoA, senha);
-    const { data, error } = await supRecep.from("servico").select("clinica_id");
+    const { data, error } = await supRecep
+      .from("servico")
+      .select("clinica_id")
+      .in("clinica_id", [clinicaA, clinicaB]);
 
     expect(error).toBeNull();
     expect(data!.length).toBeGreaterThan(0);
