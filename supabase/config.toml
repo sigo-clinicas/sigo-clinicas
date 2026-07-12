@@ -38,3 +38,9 @@ uri = "pg-functions://postgres/public/custom_access_token_hook"
 [storage]
 enabled = true
 file_size_limit = "50MiB"
+
+# Anamnese pública: preenchida por token SEM login (paciente não autenticado).
+# verify_jwt = false → o gateway não exige JWT; a autorização é o token (uuid)
+# validado dentro da função, que usa service_role escopado por .eq('token').
+[functions.anamnese-publica]
+verify_jwt = false
