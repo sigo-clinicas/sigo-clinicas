@@ -3041,6 +3041,15 @@ export type Database = {
     }
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      salvar_paciente_clinica: {
+        Args: {
+          p_clinica_id: string
+          p_dados?: Json
+          p_paciente_id?: string
+          p_vinculo?: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       classificacao_item_estoque:
