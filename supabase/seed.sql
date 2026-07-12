@@ -1,0 +1,4 @@
+-- Seed de DESENVOLVIMENTO local (supabase db reset). Dados de domínio que
+-- valem para produção (segmentos, 66 especialidades) estão nas migrations —
+-- aqui entram apenas massas de teste locais quando necessário.
+-- Os testes de RLS criam seus próprios dados via service_role.
