@@ -440,6 +440,9 @@ export type Database = {
           nome: string
           numero: string | null
           razao_social: string | null
+          retencao_fiscal_meses: number | null
+          retencao_marketing_meses: number | null
+          retencao_prontuario_meses: number | null
           slug: string | null
           sobre: string | null
           telefone: string | null
@@ -468,6 +471,9 @@ export type Database = {
           nome: string
           numero?: string | null
           razao_social?: string | null
+          retencao_fiscal_meses?: number | null
+          retencao_marketing_meses?: number | null
+          retencao_prontuario_meses?: number | null
           slug?: string | null
           sobre?: string | null
           telefone?: string | null
@@ -496,6 +502,9 @@ export type Database = {
           nome?: string
           numero?: string | null
           razao_social?: string | null
+          retencao_fiscal_meses?: number | null
+          retencao_marketing_meses?: number | null
+          retencao_prontuario_meses?: number | null
           slug?: string | null
           sobre?: string | null
           telefone?: string | null
@@ -1136,6 +1145,7 @@ export type Database = {
           conteudo: string | null
           created_at: string
           data_assinatura: string | null
+          data_revogacao: string | null
           id: string
           ip_assinatura: unknown
           observacoes: string | null
@@ -1145,6 +1155,7 @@ export type Database = {
           tipo: Database["public"]["Enums"]["tipo_documento"]
           titulo: string
           updated_at: string
+          versao: string | null
         }
         Insert: {
           arquivo_path?: string | null
@@ -1153,6 +1164,7 @@ export type Database = {
           conteudo?: string | null
           created_at?: string
           data_assinatura?: string | null
+          data_revogacao?: string | null
           id?: string
           ip_assinatura?: unknown
           observacoes?: string | null
@@ -1162,6 +1174,7 @@ export type Database = {
           tipo: Database["public"]["Enums"]["tipo_documento"]
           titulo: string
           updated_at?: string
+          versao?: string | null
         }
         Update: {
           arquivo_path?: string | null
@@ -1170,6 +1183,7 @@ export type Database = {
           conteudo?: string | null
           created_at?: string
           data_assinatura?: string | null
+          data_revogacao?: string | null
           id?: string
           ip_assinatura?: unknown
           observacoes?: string | null
@@ -1179,6 +1193,7 @@ export type Database = {
           tipo?: Database["public"]["Enums"]["tipo_documento"]
           titulo?: string
           updated_at?: string
+          versao?: string | null
         }
         Relationships: [
           {
@@ -1327,6 +1342,7 @@ export type Database = {
           created_at: string
           data_hora: string
           descricao_atendimento: string | null
+          descricao_origem: string
           fotos: Json
           id: string
           intercorrencias: string | null
@@ -1338,6 +1354,9 @@ export type Database = {
           profissional_id: string | null
           proxima_sessao_sugerida: string | null
           reacao_paciente: string | null
+          transcricao_audio_path: string | null
+          transcricao_status: string | null
+          transcricao_texto_bruto: string | null
           updated_at: string
         }
         Insert: {
@@ -1346,6 +1365,7 @@ export type Database = {
           created_at?: string
           data_hora?: string
           descricao_atendimento?: string | null
+          descricao_origem?: string
           fotos?: Json
           id?: string
           intercorrencias?: string | null
@@ -1357,6 +1377,9 @@ export type Database = {
           profissional_id?: string | null
           proxima_sessao_sugerida?: string | null
           reacao_paciente?: string | null
+          transcricao_audio_path?: string | null
+          transcricao_status?: string | null
+          transcricao_texto_bruto?: string | null
           updated_at?: string
         }
         Update: {
@@ -1365,6 +1388,7 @@ export type Database = {
           created_at?: string
           data_hora?: string
           descricao_atendimento?: string | null
+          descricao_origem?: string
           fotos?: Json
           id?: string
           intercorrencias?: string | null
@@ -1376,6 +1400,9 @@ export type Database = {
           profissional_id?: string | null
           proxima_sessao_sugerida?: string | null
           reacao_paciente?: string | null
+          transcricao_audio_path?: string | null
+          transcricao_status?: string | null
+          transcricao_texto_bruto?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -2150,6 +2177,7 @@ export type Database = {
       }
       paciente: {
         Row: {
+          anonimizado: boolean
           ativo: boolean
           bairro: string | null
           cep: string | null
@@ -2161,10 +2189,13 @@ export type Database = {
           cpf: string | null
           created_at: string
           data_aceite_termos: string | null
+          data_anonimizacao: string | null
           data_nascimento: string | null
           email: string | null
           id: string
+          ip_aceite: unknown
           logradouro: string | null
+          motivo_exclusao: string | null
           nome: string
           nome_mae: string | null
           numero: string | null
@@ -2175,8 +2206,10 @@ export type Database = {
           uf: string | null
           updated_at: string
           user_id: string | null
+          versao_termos_aceita: string | null
         }
         Insert: {
+          anonimizado?: boolean
           ativo?: boolean
           bairro?: string | null
           cep?: string | null
@@ -2188,10 +2221,13 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           data_aceite_termos?: string | null
+          data_anonimizacao?: string | null
           data_nascimento?: string | null
           email?: string | null
           id?: string
+          ip_aceite?: unknown
           logradouro?: string | null
+          motivo_exclusao?: string | null
           nome: string
           nome_mae?: string | null
           numero?: string | null
@@ -2202,8 +2238,10 @@ export type Database = {
           uf?: string | null
           updated_at?: string
           user_id?: string | null
+          versao_termos_aceita?: string | null
         }
         Update: {
+          anonimizado?: boolean
           ativo?: boolean
           bairro?: string | null
           cep?: string | null
@@ -2215,10 +2253,13 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           data_aceite_termos?: string | null
+          data_anonimizacao?: string | null
           data_nascimento?: string | null
           email?: string | null
           id?: string
+          ip_aceite?: unknown
           logradouro?: string | null
+          motivo_exclusao?: string | null
           nome?: string
           nome_mae?: string | null
           numero?: string | null
@@ -2229,6 +2270,7 @@ export type Database = {
           uf?: string | null
           updated_at?: string
           user_id?: string | null
+          versao_termos_aceita?: string | null
         }
         Relationships: []
       }
@@ -3091,7 +3133,7 @@ export type Database = {
         | "faltou"
       status_cupom: "pendente" | "ativo" | "aceito" | "expirado" | "cancelado"
       status_depoimento: "pendente" | "aprovado" | "recusado"
-      status_documento: "pendente" | "assinado" | "recusado"
+      status_documento: "pendente" | "assinado" | "recusado" | "revogado"
       status_lancamento:
         | "pendente"
         | "pago_parcial"
@@ -3303,7 +3345,7 @@ export const Constants = {
       ],
       status_cupom: ["pendente", "ativo", "aceito", "expirado", "cancelado"],
       status_depoimento: ["pendente", "aprovado", "recusado"],
-      status_documento: ["pendente", "assinado", "recusado"],
+      status_documento: ["pendente", "assinado", "recusado", "revogado"],
       status_lancamento: [
         "pendente",
         "pago_parcial",
