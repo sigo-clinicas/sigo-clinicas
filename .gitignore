@@ -30,3 +30,6 @@ coverage/
 # SO / editor
 .DS_Store
 Thumbs.db
+
+# Screenshots locais de verificacao
+*.png
