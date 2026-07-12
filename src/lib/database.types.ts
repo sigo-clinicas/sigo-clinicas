@@ -1484,6 +1484,70 @@ export type Database = {
           },
         ]
       }
+      galeria_foto: {
+        Row: {
+          categoria: string
+          clinica_id: string
+          created_at: string
+          data: string
+          descricao: string | null
+          id: string
+          origem: string
+          paciente_id: string
+          path: string
+          profissional_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          categoria?: string
+          clinica_id: string
+          created_at?: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          origem?: string
+          paciente_id: string
+          path: string
+          profissional_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string
+          clinica_id?: string
+          created_at?: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          origem?: string
+          paciente_id?: string
+          path?: string
+          profissional_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "galeria_foto_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "galeria_foto_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "paciente"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "galeria_foto_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissional"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       item_estoque: {
         Row: {
           ativo: boolean
@@ -3082,6 +3146,18 @@ export type Database = {
       }
     }
     Functions: {
+      baixar_insumos_evolucao: {
+        Args: { p_evolucao_id: string }
+        Returns: number
+      }
+      criar_consulta_retorno: {
+        Args: {
+          p_data_hora: string
+          p_duracao_minutos?: number
+          p_evolucao_id: string
+        }
+        Returns: string
+      }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       registrar_saida_estoque: {
         Args: {
@@ -3091,6 +3167,10 @@ export type Database = {
           p_observacao: string
         }
         Returns: number
+      }
+      remover_insumo_evolucao: {
+        Args: { p_insumo_id: string }
+        Returns: undefined
       }
       salvar_paciente_clinica: {
         Args: {

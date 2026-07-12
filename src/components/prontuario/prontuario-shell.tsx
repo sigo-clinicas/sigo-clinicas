@@ -21,6 +21,14 @@ import type { Terminologia, TipoClinica } from "@/lib/terminologia";
 import { AbaResumo } from "./aba-resumo";
 import { AbaAvaliacao, type AvaliacaoLinha } from "./aba-avaliacao";
 import { AbaDocumentos, type DocumentoLinha } from "./aba-documentos";
+import {
+  AbaEvolucao,
+  type EvolucaoLinha,
+  type ItemEstoqueOpcao,
+  type ConsultaConcluida,
+} from "./aba-evolucao";
+import { AbaReceituario, type ProfissionalReceita } from "./aba-receituario";
+import { AbaGaleria, type GaleriaFotoRow } from "./aba-galeria";
 
 export type PacienteProntuario = {
   id: string;
@@ -61,21 +69,31 @@ type TabId =
 
 export function ProntuarioShell({
   clinicaId,
+  clinicaNome,
   paciente,
   convenioNome,
   profissionais,
   avaliacoes,
   documentos,
+  evolucoes,
+  itensEstoque,
+  consultas,
+  fotosGaleria,
   termo,
   tipoClinica,
   podeEditar,
 }: {
   clinicaId: string;
+  clinicaNome: string;
   paciente: PacienteProntuario;
   convenioNome: string | null;
-  profissionais: { id: string; nome: string }[];
+  profissionais: ProfissionalReceita[];
   avaliacoes: AvaliacaoLinha[];
   documentos: DocumentoLinha[];
+  evolucoes: EvolucaoLinha[];
+  itensEstoque: ItemEstoqueOpcao[];
+  consultas: ConsultaConcluida[];
+  fotosGaleria: GaleriaFotoRow[];
   termo: Terminologia;
   tipoClinica: TipoClinica;
   podeEditar: boolean;
@@ -94,13 +112,14 @@ export function ProntuarioShell({
     { id: "dados", label: "Dados", icon: User },
   ];
 
-  // S3: Planos (orçamento). S2-3: Evolução/Receituário/Galeria.
+  // S3: Planos (orçamento) ainda em construção. Evolução/Receituário/Galeria já
+  // portados nesta slice (S2-3).
   const emConstrucao: Record<string, string> = {
     orcamentos: "Planos de tratamento chegam no Sprint 3 (funil comercial).",
-    evolucao: "Evolução clínica chega ainda no Sprint 2 (próxima slice).",
-    receituario: "Receituário chega com a evolução (próxima slice).",
-    galeria: "Galeria antes/depois chega com a evolução (próxima slice).",
   };
+
+  const fotosAvaliacao = avaliacoes.map((a) => ({ data: a.data, fotos: a.fotos ?? [] }));
+  const fotosEvolucao = evolucoes.map((e) => ({ data: e.data_hora, fotos: e.fotos ?? [] }));
 
   return (
     <div className="p-4 md:p-6 space-y-5 max-w-4xl mx-auto">
@@ -162,6 +181,38 @@ export function ProntuarioShell({
           pacienteId={paciente.id}
           avaliacoes={avaliacoes}
           profissionais={profissionais}
+          podeEditar={podeEditar}
+        />
+      )}
+      {tab === "evolucao" && (
+        <AbaEvolucao
+          clinicaId={clinicaId}
+          pacienteId={paciente.id}
+          pacienteNome={paciente.nome}
+          evolucoes={evolucoes}
+          profissionais={profissionais}
+          itensEstoque={itensEstoque}
+          consultas={consultas}
+          podeEditar={podeEditar}
+        />
+      )}
+      {tab === "receituario" && (
+        <AbaReceituario
+          pacienteId={paciente.id}
+          pacienteNome={paciente.nome}
+          clinicaNome={clinicaNome}
+          evolucoes={evolucoes}
+          profissionais={profissionais}
+          podeEditar={podeEditar}
+        />
+      )}
+      {tab === "galeria" && (
+        <AbaGaleria
+          clinicaId={clinicaId}
+          pacienteId={paciente.id}
+          fotosAvaliacao={fotosAvaliacao}
+          fotosEvolucao={fotosEvolucao}
+          fotosGaleria={fotosGaleria}
           podeEditar={podeEditar}
         />
       )}
