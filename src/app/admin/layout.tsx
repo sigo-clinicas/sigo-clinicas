@@ -29,6 +29,12 @@ export default async function AdminLayout({
           >
             Especialidades
           </Link>
+          <Link
+            href="/admin/lgpd"
+            className="text-sidebar-foreground hover:text-white transition-colors"
+          >
+            LGPD
+          </Link>
         </nav>
         <div className="flex-1" />
         <form action={logout}>

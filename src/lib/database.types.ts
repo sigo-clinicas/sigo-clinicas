@@ -746,6 +746,67 @@ export type Database = {
           },
         ]
       }
+      consentimento_evento: {
+        Row: {
+          clinica_id: string
+          created_at: string
+          detalhe: string | null
+          documento_id: string | null
+          id: string
+          ip: unknown
+          origem: string
+          paciente_id: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          clinica_id: string
+          created_at?: string
+          detalhe?: string | null
+          documento_id?: string | null
+          id?: string
+          ip?: unknown
+          origem?: string
+          paciente_id: string
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          clinica_id?: string
+          created_at?: string
+          detalhe?: string | null
+          documento_id?: string | null
+          id?: string
+          ip?: unknown
+          origem?: string
+          paciente_id?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consentimento_evento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consentimento_evento_documento_id_fkey"
+            columns: ["documento_id"]
+            isOneToOne: false
+            referencedRelation: "documento_consentimento"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consentimento_evento_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "paciente"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consulta: {
         Row: {
           clinica_id: string
@@ -3146,9 +3207,25 @@ export type Database = {
       }
     }
     Functions: {
+      abrir_solicitacao_lgpd: {
+        Args: { p_detalhe: string; p_tipo: string }
+        Returns: undefined
+      }
+      anonimizar_paciente: {
+        Args: { p_motivo: string; p_paciente_id: string }
+        Returns: string[]
+      }
       baixar_insumos_evolucao: {
         Args: { p_evolucao_id: string }
         Returns: number
+      }
+      consentimento_vigente: {
+        Args: {
+          p_clinica_id: string
+          p_paciente_id: string
+          p_tipo: Database["public"]["Enums"]["tipo_documento"]
+        }
+        Returns: boolean
       }
       criar_consulta_retorno: {
         Args: {
