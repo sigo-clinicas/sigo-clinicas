@@ -32,6 +32,25 @@ async function exigirClinico() {
   return { sessao, erro: null } as const;
 }
 
+/**
+ * Gate de consentimento LGPD (S2-5): o fluxo exige TCLE assinado antes de
+ * registrar avaliação, e uso_imagem antes de anexar fotos. Consulta a RPC
+ * consentimento_vigente (documento assinado e não revogado).
+ */
+async function temConsentimento(
+  supabase: ReturnType<typeof createClient>,
+  pacienteId: string,
+  clinicaId: string,
+  tipo: "tcle" | "uso_imagem"
+): Promise<boolean> {
+  const { data } = await supabase.rpc("consentimento_vigente", {
+    p_paciente_id: pacienteId,
+    p_clinica_id: clinicaId,
+    p_tipo: tipo,
+  });
+  return data === true;
+}
+
 /** IP real do request (server-side) para o registro de assinatura (inet). */
 function ipDoRequest(): string | null {
   const h = headers();
@@ -79,8 +98,18 @@ export async function salvarAvaliacao(
   if (!input.paciente_id) return { erro: "Paciente é obrigatório." };
 
   const supabase = createClient();
+  const clinicaId = sessao.clinicaAtual!;
+
+  // Gate LGPD: TCLE assinado antes de registrar a avaliação; uso_imagem se anexa fotos.
+  if (!input.id && !(await temConsentimento(supabase, input.paciente_id, clinicaId, "tcle"))) {
+    return { erro: "É preciso um TCLE (consentimento) assinado do paciente antes de registrar a avaliação." };
+  }
+  if (input.fotos.length > 0 && !(await temConsentimento(supabase, input.paciente_id, clinicaId, "uso_imagem"))) {
+    return { erro: "É preciso o termo de uso de imagem assinado para anexar fotos." };
+  }
+
   const dados = {
-    clinica_id: sessao.clinicaAtual!,
+    clinica_id: clinicaId,
     paciente_id: input.paciente_id,
     profissional_id: input.profissional_id || null,
     data: input.data || new Date().toISOString().slice(0, 10),
@@ -246,6 +275,11 @@ export async function salvarEvolucao(
 
   const supabase = createClient();
 
+  // Gate LGPD: uso_imagem assinado antes de anexar fotos à evolução.
+  if (input.fotos.length > 0 && !(await temConsentimento(supabase, input.paciente_id, clinicaId, "uso_imagem"))) {
+    return { erro: "É preciso o termo de uso de imagem assinado para anexar fotos." };
+  }
+
   // numero_sessao automático só no cadastro novo (conta as evoluções do paciente)
   let numeroSessao: number | null = null;
   if (!input.id) {
@@ -379,6 +413,10 @@ export async function adicionarFotoGaleria(
   if (!sessao) return { erro };
 
   const supabase = createClient();
+  // Gate LGPD: uso_imagem assinado antes de subir foto à galeria.
+  if (!(await temConsentimento(supabase, input.paciente_id, sessao.clinicaAtual!, "uso_imagem"))) {
+    return { erro: "É preciso o termo de uso de imagem assinado para adicionar fotos." };
+  }
   const { error } = await supabase.from("galeria_foto").insert({
     clinica_id: sessao.clinicaAtual!,
     paciente_id: input.paciente_id,
