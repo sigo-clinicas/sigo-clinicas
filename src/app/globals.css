@@ -1,3 +1,148 @@
+/* Porta de reference/base44 src/index.css — tokens shadcn + temas white-label
+   por tipo de clínica (data-clinica-theme). Fonte Inter via next/font
+   (src/app/layout.tsx) em vez do @import do Google. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+    --primary: 172 50% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 172 30% 88%;
+    --secondary-foreground: 172 50% 40%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 15% 50%;
+    --accent: 12 83% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 213 20% 88%;
+    --input: 213 20% 88%;
+    --ring: 172 60% 45%;
+    --radius: 0.5rem;
+    --sidebar-background: 172 50% 28%;
+    --sidebar-foreground: 172 20% 85%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 172 50% 28%;
+    --sidebar-accent: 172 60% 40%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 172 50% 35%;
+    --sidebar-ring: 172 60% 50%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --chart-1: 172 50% 45%;
+    --chart-2: 12 83% 60%;
+    --chart-3: 38 85% 55%;
+    --chart-4: 0 65% 55%;
+    --chart-5: 280 55% 55%;
+  }
+
+  /* Tema Clínica Médica (Azul #038297) */
+  [data-clinica-theme="medica"] {
+    --primary: 190 96% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 190 30% 94%;
+    --secondary-foreground: 190 96% 30%;
+    --accent: 190 40% 88%;
+    --accent-foreground: 190 96% 30%;
+    --sidebar-background: 190 96% 20%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 190 96% 20%;
+    --sidebar-accent: 190 80% 35%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 190 80% 25%;
+    --ring: 190 96% 40%;
+  }
+
+  /* Tema Clínica Estética (Roxo #9b319d) */
+  [data-clinica-theme="estetica"] {
+    --primary: 299 52% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 299 30% 94%;
+    --secondary-foreground: 299 52% 40%;
+    --accent: 299 40% 88%;
+    --accent-foreground: 299 52% 40%;
+    --sidebar-background: 299 52% 35%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 299 52% 35%;
+    --sidebar-accent: 299 52% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 299 52% 42%;
+    --ring: 299 52% 50%;
+  }
+
+  /* Tema Terapias Complementares e Bem-Estar (Azul Claro #38bdf8) */
+  [data-clinica-theme="terapias"] {
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 199 30% 94%;
+    --secondary-foreground: 199 89% 30%;
+    --accent: 199 40% 88%;
+    --accent-foreground: 199 89% 30%;
+    --sidebar-background: 199 89% 28%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 199 89% 28%;
+    --sidebar-accent: 199 70% 42%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 199 70% 35%;
+    --ring: 199 89% 50%;
+  }
+
+  /* Tema Clínica Odontológica (Verde #45c0b1) */
+  [data-clinica-theme="odontologia"] {
+    --primary: 172 49% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 172 30% 94%;
+    --secondary-foreground: 172 49% 51%;
+    --accent: 172 40% 88%;
+    --accent-foreground: 172 49% 51%;
+    --sidebar-background: 172 49% 30%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 172 49% 30%;
+    --sidebar-accent: 172 49% 45%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 172 49% 35%;
+    --ring: 172 49% 55%;
+  }
+
+  .dark {
+    --background: 213 30% 8%;
+    --foreground: 213 15% 92%;
+    --card: 213 28% 11%;
+    --card-foreground: 213 15% 92%;
+    --primary: 213 60% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 25% 18%;
+    --secondary-foreground: 213 15% 85%;
+    --muted: 213 22% 15%;
+    --muted-foreground: 213 15% 55%;
+    --accent: 213 30% 22%;
+    --accent-foreground: 213 15% 92%;
+    --border: 213 22% 20%;
+    --input: 213 22% 20%;
+    --ring: 213 60% 55%;
+    --sidebar-background: 213 35% 6%;
+    --sidebar-foreground: 213 15% 80%;
+    --sidebar-accent: 213 30% 15%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 213 25% 12%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+  }
+}

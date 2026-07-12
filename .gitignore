@@ -25,6 +25,7 @@ supabase/.temp/
 
 # Testes / cobertura
 coverage/
+.playwright-mcp/
 
 # SO / editor
 .DS_Store
