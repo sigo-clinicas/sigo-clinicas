@@ -80,10 +80,14 @@ describe.skipIf(!temAmbiente)("RLS: isolamento entre clínicas", () => {
   afterAll(async () => {
     if (!admin) return; // beforeAll falhou antes de criar dados — nada a limpar
     // Cascade limpa vínculos/serviços; usuários e paciente saem explicitamente.
-    await admin.from("clinica").delete().in("id", [clinicaA, clinicaB]);
-    await admin.from("paciente").delete().eq("id", pacienteA);
+    if (clinicaA) {
+      await admin.from("clinica").delete().in("id", [clinicaA, clinicaB]);
+    }
+    if (pacienteA) {
+      await admin.from("paciente").delete().eq("id", pacienteA);
+    }
     for (const uid of [userProprietariaA, userProprietariaB, userRecepcaoA]) {
-      await admin.auth.admin.deleteUser(uid);
+      if (uid) await admin.auth.admin.deleteUser(uid);
     }
   });
 
