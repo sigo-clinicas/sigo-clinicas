@@ -3083,6 +3083,15 @@ export type Database = {
     }
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      registrar_saida_estoque: {
+        Args: {
+          p_clinica_id: string
+          p_data: string
+          p_linhas: Json
+          p_observacao: string
+        }
+        Returns: number
+      }
       salvar_paciente_clinica: {
         Args: {
           p_clinica_id: string
