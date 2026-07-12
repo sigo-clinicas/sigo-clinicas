@@ -428,6 +428,7 @@ export type Database = {
           cidade: string | null
           cnpj: string | null
           complemento: string | null
+          config: Json
           created_at: string
           email: string | null
           exibir_marketplace: boolean
@@ -455,6 +456,7 @@ export type Database = {
           cidade?: string | null
           cnpj?: string | null
           complemento?: string | null
+          config?: Json
           created_at?: string
           email?: string | null
           exibir_marketplace?: boolean
@@ -482,6 +484,7 @@ export type Database = {
           cidade?: string | null
           cnpj?: string | null
           complemento?: string | null
+          config?: Json
           created_at?: string
           email?: string | null
           exibir_marketplace?: boolean
