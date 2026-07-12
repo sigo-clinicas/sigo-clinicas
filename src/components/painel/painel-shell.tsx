@@ -28,6 +28,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { logout } from "@/lib/actions/auth";
+import { definirClinicaAtual } from "@/lib/actions/usuarios";
 import type { Papel } from "@/lib/auth";
 import type { Terminologia } from "@/lib/terminologia";
 
@@ -196,6 +197,8 @@ export function PainelShell({
   nomeUsuario,
   papel,
   termo,
+  clinicasDoUsuario,
+  clinicaAtualId,
   children,
 }: {
   nomeClinica: string;
@@ -203,6 +206,8 @@ export function PainelShell({
   nomeUsuario: string;
   papel: Papel;
   termo: Terminologia;
+  clinicasDoUsuario: { id: string; nome: string }[];
+  clinicaAtualId: string;
   children: React.ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -302,6 +307,23 @@ export function PainelShell({
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           <div className="flex-1" />
+          {clinicasDoUsuario.length > 1 && (
+            <form action={definirClinicaAtual}>
+              <select
+                name="clinica_id"
+                defaultValue={clinicaAtualId}
+                onChange={(e) => e.currentTarget.form?.requestSubmit()}
+                className="h-9 rounded-md border border-input bg-background px-2 text-sm text-foreground"
+                aria-label="Trocar clínica"
+              >
+                {clinicasDoUsuario.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nome}
+                  </option>
+                ))}
+              </select>
+            </form>
+          )}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">
               {inicial}

@@ -22,11 +22,15 @@ export default async function PainelLayout({
   }
 
   const supabase = createClient();
-  const { data: clinica } = await supabase
-    .from("clinica")
-    .select("nome,tipo")
-    .eq("id", sessao.clinicaAtual)
-    .single();
+  const idsClinicas = Object.keys(sessao.clinicas);
+  const [{ data: clinica }, { data: clinicasDoUsuario }] = await Promise.all([
+    supabase
+      .from("clinica")
+      .select("nome,tipo")
+      .eq("id", sessao.clinicaAtual)
+      .single(),
+    supabase.from("clinica").select("id,nome").in("id", idsClinicas),
+  ]);
 
   const tipo = (clinica?.tipo ?? "medica") as TipoClinica;
   const termo = TERMINOLOGIA[tipo];
@@ -43,6 +47,8 @@ export default async function PainelLayout({
         nomeUsuario={nomeUsuario}
         papel={sessao.papel}
         termo={termo}
+        clinicasDoUsuario={clinicasDoUsuario ?? []}
+        clinicaAtualId={sessao.clinicaAtual}
       >
         {children}
       </PainelShell>
