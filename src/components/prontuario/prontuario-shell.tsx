@@ -13,6 +13,7 @@ import {
   Pill,
   Printer,
   Camera,
+  ClipboardList,
   Construction,
 } from "lucide-react";
 
@@ -29,6 +30,7 @@ import {
 } from "./aba-evolucao";
 import { AbaReceituario, type ProfissionalReceita } from "./aba-receituario";
 import { AbaGaleria, type GaleriaFotoRow } from "./aba-galeria";
+import { AbaAnamnese, type RespostaAnamneseLinha } from "./aba-anamnese";
 
 export type PacienteProntuario = {
   id: string;
@@ -64,6 +66,7 @@ type TabId =
   | "evolucao"
   | "receituario"
   | "galeria"
+  | "anamnese"
   | "documentos"
   | "dados";
 
@@ -79,6 +82,8 @@ export function ProntuarioShell({
   itensEstoque,
   consultas,
   fotosGaleria,
+  respostasAnamnese,
+  formulariosAtivos,
   termo,
   tipoClinica,
   podeEditar,
@@ -94,6 +99,8 @@ export function ProntuarioShell({
   itensEstoque: ItemEstoqueOpcao[];
   consultas: ConsultaConcluida[];
   fotosGaleria: GaleriaFotoRow[];
+  respostasAnamnese: RespostaAnamneseLinha[];
+  formulariosAtivos: { id: string; nome: string }[];
   termo: Terminologia;
   tipoClinica: TipoClinica;
   podeEditar: boolean;
@@ -108,6 +115,7 @@ export function ProntuarioShell({
     { id: "evolucao", label: "Evolução", icon: Activity },
     { id: "receituario", label: "Receituário", icon: Pill },
     { id: "galeria", label: "Galeria", icon: Camera },
+    { id: "anamnese", label: "Anamnese", icon: ClipboardList },
     { id: "documentos", label: "Documentos", icon: FileText },
     { id: "dados", label: "Dados", icon: User },
   ];
@@ -214,6 +222,14 @@ export function ProntuarioShell({
           fotosEvolucao={fotosEvolucao}
           fotosGaleria={fotosGaleria}
           podeEditar={podeEditar}
+        />
+      )}
+      {tab === "anamnese" && (
+        <AbaAnamnese
+          pacienteId={paciente.id}
+          respostas={respostasAnamnese}
+          formulariosAtivos={formulariosAtivos}
+          podeEnviar={podeEditar}
         />
       )}
       {tab === "documentos" && (

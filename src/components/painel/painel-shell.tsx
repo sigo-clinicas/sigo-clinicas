@@ -23,6 +23,7 @@ import {
   Receipt,
   Package,
   BookOpenCheck,
+  ClipboardList,
   Megaphone,
 } from "lucide-react";
 
@@ -73,6 +74,7 @@ function buildNavItems(termo: Terminologia): NavItemDef[] {
       path: "/painel/orcamentos",
       papeis: RECEPCAO,
     },
+    { label: "Anamnese", icon: ClipboardList, path: "/painel/anamnese", papeis: RECEPCAO },
     { label: "Estoque", icon: Package, path: "/painel/estoque", papeis: GESTAO },
     {
       label: "Financeiro",

@@ -55,6 +55,8 @@ export default async function ProntuarioPacientePage({
     { data: galeria },
     { data: itensEstoque },
     { data: consultas },
+    { data: respostasRaw },
+    { data: formulariosAtivos },
   ] = await Promise.all([
     supabase
       .from("profissional")
@@ -105,6 +107,18 @@ export default async function ProntuarioPacientePage({
       .eq("paciente_id", params.pacienteId)
       .eq("status", "concluido")
       .order("data_hora", { ascending: false }),
+    supabase
+      .from("resposta_anamnese")
+      .select("id,status,token,data_preenchimento,respostas,formulario:formulario_id(nome)")
+      .eq("clinica_id", clinicaId)
+      .eq("paciente_id", params.pacienteId)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("formulario_anamnese")
+      .select("id,nome")
+      .eq("clinica_id", clinicaId)
+      .eq("ativo", true)
+      .order("nome"),
   ]);
 
   // Insumos das evoluções (tabela normalizada) — anexados a cada evolução
@@ -120,6 +134,15 @@ export default async function ProntuarioPacientePage({
     ...e,
     fotos: (e.fotos as AvaliacaoFotos) ?? [],
     insumos: (insumos ?? []).filter((i) => i.evolucao_id === e.id),
+  }));
+
+  const respostasAnamnese = (respostasRaw ?? []).map((r) => ({
+    id: r.id,
+    status: r.status,
+    token: r.token,
+    data_preenchimento: r.data_preenchimento,
+    respostas: (r.respostas as { pergunta_texto?: string; resposta?: string }[] | null) ?? [],
+    formulario_nome: (r.formulario as { nome?: string } | null)?.nome ?? null,
   }));
 
   const podeEditar =
@@ -143,6 +166,8 @@ export default async function ProntuarioPacientePage({
       itensEstoque={itensEstoque ?? []}
       consultas={consultas ?? []}
       fotosGaleria={galeria ?? []}
+      respostasAnamnese={respostasAnamnese}
+      formulariosAtivos={formulariosAtivos ?? []}
       termo={TERMINOLOGIA[(clinica?.tipo ?? "medica") as TipoClinica]}
       tipoClinica={(clinica?.tipo ?? "medica") as TipoClinica}
       podeEditar={podeEditar}
