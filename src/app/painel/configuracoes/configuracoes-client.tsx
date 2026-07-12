@@ -16,6 +16,7 @@ import {
   Plus,
   Trash2,
   Leaf,
+  GraduationCap,
 } from "lucide-react";
 
 import type { Papel } from "@/lib/auth";
@@ -25,6 +26,7 @@ import {
   atualizarDadosClinica,
   type EstadoClinica,
 } from "@/lib/actions/clinica";
+import { salvarEspecialidadesClinica } from "@/lib/actions/especialidades";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,10 +100,18 @@ function BotaoSalvar({ salvo }: { salvo: boolean }) {
 export function ConfiguracoesClient({
   clinica,
   podeEditar,
+  podeEditarEspecialidades,
+  segmentos,
+  especialidades,
+  especialidadesSelecionadas,
   usuario,
 }: {
   clinica: ConfigClinica;
   podeEditar: boolean;
+  podeEditarEspecialidades: boolean;
+  segmentos: { id: string; nome: string }[];
+  especialidades: { id: string; segmento_id: string; nome: string }[];
+  especialidadesSelecionadas: string[];
   usuario: { nome: string; email: string; papel: Papel };
 }) {
   const cfg = clinica.config ?? {};
@@ -121,6 +131,9 @@ export function ConfiguracoesClient({
   });
   const [origens, setOrigens] = useState(cfg.origens_pacientes ?? ORIGENS_PADRAO);
   const [novaOrigem, setNovaOrigem] = useState("");
+  const [selecionadas, setSelecionadas] = useState<Set<string>>(
+    new Set(especialidadesSelecionadas)
+  );
   const [salvo, setSalvo] = useState(false);
   const [erroConfig, setErroConfig] = useState<string | null>(null);
   const [pendente, startTransition] = useTransition();
@@ -145,9 +158,12 @@ export function ConfiguracoesClient({
     setNovaOrigem("");
   }
 
+  // Aba "Especialidades" é ADIÇÃO ao Base44 (multisseleção dinâmica —
+  // decisão da call de 02/07; lá especialidade era string livre, A4)
   const tabs = [
     { id: "perfil", label: "Perfil", icon: User },
     { id: "clinica", label: "Clínica", icon: Settings },
+    { id: "especialidades", label: "Especialidades", icon: GraduationCap },
     { id: "financeiro", label: "Financeiro", icon: DollarSign },
     { id: "notificacoes", label: "Notificações", icon: Bell },
     { id: "origens", label: "Origens", icon: Tag },
@@ -285,6 +301,96 @@ export function ConfiguracoesClient({
               )}
               {podeEditar && <BotaoSalvar salvo={Boolean(estadoDados.ok)} />}
             </form>
+          )}
+
+          {tab === "especialidades" && (
+            <div className="space-y-6 max-w-lg">
+              <div>
+                <h2 className="text-base font-semibold">
+                  Especialidades da Clínica
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Selecione as especialidades oferecidas — elas aparecem na
+                  busca do marketplace e nos cadastros de profissionais e
+                  serviços.
+                </p>
+              </div>
+
+              {segmentos.map((seg) => {
+                const doSegmento = especialidades.filter(
+                  (e) => e.segmento_id === seg.id
+                );
+                if (doSegmento.length === 0) return null;
+                return (
+                  <div key={seg.id} className="space-y-2">
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                      {seg.nome}
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                      {doSegmento.map((esp) => {
+                        const marcada = selecionadas.has(esp.id);
+                        return (
+                          <button
+                            key={esp.id}
+                            type="button"
+                            disabled={!podeEditarEspecialidades}
+                            onClick={() =>
+                              setSelecionadas((prev) => {
+                                const next = new Set(prev);
+                                if (next.has(esp.id)) next.delete(esp.id);
+                                else next.add(esp.id);
+                                return next;
+                              })
+                            }
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-left text-sm transition-all disabled:opacity-60 ${
+                              marcada
+                                ? "border-primary bg-primary/5 text-foreground"
+                                : "border-border text-muted-foreground hover:border-primary/40"
+                            }`}
+                          >
+                            <span
+                              className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                                marcada
+                                  ? "bg-primary border-primary text-white"
+                                  : "border-muted-foreground"
+                              }`}
+                            >
+                              {marcada && (
+                                <svg viewBox="0 0 8 8" className="w-2.5 h-2.5 fill-current">
+                                  <path d="M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z" />
+                                </svg>
+                              )}
+                            </span>
+                            {esp.nome}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {erroConfig && <p className="text-sm text-destructive">{erroConfig}</p>}
+              {podeEditarEspecialidades && (
+                <Button
+                  disabled={pendente}
+                  onClick={() =>
+                    startTransition(async () => {
+                      const resultado = await salvarEspecialidadesClinica(
+                        Array.from(selecionadas)
+                      );
+                      setErroConfig(resultado.erro);
+                      if (!resultado.erro) {
+                        setSalvo(true);
+                        setTimeout(() => setSalvo(false), 2000);
+                      }
+                    })
+                  }
+                >
+                  {pendente ? "Salvando..." : salvo ? "✓ Salvo!" : "Salvar Especialidades"}
+                </Button>
+              )}
+            </div>
           )}
 
           {tab === "financeiro" && (

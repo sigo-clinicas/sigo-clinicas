@@ -507,6 +507,45 @@ export type Database = {
         }
         Relationships: []
       }
+      clinica_especialidade: {
+        Row: {
+          clinica_id: string
+          created_at: string
+          especialidade_id: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          clinica_id: string
+          created_at?: string
+          especialidade_id: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          clinica_id?: string
+          created_at?: string
+          especialidade_id?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinica_especialidade_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinica_especialidade_especialidade_id_fkey"
+            columns: ["especialidade_id"]
+            isOneToOne: false
+            referencedRelation: "especialidade"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinica_usuario: {
         Row: {
           ativo: boolean

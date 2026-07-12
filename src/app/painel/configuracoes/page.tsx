@@ -14,20 +14,41 @@ export default async function ConfiguracoesPage() {
   if (!sessao?.clinicaAtual || !sessao.papel) redirect("/login");
 
   const supabase = createClient();
-  const { data: clinica } = await supabase
-    .from("clinica")
-    .select("id,nome,tipo,cidade,cnpj,telefone,logradouro,email,config")
-    .eq("id", sessao.clinicaAtual)
-    .single();
+  const [{ data: clinica }, { data: segmentos }, { data: especialidades }, { data: selecionadas }] =
+    await Promise.all([
+      supabase
+        .from("clinica")
+        .select("id,nome,tipo,cidade,cnpj,telefone,logradouro,email,config")
+        .eq("id", sessao.clinicaAtual)
+        .single(),
+      supabase.from("segmento").select("id,nome").eq("ativo", true).order("nome"),
+      supabase
+        .from("especialidade")
+        .select("id,segmento_id,nome")
+        .eq("ativo", true)
+        .order("nome"),
+      supabase
+        .from("clinica_especialidade")
+        .select("especialidade_id")
+        .eq("clinica_id", sessao.clinicaAtual),
+    ]);
 
   if (!clinica) redirect("/painel");
 
   const podeEditar = sessao.papel === "proprietario" || sessao.isAdmin;
+  const podeEditarEspecialidades =
+    podeEditar || sessao.papel === "gerente";
 
   return (
     <ConfiguracoesClient
       clinica={clinica as ConfigClinica}
       podeEditar={podeEditar}
+      podeEditarEspecialidades={podeEditarEspecialidades}
+      segmentos={segmentos ?? []}
+      especialidades={especialidades ?? []}
+      especialidadesSelecionadas={(selecionadas ?? []).map(
+        (s) => s.especialidade_id
+      )}
       usuario={{
         nome:
           (sessao.user.user_metadata?.nome as string | undefined) ??
