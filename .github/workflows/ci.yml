@@ -16,7 +16,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # supabase-js v2 (realtime) exige WebSocket nativo => Node 22+
+          node-version: 22
           cache: npm
 
       - name: Instalar dependências
@@ -38,12 +39,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # supabase-js v2 (realtime) exige WebSocket nativo => Node 22+
+          node-version: 22
           cache: npm
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # Pinado na versão validada localmente — "latest" (2.109) muda o
+          # formato/semântica das chaves de `status -o env` e quebrou o job.
+          version: 2.100.1
 
       - name: Instalar dependências
         run: npm ci
@@ -54,6 +58,9 @@ jobs:
       - name: Exportar credenciais locais para os testes
         run: |
           supabase status -o env | sed 's/"//g' >> "$GITHUB_ENV"
+          # Sanidade: nomes exportados (sem valores) — facilita depurar
+          # mudanças de formato entre versões do CLI.
+          supabase status -o env | sed 's/=.*//' | tr '\n' ' '
 
       - name: Testes de policy RLS / RBAC
         env:
