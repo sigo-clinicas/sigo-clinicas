@@ -590,8 +590,11 @@ export type Database = {
         Row: {
           base_calculo: number | null
           clinica_id: string
+          competencia: string | null
           consulta_id: string | null
+          consulta_servico_id: string | null
           created_at: string
+          evolucao_sessao_id: string | null
           id: string
           item_orcamento_id: string | null
           lancamento_id: string | null
@@ -606,8 +609,11 @@ export type Database = {
         Insert: {
           base_calculo?: number | null
           clinica_id: string
+          competencia?: string | null
           consulta_id?: string | null
+          consulta_servico_id?: string | null
           created_at?: string
+          evolucao_sessao_id?: string | null
           id?: string
           item_orcamento_id?: string | null
           lancamento_id?: string | null
@@ -622,8 +628,11 @@ export type Database = {
         Update: {
           base_calculo?: number | null
           clinica_id?: string
+          competencia?: string | null
           consulta_id?: string | null
+          consulta_servico_id?: string | null
           created_at?: string
+          evolucao_sessao_id?: string | null
           id?: string
           item_orcamento_id?: string | null
           lancamento_id?: string | null
@@ -648,6 +657,20 @@ export type Database = {
             columns: ["consulta_id"]
             isOneToOne: false
             referencedRelation: "consulta"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comissao_consulta_servico_id_fkey"
+            columns: ["consulta_servico_id"]
+            isOneToOne: false
+            referencedRelation: "consulta_servico"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comissao_evolucao_sessao_id_fkey"
+            columns: ["evolucao_sessao_id"]
+            isOneToOne: false
+            referencedRelation: "evolucao_sessao"
             referencedColumns: ["id"]
           },
           {
@@ -3237,9 +3260,24 @@ export type Database = {
         Args: { p_motivo: string; p_paciente_id: string }
         Returns: string[]
       }
+      apurar_comissao: {
+        Args: {
+          p_categoria_id?: string
+          p_clinica_id: string
+          p_competencia: string
+          p_itens?: Json
+          p_profissional_id: string
+          p_vencimento: string
+        }
+        Returns: string
+      }
       baixar_insumos_evolucao: {
         Args: { p_evolucao_id: string }
         Returns: number
+      }
+      cancelar_apuracao_comissao: {
+        Args: { p_clinica_id: string; p_lancamento_id: string }
+        Returns: undefined
       }
       consentimento_vigente: {
         Args: {
