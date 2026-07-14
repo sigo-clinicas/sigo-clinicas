@@ -98,6 +98,33 @@ export const TIPO_VALOR_LABEL: Record<TipoValor, string> = {
   gratuito: "Gratuito",
 };
 
+export const FORMAS_PAGAMENTO: { valor: string; label: string }[] = [
+  { valor: "dinheiro", label: "Dinheiro" },
+  { valor: "pix", label: "Pix" },
+  { valor: "cartao_credito", label: "Cartão de crédito" },
+  { valor: "cartao_debito", label: "Cartão de débito" },
+  { valor: "boleto", label: "Boleto" },
+  { valor: "transferencia", label: "Transferência" },
+];
+
+export type VendaRow = {
+  id: string;
+  orcamento_id: string;
+  data_hora: string;
+  forma_pagamento: string | null;
+  cancelada: boolean;
+};
+
+export type PagamentoRow = {
+  id: string;
+  venda_id: string;
+  numero_parcela: number;
+  valor: number;
+  vencimento: string;
+  pago: boolean;
+  data_pagamento: string | null;
+};
+
 export function formatarBRL(valor: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",

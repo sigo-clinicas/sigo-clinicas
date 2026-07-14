@@ -3271,6 +3271,16 @@ export type Database = {
         }
         Returns: string
       }
+      vender_orcamento: {
+        Args: {
+          p_clinica_id: string
+          p_data_venda: string
+          p_forma_pagamento: Database["public"]["Enums"]["forma_pagamento"]
+          p_orcamento_id: string
+          p_parcelas: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       classificacao_item_estoque:

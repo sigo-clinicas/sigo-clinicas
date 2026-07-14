@@ -21,6 +21,8 @@ import type { TipoClinica } from "@/lib/terminologia";
 
 import { OrcamentoForm } from "@/components/orcamento/orcamento-form";
 import { OrcamentoKanban } from "@/components/orcamento/orcamento-kanban";
+import { VendaModal } from "@/components/orcamento/venda-modal";
+import { VendasFaturamento } from "@/components/orcamento/vendas-faturamento";
 import {
   STATUS_ORCAMENTO,
   type ItemTabela,
@@ -29,8 +31,10 @@ import {
   type OpcaoProfissional,
   type OpcaoServico,
   type OrcamentoRow,
+  type PagamentoRow,
   type ProdutoEstoque,
   type TabelaPreco,
+  type VendaRow,
 } from "@/components/orcamento/tipos";
 
 export function OrcamentosClient({
@@ -42,9 +46,12 @@ export function OrcamentosClient({
   tabelasPreco,
   itensTabela,
   produtosEstoque,
+  vendas,
+  pagamentos,
   tipoClinica,
   termo,
   podeExcluir,
+  podeVender,
 }: {
   orcamentos: OrcamentoRow[];
   profissionais: OpcaoProfissional[];
@@ -54,14 +61,23 @@ export function OrcamentosClient({
   tabelasPreco: TabelaPreco[];
   itensTabela: ItemTabela[];
   produtosEstoque: ProdutoEstoque[];
+  vendas: VendaRow[];
+  pagamentos: PagamentoRow[];
   tipoClinica: TipoClinica;
   termo: Terminologia;
   podeExcluir: boolean;
+  podeVender: boolean;
 }) {
   const [view, setView] = useState<"lista" | "form">("lista");
   const [editando, setEditando] = useState<OrcamentoRow | null>(null);
+  const [vendendo, setVendendo] = useState<OrcamentoRow | null>(null);
   const [filtroCliente, setFiltroCliente] = useState("");
   const [filtroStatus, setFiltroStatus] = useState<string>("todos");
+
+  const vendidos = useMemo(
+    () => new Set(vendas.filter((v) => !v.cancelada).map((v) => v.orcamento_id)),
+    [vendas]
+  );
 
   const nomePac = useMemo(
     () => new Map(pacientes.map((p) => [p.id, p.nome])),
@@ -159,17 +175,30 @@ export function OrcamentosClient({
             profissionais={profissionais}
             pacientes={pacientes}
             podeExcluir={podeExcluir}
+            podeVender={podeVender}
+            vendidos={vendidos}
             onEditar={editar}
+            onVender={setVendendo}
           />
         </TabsContent>
 
         <TabsContent value="vendas">
-          <div className="text-muted-foreground rounded-lg border border-dashed border-border p-8 text-center text-sm">
-            As vendas aparecem aqui após aprovar um orçamento e usar o botão
-            Vender. (disponível no S3-2)
-          </div>
+          <VendasFaturamento
+            orcamentos={orcamentos}
+            vendas={vendas}
+            pagamentos={pagamentos}
+            profissionais={profissionais}
+            pacientes={pacientes}
+          />
         </TabsContent>
       </Tabs>
+
+      <VendaModal
+        open={!!vendendo}
+        onOpenChange={(v) => !v && setVendendo(null)}
+        orcamento={vendendo}
+        onSold={() => setVendendo(null)}
+      />
     </div>
   );
 }
