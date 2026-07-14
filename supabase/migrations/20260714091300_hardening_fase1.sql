@@ -16,9 +16,17 @@
 alter function  app.set_updated_at() set search_path = '';
 alter procedure app.aplicar_padrao_tenant(text, text[], text[], boolean) set search_path = '';
 
--- 2) Bucket público `logos`: remove o SELECT amplo que permite LISTAR (0025).
--- Bucket é público → URLs de objeto continuam resolvendo sem policy de SELECT.
+-- 2) Bucket público `logos`: troca o SELECT AMPLO (anon vê/lista tudo — 0025)
+-- por um SELECT ESCOPADO ao staff da clínica dona da pasta. GET público do
+-- logo segue pela CDN (bucket público, não consulta storage.objects); o SELECT
+-- escopado é o que o upsert de upload precisa para checar o objeto existente.
 drop policy if exists logos_select on storage.objects;
+create policy logos_select on storage.objects
+  for select to authenticated
+  using (
+    bucket_id = 'logos'
+    and app.tem_papel(app.clinica_do_objeto(name), array['proprietario','gerente'])
+  );
 
 -- 3) Fecha EXECUTE de RPCs SECURITY DEFINER ao `anon` (0028) -------------------
 -- agendar_publico é chamado SÓ server-side (service_role, rota /api/publico) —
