@@ -3748,6 +3748,10 @@ export type Database = {
         }
         Returns: number
       }
+      relatorio_dashboard: {
+        Args: { p_clinica_id: string; p_fim: string; p_ini: string }
+        Returns: Json
+      }
       remover_insumo_evolucao: {
         Args: { p_insumo_id: string }
         Returns: undefined
