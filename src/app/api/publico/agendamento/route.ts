@@ -3,6 +3,17 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { enviarEmail } from "@/lib/email";
 
+// Escapa entrada não confiável antes de interpolar em HTML de e-mail
+// (previne injeção de HTML/phishing quando o Resend for ativado).
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 /**
  * S3-8 — Endpoint público de agendamento (sem login). service_role SÓ aqui no
  * servidor; chama a RPC transacional agendar_publico (que valida clínica/
@@ -60,18 +71,20 @@ export async function POST(req: Request) {
     .eq("id", clinica_id)
     .maybeSingle();
   const nomeClinica = clin?.nome ?? "a clínica";
+  const nomeSeguro = esc(nome);
+  const clinicaSegura = esc(nomeClinica);
   if (email) {
     void enviarEmail({
       para: email,
       assunto: `Agendamento em ${nomeClinica}`,
-      html: `<p>Olá ${nome}, recebemos sua solicitação de horário. Em breve ${nomeClinica} confirma.</p>`,
+      html: `<p>Olá ${nomeSeguro}, recebemos sua solicitação de horário. Em breve ${clinicaSegura} confirma.</p>`,
     });
   }
   if (clin?.email) {
     void enviarEmail({
       para: clin.email,
       assunto: "Novo agendamento online",
-      html: `<p>${nome} (${telefone}) solicitou um horário pelo site.</p>`,
+      html: `<p>${nomeSeguro} (${esc(telefone)}) solicitou um horário pelo site.</p>`,
     });
   }
 
