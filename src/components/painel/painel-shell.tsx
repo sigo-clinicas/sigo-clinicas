@@ -31,7 +31,8 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/lib/actions/auth";
 import { definirClinicaAtual } from "@/lib/actions/usuarios";
 import type { Papel } from "@/lib/auth";
-import type { Terminologia } from "@/lib/terminologia";
+import type { Terminologia, TipoClinica } from "@/lib/terminologia";
+import { iconeDaClinica } from "@/lib/tipo-clinica";
 
 type NavChild = { label: string; path: string };
 type NavItemDef = {
@@ -196,6 +197,8 @@ const PAPEL_LABEL: Record<Papel, string> = {
 export function PainelShell({
   nomeClinica,
   tipoClinicaLabel,
+  tipo,
+  logoUrl,
   nomeUsuario,
   papel,
   termo,
@@ -205,6 +208,8 @@ export function PainelShell({
 }: {
   nomeClinica: string;
   tipoClinicaLabel: string;
+  tipo: TipoClinica;
+  logoUrl: string | null;
   nomeUsuario: string;
   papel: Papel;
   termo: Terminologia;
@@ -212,6 +217,7 @@ export function PainelShell({
   clinicaAtualId: string;
   children: React.ReactNode;
 }) {
+  const IconeVertical = iconeDaClinica(tipo);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -239,11 +245,16 @@ export function PainelShell({
         <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border shrink-0">
           <div
             className={cn(
-              "shrink-0 rounded-full bg-white/15 flex items-center justify-center text-white font-bold transition-all",
+              "shrink-0 overflow-hidden rounded-full bg-white/15 flex items-center justify-center text-white font-bold transition-all",
               collapsed ? "h-8 w-8 text-sm" : "h-11 w-11 text-lg"
             )}
           >
-            S
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt={nomeClinica} className="h-full w-full object-cover" />
+            ) : (
+              <IconeVertical className={collapsed ? "h-4 w-4" : "h-5 w-5"} />
+            )}
           </div>
           {!collapsed && (
             <div>

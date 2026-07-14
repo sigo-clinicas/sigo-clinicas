@@ -18,7 +18,9 @@ export default async function ConfiguracoesPage() {
     await Promise.all([
       supabase
         .from("clinica")
-        .select("id,nome,tipo,cidade,cnpj,telefone,logradouro,email,config")
+        .select(
+          "id,nome,tipo,razao_social,cnpj,telefone,email,cep,uf,cidade,bairro,logradouro,numero,complemento,sobre,slug,logo_path,exibir_marketplace,config"
+        )
         .eq("id", sessao.clinicaAtual)
         .single(),
       supabase.from("segmento").select("id,nome").eq("ativo", true).order("nome"),
