@@ -2,17 +2,7 @@ import { NextResponse } from "next/server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { enviarEmail } from "@/lib/email";
-
-// Escapa entrada não confiável antes de interpolar em HTML de e-mail
-// (previne injeção de HTML/phishing quando o Resend for ativado).
-function esc(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+import { escapeHtml as esc } from "@/lib/sanitize";
 
 /**
  * S3-8 — Endpoint público de agendamento (sem login). service_role SÓ aqui no
