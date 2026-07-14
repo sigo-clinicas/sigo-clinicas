@@ -28,7 +28,7 @@ export default async function AgendaPage() {
     supabase
       .from("consulta")
       .select(
-        `id,paciente_id,profissional_id,convenio_id,data_hora,duracao_minutos,tipo,status,valor,observacoes,
+        `id,paciente_id,profissional_id,convenio_id,numero_guia,data_hora,duracao_minutos,tipo,status,valor,observacoes,
          paciente:paciente(nome),
          consulta_servico(servico_id)`
       )
@@ -80,6 +80,7 @@ export default async function AgendaPage() {
         paciente_nome: c.paciente?.nome ?? "—",
         profissional_id: c.profissional_id,
         convenio_id: c.convenio_id,
+        numero_guia: c.numero_guia,
         data_hora: c.data_hora,
         duracao_minutos: c.duracao_minutos,
         tipo: c.tipo,

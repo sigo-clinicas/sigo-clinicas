@@ -85,6 +85,7 @@ export function ConsultaModal({
     paciente_id: consulta?.paciente_id ?? "",
     profissional_id: consulta?.profissional_id ?? slot?.profId ?? "",
     convenio_id: consulta?.convenio_id ?? null,
+    numero_guia: consulta?.numero_guia ?? null,
     data_hora: consulta
       ? paraInputLocal(consulta.data_hora)
       : slot
@@ -318,6 +319,21 @@ export function ConsultaModal({
                 disabled={somenteLeitura}
               />
             </div>
+            {form.convenio_id && (
+              // Nº da guia — chave do fechamento por convênio (S4-5). Só faz
+              // sentido quando o atendimento é por convênio, não particular.
+              <div className="space-y-1.5">
+                <Label>Nº da guia</Label>
+                <Input
+                  value={form.numero_guia ?? ""}
+                  onChange={(e) =>
+                    set("numero_guia", e.target.value === "" ? null : e.target.value)
+                  }
+                  placeholder="Guia do convênio"
+                  disabled={somenteLeitura}
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-1.5">

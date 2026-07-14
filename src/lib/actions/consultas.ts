@@ -19,6 +19,7 @@ export type ConsultaInput = {
   paciente_id: string;
   profissional_id: string;
   convenio_id?: string | null;
+  numero_guia?: string | null;
   data_hora: string; // ISO local "yyyy-MM-ddTHH:mm"
   duracao_minutos: number;
   tipo: "consulta" | "retorno" | "exame" | "procedimento";
@@ -118,6 +119,7 @@ export async function salvarConsulta(
     paciente_id: input.paciente_id,
     profissional_id: input.profissional_id,
     convenio_id: input.convenio_id || null,
+    numero_guia: input.numero_guia?.trim() || null,
     data_hora: inicio.toISOString(),
     duracao_minutos: duracao,
     tipo: input.tipo,
