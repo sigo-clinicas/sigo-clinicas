@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import type { ClinicaPublica } from "@/lib/marketplace";
+import { urlLogoPublica } from "@/lib/tipo-clinica";
 
 export const TIPO_CLINICA_LABEL: Record<string, string> = {
   medica: "Clínica Médica",
@@ -15,14 +16,20 @@ export const TIPO_CLINICA_LABEL: Record<string, string> = {
 export function ClinicaCard({ clinica }: { clinica: ClinicaPublica }) {
   const inicial = clinica.nome.charAt(0).toUpperCase();
   const local = [clinica.cidade, clinica.uf].filter(Boolean).join(" · ");
+  const logo = urlLogoPublica(clinica.logo_path);
   return (
     <Link
       href={clinica.slug ? `/clinica/${clinica.slug}` : "#"}
       className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md"
     >
       <div className="flex items-center gap-3">
-        <span className="bg-primary/10 text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold">
-          {inicial}
+        <span className="bg-primary/10 text-primary flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full text-lg font-semibold">
+          {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logo} alt={clinica.nome} className="h-full w-full object-cover" />
+          ) : (
+            inicial
+          )}
         </span>
         <div className="min-w-0">
           <h3 className="group-hover:text-primary truncate font-semibold">{clinica.nome}</h3>

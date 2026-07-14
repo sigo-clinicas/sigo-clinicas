@@ -6,6 +6,8 @@ import { Clock, MapPin, Star, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TIPO_CLINICA_LABEL } from "@/components/marketplace/clinica-card";
 import { clinicaPorSlug } from "@/lib/marketplace";
+import { temaDaClinica, urlLogoPublica } from "@/lib/tipo-clinica";
+import type { TipoClinica } from "@/lib/terminologia";
 
 function brl(v: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
@@ -36,9 +38,11 @@ export default async function ClinicaPage({ params }: { params: { slug: string }
   if (!dados) notFound();
   const { clinica, servicos, profissionais, depoimentos } = dados;
   const local = [clinica.bairro, clinica.cidade, clinica.uf].filter(Boolean).join(", ");
+  const logo = urlLogoPublica(clinica.logo_path);
+  const tema = clinica.tipo ? temaDaClinica(clinica.tipo as TipoClinica) : undefined;
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-4 py-8">
+    <main data-clinica-theme={tema} className="mx-auto min-h-screen max-w-4xl px-4 py-8">
       <Link href="/buscar" className="text-muted-foreground text-sm hover:underline">
         ← Buscar
       </Link>
@@ -46,8 +50,13 @@ export default async function ClinicaPage({ params }: { params: { slug: string }
       {/* Cabeçalho */}
       <header className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-4">
-          <span className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-2xl text-2xl font-semibold">
-            {clinica.nome.charAt(0).toUpperCase()}
+          <span className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl text-2xl font-semibold">
+            {logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logo} alt={clinica.nome} className="h-full w-full object-cover" />
+            ) : (
+              clinica.nome.charAt(0).toUpperCase()
+            )}
           </span>
           <div>
             <h1 className="text-2xl font-bold">{clinica.nome}</h1>

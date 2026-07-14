@@ -24,8 +24,10 @@ import type { TipoClinica } from "@/lib/terminologia";
 import {
   atualizarConfigClinica,
   atualizarDadosClinica,
+  uploadLogoClinica,
   type EstadoClinica,
 } from "@/lib/actions/clinica";
+import { urlLogoPublica } from "@/lib/tipo-clinica";
 import { salvarEspecialidadesClinica } from "@/lib/actions/especialidades";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -36,11 +38,21 @@ export type ConfigClinica = {
   id: string;
   nome: string;
   tipo: TipoClinica;
-  cidade: string | null;
+  razao_social: string | null;
   cnpj: string | null;
   telefone: string | null;
-  logradouro: string | null;
   email: string | null;
+  cep: string | null;
+  uf: string | null;
+  cidade: string | null;
+  bairro: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  sobre: string | null;
+  slug: string | null;
+  logo_path: string | null;
+  exibir_marketplace: boolean;
   config: {
     base_comissao?: "por_agendamento" | "por_evolucao";
     lembretes?: { h24?: boolean; h12?: boolean; h2?: boolean };
@@ -117,6 +129,10 @@ export function ConfiguracoesClient({
   const cfg = clinica.config ?? {};
   const [tab, setTab] = useState("perfil");
   const [tipoSelecionado, setTipoSelecionado] = useState<TipoClinica>(clinica.tipo);
+  const [exibirMkt, setExibirMkt] = useState(clinica.exibir_marketplace);
+  const [logoMsg, setLogoMsg] = useState<string | null>(null);
+  const [enviandoLogo, startLogo] = useTransition();
+  const logoUrl = urlLogoPublica(clinica.logo_path);
   const [estadoDados, dispatchDados] = useFormState(atualizarDadosClinica, estadoInicial);
   const [baseComissao, setBaseComissao] = useState(cfg.base_comissao ?? "por_agendamento");
   const [lembretes, setLembretes] = useState({
@@ -275,32 +291,119 @@ export function ConfiguracoesClient({
                   <Label>Nome</Label>
                   <Input name="nome" defaultValue={clinica.nome} placeholder="Ex: Clínica Bella Estética" disabled={!podeEditar} />
                 </div>
-                <div className="space-y-1.5">
-                  <Label>Cidade</Label>
-                  <Input name="cidade" defaultValue={clinica.cidade ?? ""} placeholder="São Paulo" disabled={!podeEditar} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>CNPJ</Label>
-                  <Input name="cnpj" defaultValue={clinica.cnpj ?? ""} placeholder="00.000.000/0001-00" disabled={!podeEditar} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Telefone</Label>
-                  <Input name="telefone" defaultValue={clinica.telefone ?? ""} placeholder="(00) 0000-0000" disabled={!podeEditar} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Endereço</Label>
-                  <Input name="endereco" defaultValue={clinica.logradouro ?? ""} placeholder="Rua, número..." disabled={!podeEditar} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Email</Label>
-                  <Input type="email" name="email" defaultValue={clinica.email ?? ""} placeholder="contato@clinica.com" disabled={!podeEditar} />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>Razão social</Label>
+                    <Input name="razao_social" defaultValue={clinica.razao_social ?? ""} disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>CNPJ</Label>
+                    <Input name="cnpj" defaultValue={clinica.cnpj ?? ""} placeholder="00.000.000/0001-00" disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Telefone</Label>
+                    <Input name="telefone" defaultValue={clinica.telefone ?? ""} placeholder="(00) 0000-0000" disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Email</Label>
+                    <Input type="email" name="email" defaultValue={clinica.email ?? ""} placeholder="contato@clinica.com" disabled={!podeEditar} />
+                  </div>
                 </div>
               </div>
+
+              <div className="border-t border-border pt-5 space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Endereço</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>CEP</Label>
+                    <Input name="cep" defaultValue={clinica.cep ?? ""} disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label>Logradouro</Label>
+                    <Input name="endereco" defaultValue={clinica.logradouro ?? ""} placeholder="Rua/Av..." disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Número</Label>
+                    <Input name="numero" defaultValue={clinica.numero ?? ""} disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label>Complemento</Label>
+                    <Input name="complemento" defaultValue={clinica.complemento ?? ""} disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Bairro</Label>
+                    <Input name="bairro" defaultValue={clinica.bairro ?? ""} disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Cidade</Label>
+                    <Input name="cidade" defaultValue={clinica.cidade ?? ""} placeholder="São Paulo" disabled={!podeEditar} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>UF</Label>
+                    <Input name="uf" maxLength={2} defaultValue={clinica.uf ?? ""} placeholder="SP" disabled={!podeEditar} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-5 space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Marca &amp; Marketplace</h3>
+                <input type="hidden" name="exibir_marketplace" value={exibirMkt ? "1" : "0"} />
+                <div className="space-y-1.5">
+                  <Label>Sobre a clínica</Label>
+                  <Input name="sobre" defaultValue={clinica.sobre ?? ""} placeholder="Uma frase que descreve a clínica" disabled={!podeEditar} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Endereço público (slug)</Label>
+                  <Input name="slug" defaultValue={clinica.slug ?? ""} placeholder="minha-clinica" disabled={!podeEditar} />
+                  <p className="text-xs text-muted-foreground">A clínica fica em /clinica/&lt;slug&gt; no marketplace.</p>
+                </div>
+                <div className="flex items-center justify-between rounded-lg border border-border p-3">
+                  <div>
+                    <p className="text-sm font-medium">Aparecer no marketplace</p>
+                    <p className="text-xs text-muted-foreground">Exibe a clínica na busca pública.</p>
+                  </div>
+                  <Switch checked={exibirMkt} disabled={!podeEditar} onCheckedChange={setExibirMkt} />
+                </div>
+              </div>
+
               {estadoDados.erro && (
                 <p className="text-sm text-destructive">{estadoDados.erro}</p>
               )}
               {podeEditar && <BotaoSalvar salvo={Boolean(estadoDados.ok)} />}
             </form>
+          )}
+
+          {tab === "clinica" && podeEditar && (
+            <div className="max-w-lg mt-6 border-t border-border pt-5 space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Logo</h3>
+              <div className="flex items-center gap-4">
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-border bg-muted flex items-center justify-center text-muted-foreground">
+                  {logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={logoUrl} alt="logo" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-xs">sem logo</span>
+                  )}
+                </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const fd = new FormData(e.currentTarget);
+                    startLogo(async () => {
+                      const r = await uploadLogoClinica(fd);
+                      setLogoMsg(r.erro ?? "Logo atualizado.");
+                    });
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <input type="file" name="logo" accept="image/*" className="text-sm" />
+                  <Button type="submit" variant="outline" size="sm" disabled={enviandoLogo}>
+                    {enviandoLogo ? "Enviando..." : "Enviar logo"}
+                  </Button>
+                </form>
+              </div>
+              {logoMsg && <p className="text-sm text-muted-foreground">{logoMsg}</p>}
+            </div>
           )}
 
           {tab === "especialidades" && (

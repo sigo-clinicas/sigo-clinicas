@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { clinicaPorSlug } from "@/lib/marketplace";
 import { slotsDisponiveis } from "@/lib/agenda-publica";
+import { temaDaClinica } from "@/lib/tipo-clinica";
+import type { TipoClinica } from "@/lib/terminologia";
 
 import { AgendarClient } from "./agendar-client";
 
@@ -35,15 +37,21 @@ export default async function AgendarPage({
     ? await slotsDisponiveis(dados.clinica.id, profSelecionado)
     : [];
 
+  const tema = dados.clinica.tipo
+    ? temaDaClinica(dados.clinica.tipo as TipoClinica)
+    : undefined;
+
   return (
-    <AgendarClient
-      clinicaId={dados.clinica.id}
-      clinicaNome={dados.clinica.nome}
-      slug={params.slug}
-      profissionais={profissionais.map((p) => ({ id: p.id, nome: p.nome }))}
-      servicos={dados.servicos.map((s) => ({ id: s.id, nome: s.nome }))}
-      profSelecionado={profSelecionado}
-      slots={slots}
-    />
+    <div data-clinica-theme={tema} className="contents">
+      <AgendarClient
+        clinicaId={dados.clinica.id}
+        clinicaNome={dados.clinica.nome}
+        slug={params.slug}
+        profissionais={profissionais.map((p) => ({ id: p.id, nome: p.nome }))}
+        servicos={dados.servicos.map((s) => ({ id: s.id, nome: s.nome }))}
+        profSelecionado={profSelecionado}
+        slots={slots}
+      />
+    </div>
   );
 }
