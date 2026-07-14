@@ -3,19 +3,38 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { enviarEmail } from "@/lib/email";
 import { escapeHtml as esc } from "@/lib/sanitize";
+import { corsHeaders } from "@/lib/cors";
+import { consumirRateLimit, ipDoRequest } from "@/lib/rate-limit";
 
 /**
  * S3-8 — Endpoint público de agendamento (sem login). service_role SÓ aqui no
  * servidor; chama a RPC transacional agendar_publico (que valida clínica/
  * profissional públicos, trava double-booking e cria paciente+consulta). Erros
- * genéricos (não vaza detalhe). CORS de produção = hardening (§fechamento).
+ * genéricos (não vaza detalhe). S4-6: CORS restrito por origem + rate-limit.
  */
+export async function OPTIONS(req: Request) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(req.headers.get("origin")),
+  });
+}
+
 export async function POST(req: Request) {
+  const cors = corsHeaders(req.headers.get("origin"));
+
+  // Rate-limit por IP (abuso/DoS): 8 agendamentos/min. Fail-open.
+  if (!(await consumirRateLimit(`agendamento:${ipDoRequest(req)}`, 8, 60))) {
+    return NextResponse.json(
+      { erro: "Muitas tentativas. Aguarde um instante." },
+      { status: 429, headers: cors }
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ erro: "Requisição inválida." }, { status: 400 });
+    return NextResponse.json({ erro: "Requisição inválida." }, { status: 400, headers: cors });
   }
 
   const clinica_id = String(body.clinica_id ?? "");
@@ -31,7 +50,10 @@ export async function POST(req: Request) {
     : [];
 
   if (!clinica_id || !profissional_id || !data_hora || !nome || !telefone) {
-    return NextResponse.json({ erro: "Preencha nome, telefone e horário." }, { status: 400 });
+    return NextResponse.json(
+      { erro: "Preencha nome, telefone e horário." },
+      { status: 400, headers: cors }
+    );
   }
 
   const admin = createAdminClient();
@@ -50,7 +72,7 @@ export async function POST(req: Request) {
   if (error) {
     return NextResponse.json(
       { erro: "Não foi possível agendar. O horário pode estar indisponível." },
-      { status: 409 }
+      { status: 409, headers: cors }
     );
   }
 
@@ -78,5 +100,5 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({ ok: true, consulta_id: data });
+  return NextResponse.json({ ok: true, consulta_id: data }, { headers: cors });
 }

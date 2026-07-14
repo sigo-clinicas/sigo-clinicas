@@ -71,6 +71,18 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false, autoRefreshToken: false } }
     );
 
+    // S4-6 — rate-limit por IP (abuso/força-bruta de token): 30 req/min.
+    // Fail-open: erro do limiter nunca derruba o fluxo público.
+    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "sem-ip";
+    const { data: permitido, error: rlErro } = await supabase.rpc("consumir_rate_limit", {
+      p_chave: `anamnese:${ip}`,
+      p_limite: 30,
+      p_janela_seg: 60,
+    });
+    if (!rlErro && permitido === false) {
+      return json({ error: "rate_limited" }, 429, h);
+    }
+
     if (action === "get") {
       const { data: r } = await supabase
         .from("resposta_anamnese")
