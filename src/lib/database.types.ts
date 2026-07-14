@@ -3694,6 +3694,10 @@ export type Database = {
         Args: { p_evolucao_id: string }
         Returns: number
       }
+      campanha_publico_alvo: {
+        Args: { p_clinica_id: string; p_filtros: Json }
+        Returns: number
+      }
       cancelar_apuracao_comissao: {
         Args: { p_clinica_id: string; p_lancamento_id: string }
         Returns: undefined
