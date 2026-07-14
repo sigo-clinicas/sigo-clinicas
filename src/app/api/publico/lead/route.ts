@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { resolverClinicaLead } from "@/lib/leads";
 
 /**
  * S3-8 — Captação de lead público (nome+telefone, sem login). service_role no
@@ -62,28 +63,14 @@ export async function POST(req: Request) {
   }
 
   // marketplace | cupom → tabela lead. O clinica_id é SEMPRE resolvido no
-  // servidor: derivado do cupom (origem cupom) ou validado contra uma clínica
-  // pública (origem marketplace). Nunca é gravado direto do corpo do request.
-  let clinicaId: string | null = null;
+  // servidor (resolverClinicaLead): derivado do cupom ou validado contra clínica
+  // pública. Nunca gravado direto do corpo do request.
   const cupom_id = body.cupom_id ? String(body.cupom_id) : null;
-  if (origem === "cupom" && cupom_id) {
-    const { data: cup } = await admin
-      .from("cupom")
-      .select("clinica_id")
-      .eq("id", cupom_id)
-      .maybeSingle();
-    clinicaId = cup?.clinica_id ?? null; // deriva do cupom
-  } else if (body.clinica_id) {
-    // marketplace: só aceita clínica existente e pública; senão lead global (null)
-    const { data: cl } = await admin
-      .from("clinica")
-      .select("id")
-      .eq("id", String(body.clinica_id))
-      .eq("ativo", true)
-      .eq("exibir_marketplace", true)
-      .maybeSingle();
-    clinicaId = cl?.id ?? null;
-  }
+  const clinicaId = await resolverClinicaLead(admin, {
+    origem,
+    clinica_id: body.clinica_id ? String(body.clinica_id) : null,
+    cupom_id,
+  });
 
   const { error } = await admin.from("lead").insert({
     clinica_id: clinicaId,
