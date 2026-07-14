@@ -310,3 +310,22 @@ export async function estornarBaixa(baixaId: string): Promise<EstadoFin> {
   revalidatePath("/painel/financeiro/contas");
   return { erro: null, ok: true };
 }
+
+// ---- Conciliação (só o flag conciliada; policy movimentacao_conciliar) -------
+
+export async function conciliarMovimentacao(
+  id: string,
+  conciliada: boolean
+): Promise<EstadoFin> {
+  const { sessao, erro } = await exigirFinanceiro();
+  if (!sessao) return { erro };
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("movimentacao_conta")
+    .update({ conciliada })
+    .eq("id", id)
+    .eq("clinica_id", sessao.clinicaAtual!);
+  if (error) return { erro: "Sem permissão para conciliar." };
+  revalidatePath("/painel/financeiro/contas");
+  return { erro: null, ok: true };
+}
