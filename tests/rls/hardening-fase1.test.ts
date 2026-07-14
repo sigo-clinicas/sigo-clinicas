@@ -77,6 +77,16 @@ describe.skipIf(!temAmbiente)("Hardening Fase 1 (S4-6)", () => {
     // desnecessária: o DB de teste é efêmero e a chave tem sufixo único.)
   });
 
+  it("rate-limit: a janela RESETA após expirar (contador volta a liberar)", async () => {
+    // janela curta (1s) + limite 1: 1ª libera, 2ª bloqueia, após >1s a janela
+    // expira e a 3ª libera de novo — exercita o ramo de RESET da fixed window.
+    const chave = `test-reset:${sufixo}`;
+    expect((await admin.rpc("consumir_rate_limit", { p_chave: chave, p_limite: 1, p_janela_seg: 1 })).data).toBe(true);
+    expect((await admin.rpc("consumir_rate_limit", { p_chave: chave, p_limite: 1, p_janela_seg: 1 })).data).toBe(false);
+    await new Promise((r) => setTimeout(r, 1200));
+    expect((await admin.rpc("consumir_rate_limit", { p_chave: chave, p_limite: 1, p_janela_seg: 1 })).data).toBe(true);
+  });
+
   it("rate-limit e purga não são executáveis por anon nem authenticated", async () => {
     const anon = clientAnon();
     const rlAnon = await anon.rpc("consumir_rate_limit", { p_chave: "x", p_limite: 1, p_janela_seg: 1 });
@@ -92,16 +102,37 @@ describe.skipIf(!temAmbiente)("Hardening Fase 1 (S4-6)", () => {
     expect(purgaAuth.error).not.toBeNull();
   });
 
-  it("purga LGPD: exige prazo, dry_run não apaga", async () => {
-    // sem prazo → erro (não roda com retenção "chutada")
+  it("purga LGPD: exige prazo; dry_run CONTA sem apagar; destrutivo APAGA", async () => {
+    // (1) sem prazo → erro (não roda com retenção "chutada")
     const semPrazo = await admin.rpc("purgar_por_retencao", { p_retencao_dias: null, p_dry_run: true });
     expect(semPrazo.error).not.toBeNull();
 
-    // dry_run com prazo largo → retorna contadores e NÃO apaga
-    const dry = await admin.rpc("purgar_por_retencao", { p_retencao_dias: 3650, p_dry_run: true });
+    // semeia um lead ANTIGO (2020) — capturado por qualquer retenção de 30 dias
+    const marca = `purga-${sufixo}`;
+    const { data: leadIns, error: insErr } = await admin
+      .from("lead")
+      .insert({
+        clinica_id: null, nome: marca, telefone: "11999990000",
+        origem: "marketplace", status: "novo", created_at: "2020-01-01T00:00:00Z",
+      })
+      .select("id")
+      .single();
+    expect(insErr).toBeNull();
+    const leadId = leadIns!.id;
+
+    // (2) dry_run: conta >=1 e o lead PERMANECE (prova que não é tautologia)
+    const dry = await admin.rpc("purgar_por_retencao", { p_retencao_dias: 30, p_dry_run: true });
     expect(dry.error).toBeNull();
-    const r = dry.data as { dry_run: boolean; retencao_dias: number };
-    expect(r.dry_run).toBe(true);
-    expect(r.retencao_dias).toBe(3650);
+    const rd = dry.data as { dry_run: boolean; leads: number };
+    expect(rd.dry_run).toBe(true);
+    expect(Number(rd.leads)).toBeGreaterThanOrEqual(1);
+    const aindaLa = await admin.from("lead").select("id").eq("id", leadId).maybeSingle();
+    expect(aindaLa.data).not.toBeNull(); // dry_run NÃO apagou
+
+    // (3) destrutivo: o lead antigo some (prova a diferença de comportamento)
+    const del = await admin.rpc("purgar_por_retencao", { p_retencao_dias: 30, p_dry_run: false });
+    expect(del.error).toBeNull();
+    const sumiu = await admin.from("lead").select("id").eq("id", leadId).maybeSingle();
+    expect(sumiu.data).toBeNull(); // p_dry_run=false apagou
   });
 });
