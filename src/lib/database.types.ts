@@ -326,6 +326,8 @@ export type Database = {
           descricao: string | null
           id: string
           nome: string
+          ordem: number
+          pai_id: string | null
           tipo: Database["public"]["Enums"]["tipo_lancamento"]
           updated_at: string
         }
@@ -336,6 +338,8 @@ export type Database = {
           descricao?: string | null
           id?: string
           nome: string
+          ordem?: number
+          pai_id?: string | null
           tipo: Database["public"]["Enums"]["tipo_lancamento"]
           updated_at?: string
         }
@@ -346,6 +350,8 @@ export type Database = {
           descricao?: string | null
           id?: string
           nome?: string
+          ordem?: number
+          pai_id?: string | null
           tipo?: Database["public"]["Enums"]["tipo_lancamento"]
           updated_at?: string
         }
@@ -355,6 +361,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categoria_lancamento_pai_id_fkey"
+            columns: ["pai_id"]
+            isOneToOne: false
+            referencedRelation: "categoria_lancamento"
             referencedColumns: ["id"]
           },
         ]
@@ -3245,6 +3258,22 @@ export type Database = {
         Returns: string
       }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      estornar_baixa_lancamento: {
+        Args: { p_baixa_id: string; p_clinica_id: string }
+        Returns: undefined
+      }
+      registrar_baixa_lancamento: {
+        Args: {
+          p_clinica_id: string
+          p_conta_id: string
+          p_data: string
+          p_forma: Database["public"]["Enums"]["forma_pagamento"]
+          p_lancamento_id: string
+          p_obs: string
+          p_valor: number
+        }
+        Returns: string
+      }
       registrar_saida_estoque: {
         Args: {
           p_clinica_id: string
