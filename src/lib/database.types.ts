@@ -78,6 +78,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "assinatura_clinica_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: true
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "assinatura_clinica_plano_id_fkey"
             columns: ["plano_id"]
             isOneToOne: false
@@ -162,6 +169,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "avaliacao_clinica_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "avaliacao_clinica_paciente_id_fkey"
             columns: ["paciente_id"]
             isOneToOne: false
@@ -227,6 +241,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "baixa_lancamento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -316,6 +337,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "campanha_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       categoria_lancamento: {
@@ -364,6 +392,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "categoria_lancamento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "categoria_lancamento_pai_id_fkey"
             columns: ["pai_id"]
             isOneToOne: false
@@ -409,6 +444,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "centro_custo_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -548,6 +590,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "clinica_destaque_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: true
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       clinica_especialidade: {
@@ -578,6 +627,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinica_especialidade_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -623,6 +679,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinica_usuario_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -691,6 +754,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comissao_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -781,6 +851,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "composicao_servico_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "composicao_servico_item_estoque_id_fkey"
             columns: ["item_estoque_id"]
             isOneToOne: false
@@ -846,6 +923,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consentimento_evento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -932,6 +1016,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "consulta_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "consulta_convenio_id_fkey"
             columns: ["convenio_id"]
             isOneToOne: false
@@ -988,6 +1079,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consulta_servico_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1061,6 +1159,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "conta_bancaria_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       convenio: {
@@ -1109,6 +1214,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convenio_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -1165,6 +1277,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cupom_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -1230,6 +1349,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "depoimento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1319,6 +1445,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documento_consentimento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1421,6 +1554,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolucao_insumo_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1532,6 +1672,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "evolucao_sessao_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "evolucao_sessao_consulta_id_fkey"
             columns: ["consulta_id"]
             isOneToOne: false
@@ -1600,6 +1747,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "formulario_anamnese_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       galeria_foto: {
@@ -1648,6 +1802,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "galeria_foto_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1729,6 +1890,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "item_estoque_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       item_orcamento: {
@@ -1789,6 +1957,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_orcamento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1861,6 +2036,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_tabela_preco_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -1973,6 +2155,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "lancamento_financeiro_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "lancamento_financeiro_consulta_id_fkey"
             columns: ["consulta_id"]
             isOneToOne: false
@@ -2055,6 +2244,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "lead_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "lead_cupom_id_fkey"
             columns: ["cupom_id"]
             isOneToOne: false
@@ -2106,6 +2302,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_sala_vip_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2166,6 +2369,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimentacao_conta_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2262,6 +2472,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "movimentacao_estoque_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "movimentacao_estoque_item_id_fkey"
             columns: ["item_id"]
             isOneToOne: false
@@ -2354,6 +2571,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orcamento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2531,6 +2755,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "paciente_clinica_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "paciente_clinica_convenio_id_fkey"
             columns: ["convenio_id"]
             isOneToOne: false
@@ -2599,6 +2830,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagamento_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2725,6 +2963,13 @@ export type Database = {
             referencedRelation: "clinica"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "profissional_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profissional_convenio: {
@@ -2758,6 +3003,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profissional_convenio_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2807,6 +3059,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profissional_especialidade_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2877,6 +3136,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "profissional_intervalo_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "profissional_intervalo_profissional_id_fkey"
             columns: ["profissional_id"]
             isOneToOne: false
@@ -2922,6 +3188,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profissional_servico_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -2992,6 +3265,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "resposta_anamnese_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "resposta_anamnese_consulta_id_fkey"
             columns: ["consulta_id"]
             isOneToOne: false
@@ -3057,6 +3337,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sala_vip_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -3140,6 +3427,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "servico_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "servico_especialidade_id_fkey"
             columns: ["especialidade_id"]
             isOneToOne: false
@@ -3188,6 +3482,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tabela_preco_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
           {
@@ -3246,6 +3547,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "venda_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "venda_orcamento_id_fkey"
             columns: ["orcamento_id"]
             isOneToOne: true
@@ -3256,6 +3564,48 @@ export type Database = {
       }
     }
     Views: {
+      marketplace_clinica: {
+        Row: {
+          bairro: string | null
+          cidade: string | null
+          fotos: Json | null
+          id: string | null
+          logo_path: string | null
+          nome: string | null
+          ranking: number | null
+          slug: string | null
+          sobre: string | null
+          tipo: Database["public"]["Enums"]["tipo_clinica"] | null
+          uf: string | null
+        }
+        Insert: {
+          bairro?: string | null
+          cidade?: string | null
+          fotos?: Json | null
+          id?: string | null
+          logo_path?: string | null
+          nome?: string | null
+          ranking?: never
+          slug?: string | null
+          sobre?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_clinica"] | null
+          uf?: string | null
+        }
+        Update: {
+          bairro?: string | null
+          cidade?: string | null
+          fotos?: Json | null
+          id?: string | null
+          logo_path?: string | null
+          nome?: string | null
+          ranking?: never
+          slug?: string | null
+          sobre?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_clinica"] | null
+          uf?: string | null
+        }
+        Relationships: []
+      }
       saldo_conta_bancaria: {
         Row: {
           clinica_id: string | null
@@ -3269,6 +3619,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conta_bancaria_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
@@ -3287,6 +3644,13 @@ export type Database = {
             columns: ["clinica_id"]
             isOneToOne: false
             referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_estoque_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
             referencedColumns: ["id"]
           },
         ]
