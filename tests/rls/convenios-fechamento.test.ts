@@ -186,6 +186,26 @@ describe.skipIf(!temAmbiente)("Convênios: fechamento de guia (S4-5)", () => {
     expect(Number(saldo!.saldo_atual)).toBe(320);
   });
 
+  it("recebível de convênio entra na reconciliação do relatório (S4-5 ↔ S4-4)", async () => {
+    // A baixa em lote do convênio (320) tem de aparecer no MESMO somatório de
+    // faturamento do relatorio_dashboard (regime de caixa == extrato). Fecha o
+    // laço: gerar_recebiveis_convenio → registrar_baixa_lote_convenio → relatório.
+    const sup = await clientLogado(emailProp, senha);
+    const { data, error } = await sup.rpc("relatorio_dashboard", {
+      p_clinica_id: clinicaA, p_ini: ini, p_fim: fim,
+    });
+    expect(error).toBeNull();
+    const r = data as { faturamento_recebido: number };
+
+    const { data: movs } = await admin
+      .from("movimentacao_conta").select("valor,tipo").eq("clinica_id", clinicaA);
+    const entradas = (movs ?? []).filter((m) => m.tipo === "entrada").reduce((a, m) => a + Number(m.valor), 0);
+
+    // faturamento do relatório == extrato == total baixado do convênio
+    expect(Number(r.faturamento_recebido)).toBe(320);
+    expect(Number(r.faturamento_recebido)).toBe(entradas);
+  });
+
   it("atômico: se um item excede o saldo, o lote inteiro reverte", async () => {
     const sup = await clientLogado(emailProp, senha);
     // gera recebíveis do convênio C: 300 + 50
