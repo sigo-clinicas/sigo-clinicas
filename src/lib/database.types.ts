@@ -3661,6 +3661,20 @@ export type Database = {
         Args: { p_detalhe: string; p_tipo: string }
         Returns: undefined
       }
+      agendar_publico: {
+        Args: {
+          p_clinica_id: string
+          p_cpf: string
+          p_data_hora: string
+          p_email: string
+          p_nome: string
+          p_obs: string
+          p_profissional_id: string
+          p_servico_ids: string[]
+          p_telefone: string
+        }
+        Returns: string
+      }
       anonimizar_paciente: {
         Args: { p_motivo: string; p_paciente_id: string }
         Returns: string[]

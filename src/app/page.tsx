@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ClinicaCard } from "@/components/marketplace/clinica-card";
+import { LeadForm } from "@/components/marketplace/lead-form";
 import { clinicasDestaque } from "@/lib/marketplace";
 
 // SSR dinâmico (lê sessão/cookies via createClient). Indexável (sem noindex).
@@ -84,6 +85,19 @@ export default async function Home() {
                 <p className="text-muted-foreground mt-1 text-sm">{p.d}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Captação de lead */}
+      <section className="px-4 py-12">
+        <div className="mx-auto max-w-xl text-center">
+          <h2 className="text-xl font-semibold">Quer ajuda para encontrar a clínica ideal?</h2>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Deixe seu contato e retornamos com as melhores opções.
+          </p>
+          <div className="mt-4">
+            <LeadForm origem="marketplace" />
           </div>
         </div>
       </section>
