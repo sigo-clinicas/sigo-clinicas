@@ -509,6 +509,47 @@ export type Database = {
         }
         Relationships: []
       }
+      clinica_destaque: {
+        Row: {
+          ativo: boolean
+          clinica_id: string
+          created_at: string
+          nivel: Database["public"]["Enums"]["nivel_destaque"]
+          score_manual: number
+          updated_at: string
+          vigencia_fim: string | null
+          vigencia_inicio: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          clinica_id: string
+          created_at?: string
+          nivel?: Database["public"]["Enums"]["nivel_destaque"]
+          score_manual?: number
+          updated_at?: string
+          vigencia_fim?: string | null
+          vigencia_inicio?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          clinica_id?: string
+          created_at?: string
+          nivel?: Database["public"]["Enums"]["nivel_destaque"]
+          score_manual?: number
+          updated_at?: string
+          vigencia_fim?: string | null
+          vigencia_inicio?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinica_destaque_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: true
+            referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinica_especialidade: {
         Row: {
           clinica_id: string
@@ -3300,6 +3341,10 @@ export type Database = {
         Args: { p_baixa_id: string; p_clinica_id: string }
         Returns: undefined
       }
+      marketplace_ranking_score: {
+        Args: { p_clinica_id: string }
+        Returns: number
+      }
       registrar_baixa_lancamento: {
         Args: {
           p_clinica_id: string
@@ -3367,6 +3412,7 @@ export type Database = {
         | "boleto"
         | "convenio"
         | "outro"
+      nivel_destaque: "neutro" | "parceiro" | "premium"
       origem_depoimento: "manual" | "solicitado" | "google" | "whatsapp"
       origem_lead: "cupom" | "lista_vip" | "marketplace"
       papel_clinica:
@@ -3574,6 +3620,7 @@ export const Constants = {
         "convenio",
         "outro",
       ],
+      nivel_destaque: ["neutro", "parceiro", "premium"],
       origem_depoimento: ["manual", "solicitado", "google", "whatsapp"],
       origem_lead: ["cupom", "lista_vip", "marketplace"],
       papel_clinica: [
