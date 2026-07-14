@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { getSessaoComClaims } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/database.types";
 
 /**
  * S3-6 — Marketing: cupons (CRUD do painel, proprietário/gerente) + destaque/
@@ -314,5 +315,76 @@ export async function excluirLeadVip(id: string): Promise<EstadoMkt> {
   const { error } = await supabase.from("lead_sala_vip").delete().eq("id", id).eq("clinica_id", sessao.clinicaAtual!);
   if (error) return { erro: "Não foi possível excluir." };
   revalidatePath("/painel/marketing/sala-vip");
+  return { erro: null, ok: true };
+}
+
+// ---- Campanhas (segmentação; disparo NÃO — F2) -----------------------------
+
+type StatusCampanha = "draft" | "agendada" | "ativa" | "pausada" | "finalizada";
+
+export type CampanhaInput = {
+  id?: string;
+  nome: string;
+  descricao?: string | null;
+  status?: StatusCampanha;
+  filtros: Json;
+  canais: string[];
+  conteudo: Json;
+  data_agendado?: string | null;
+};
+
+/** Conta o público-alvo de um conjunto de filtros (isolado por clínica). */
+export async function contarPublicoAlvo(
+  filtros: Json
+): Promise<{ erro: string | null; total?: number }> {
+  const { sessao, erro } = await exigirMarketing();
+  if (!sessao) return { erro };
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("campanha_publico_alvo", {
+    p_clinica_id: sessao.clinicaAtual!,
+    p_filtros: filtros,
+  });
+  if (error) return { erro: "Não foi possível calcular o público-alvo." };
+  return { erro: null, total: Number(data) || 0 };
+}
+
+export async function salvarCampanha(input: CampanhaInput): Promise<EstadoMkt> {
+  const { sessao, erro } = await exigirMarketing();
+  if (!sessao) return { erro };
+  if (!input.nome.trim()) return { erro: "Informe o nome da campanha." };
+
+  const supabase = createClient();
+  // recomputa o público-alvo no servidor (não confiar no cliente)
+  const { data: qtd } = await supabase.rpc("campanha_publico_alvo", {
+    p_clinica_id: sessao.clinicaAtual!,
+    p_filtros: input.filtros,
+  });
+
+  const dados = {
+    clinica_id: sessao.clinicaAtual!,
+    nome: input.nome.trim(),
+    descricao: input.descricao || null,
+    status: input.status ?? "draft",
+    filtros: input.filtros,
+    canais: input.canais ?? [],
+    conteudo: input.conteudo,
+    data_agendado: input.data_agendado || null,
+    quantidade_destinatarios: Number(qtd) || 0,
+  };
+  const { error } = input.id
+    ? await supabase.from("campanha").update(dados).eq("id", input.id).eq("clinica_id", sessao.clinicaAtual!)
+    : await supabase.from("campanha").insert(dados);
+  if (error) return { erro: "Sem permissão para salvar a campanha." };
+  revalidatePath("/painel/marketing/campanhas");
+  return { erro: null, ok: true };
+}
+
+export async function excluirCampanha(id: string): Promise<EstadoMkt> {
+  const { sessao, erro } = await exigirMarketing();
+  if (!sessao) return { erro };
+  const supabase = createClient();
+  const { error } = await supabase.from("campanha").delete().eq("id", id).eq("clinica_id", sessao.clinicaAtual!);
+  if (error) return { erro: "Não foi possível excluir a campanha." };
+  revalidatePath("/painel/marketing/campanhas");
   return { erro: null, ok: true };
 }
