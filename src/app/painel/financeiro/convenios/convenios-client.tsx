@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type ConvenioLinha = {
+export type ConvenioLinha = {
   id: string;
   nome: string;
   codigo: string | null;

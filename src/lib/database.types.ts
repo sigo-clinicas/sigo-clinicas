@@ -3723,6 +3723,16 @@ export type Database = {
         Args: { p_baixa_id: string; p_clinica_id: string }
         Returns: undefined
       }
+      gerar_recebiveis_convenio: {
+        Args: {
+          p_categoria_id?: string
+          p_clinica_id: string
+          p_convenio_id: string
+          p_fim: string
+          p_ini: string
+        }
+        Returns: Json
+      }
       marketplace_ranking_score: {
         Args: { p_clinica_id: string }
         Returns: number
@@ -3738,6 +3748,16 @@ export type Database = {
           p_valor: number
         }
         Returns: string
+      }
+      registrar_baixa_lote_convenio: {
+        Args: {
+          p_clinica_id: string
+          p_conta_id: string
+          p_data: string
+          p_forma: Database["public"]["Enums"]["forma_pagamento"]
+          p_itens: Json
+        }
+        Returns: Json
       }
       registrar_saida_estoque: {
         Args: {

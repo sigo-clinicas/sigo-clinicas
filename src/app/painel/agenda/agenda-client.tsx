@@ -57,6 +57,7 @@ export type ConsultaLinha = {
   paciente_nome: string;
   profissional_id: string;
   convenio_id: string | null;
+  numero_guia: string | null;
   data_hora: string;
   duracao_minutos: number;
   tipo: "consulta" | "retorno" | "exame" | "procedimento";
