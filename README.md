@@ -43,3 +43,4 @@ Os testes de RLS (`tests/rls/`) exigem `SUPABASE_TEST_*` no ambiente (saída do
 - Nenhum segredo no código ou no git — só `.env.example` com chaves vazias.
 - Schema muda **apenas** via `supabase/migrations/` (nunca no dashboard).
 - Feature sem teste de RLS/RBAC (e financeiro, quando aplicável) não é "done".
+- Build
