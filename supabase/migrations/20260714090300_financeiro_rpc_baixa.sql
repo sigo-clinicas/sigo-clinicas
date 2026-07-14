@@ -72,7 +72,7 @@ begin
     (clinica_id, conta_bancaria_id, lancamento_id, tipo, descricao, valor, data)
   values
     (p_clinica_id, p_conta_id, p_lancamento_id,
-     case v_tipo when 'receita' then 'entrada' else 'saida' end,
+     (case v_tipo when 'receita' then 'entrada' else 'saida' end)::public.tipo_movimentacao_conta,
      'Baixa de lançamento', p_valor, p_data)
   returning id into v_mov_id;
 
