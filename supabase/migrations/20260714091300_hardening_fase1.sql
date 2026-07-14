@@ -42,8 +42,15 @@ revoke execute on function public.salvar_paciente_clinica(uuid, uuid, jsonb, jso
 revoke execute on function public.vender_orcamento(
   uuid, uuid, public.forma_pagamento, date, jsonb) from anon;
 
--- helper interno de bootstrap de RLS: nunca deveria estar na API REST.
-revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
+-- helper interno de bootstrap de RLS: nunca deveria estar na API REST. É um
+-- órfão do remoto (não criado por migration nenhuma) — guardado por existência
+-- para o revoke rodar no remoto e virar no-op em bancos limpos (CI/local).
+do $$
+begin
+  if to_regprocedure('public.rls_auto_enable()') is not null then
+    execute 'revoke execute on function public.rls_auto_enable() from public, anon, authenticated';
+  end if;
+end $$;
 
 -- 4) Rate-limit (fixed window) — bucket + RPC atômica ------------------------
 -- Tabela no schema `app` (fora dos schemas expostos ao PostgREST) — só o
