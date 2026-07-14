@@ -30,6 +30,8 @@ export default async function OrcamentosPage() {
     { data: itensEstoque },
     { data: saldos },
     { data: clinica },
+    { data: vendas },
+    { data: pagamentos },
   ] = await Promise.all([
     supabase
       .from("orcamento")
@@ -88,6 +90,14 @@ export default async function OrcamentosPage() {
       .select("item_id,saldo_atual")
       .eq("clinica_id", clinicaId),
     supabase.from("clinica").select("tipo").eq("id", clinicaId).single(),
+    supabase
+      .from("venda")
+      .select("id,orcamento_id,data_hora,forma_pagamento,cancelada")
+      .eq("clinica_id", clinicaId),
+    supabase
+      .from("pagamento")
+      .select("id,venda_id,numero_parcela,valor,vencimento,pago,data_pagamento")
+      .eq("clinica_id", clinicaId),
   ]);
 
   // Agrupa itens por orçamento
@@ -135,9 +145,16 @@ export default async function OrcamentosPage() {
       tabelasPreco={tabelasPreco ?? []}
       itensTabela={(itensTabela ?? []).map((i) => ({ ...i, valor: i.valor ?? 0 }))}
       produtosEstoque={produtosEstoque}
+      vendas={vendas ?? []}
+      pagamentos={pagamentos ?? []}
       tipoClinica={tipoClinica}
       termo={termo}
       podeExcluir={
+        ["proprietario", "gerente", "recepcionista", "assistente"].includes(
+          sessao.papel
+        ) || sessao.isAdmin
+      }
+      podeVender={
         ["proprietario", "gerente", "recepcionista", "assistente"].includes(
           sessao.papel
         ) || sessao.isAdmin

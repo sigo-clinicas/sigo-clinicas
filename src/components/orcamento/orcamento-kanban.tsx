@@ -7,12 +7,13 @@
 // transição já é feita pelo Select; sinalizado como follow-up, não removido.
 // O botão "Vender" entra no S3-2.
 import { useTransition } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { CheckCircle2, Pencil, ShoppingBag, Trash2 } from "lucide-react";
 
 import {
   excluirOrcamento,
   moverOrcamentoStatus,
 } from "@/lib/actions/orcamentos";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -35,13 +36,19 @@ export function OrcamentoKanban({
   profissionais,
   pacientes,
   podeExcluir,
+  podeVender,
+  vendidos,
   onEditar,
+  onVender,
 }: {
   orcamentos: OrcamentoRow[];
   profissionais: OpcaoProfissional[];
   pacientes: OpcaoPaciente[];
   podeExcluir: boolean;
+  podeVender: boolean;
+  vendidos: Set<string>;
   onEditar: (o: OrcamentoRow) => void;
+  onVender: (o: OrcamentoRow) => void;
 }) {
   const [, startTransition] = useTransition();
   const nomeProf = new Map(profissionais.map((p) => [p.id, p.nome]));
@@ -98,6 +105,23 @@ export function OrcamentoKanban({
                     {o.itens.length} item(s) ·{" "}
                     {new Date(o.created_at).toLocaleDateString("pt-BR")}
                   </p>
+
+                  {vendidos.has(o.id) ? (
+                    <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                      <CheckCircle2 className="h-3 w-3" /> Vendido
+                    </div>
+                  ) : (
+                    o.status === "aprovado" &&
+                    podeVender && (
+                      <Button
+                        size="sm"
+                        className="mt-2 h-7 w-full"
+                        onClick={() => onVender(o)}
+                      >
+                        <ShoppingBag className="mr-1 h-3.5 w-3.5" /> Vender
+                      </Button>
+                    )
+                  )}
 
                   <div className="mt-3 flex items-center justify-between gap-2">
                     <Select
