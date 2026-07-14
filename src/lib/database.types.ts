@@ -7,30 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -1679,13 +1659,15 @@ export type Database = {
           clinica_id: string
           created_at: string
           id: string
+          item_estoque_id: string | null
           observacao: string | null
           orcamento_id: string
           quantidade: number
           regioes: string[]
-          servico_id: string
+          servico_id: string | null
           sessoes_realizadas: number
           tipo_valor: Database["public"]["Enums"]["tipo_valor_preco"]
+          unidade: string | null
           updated_at: string
           valor_total: number
           valor_unitario: number
@@ -1694,13 +1676,15 @@ export type Database = {
           clinica_id: string
           created_at?: string
           id?: string
+          item_estoque_id?: string | null
           observacao?: string | null
           orcamento_id: string
           quantidade?: number
           regioes?: string[]
-          servico_id: string
+          servico_id?: string | null
           sessoes_realizadas?: number
           tipo_valor?: Database["public"]["Enums"]["tipo_valor_preco"]
+          unidade?: string | null
           updated_at?: string
           valor_total?: number
           valor_unitario?: number
@@ -1709,13 +1693,15 @@ export type Database = {
           clinica_id?: string
           created_at?: string
           id?: string
+          item_estoque_id?: string | null
           observacao?: string | null
           orcamento_id?: string
           quantidade?: number
           regioes?: string[]
-          servico_id?: string
+          servico_id?: string | null
           sessoes_realizadas?: number
           tipo_valor?: Database["public"]["Enums"]["tipo_valor_preco"]
+          unidade?: string | null
           updated_at?: string
           valor_total?: number
           valor_unitario?: number
@@ -1727,6 +1713,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "clinica"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_orcamento_item_estoque_id_fkey"
+            columns: ["item_estoque_id"]
+            isOneToOne: false
+            referencedRelation: "item_estoque"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_orcamento_item_estoque_id_fkey"
+            columns: ["item_estoque_id"]
+            isOneToOne: false
+            referencedRelation: "saldo_item_estoque"
+            referencedColumns: ["item_id"]
           },
           {
             foreignKeyName: "item_orcamento_orcamento_id_fkey"
@@ -2210,13 +2210,16 @@ export type Database = {
       orcamento: {
         Row: {
           anotacoes_internas: string | null
+          cliente_email: string | null
+          cliente_nome: string | null
+          cliente_telefone: string | null
           clinica_id: string
           convenio_id: string | null
           created_at: string
           desconto: number
           id: string
           observacoes: string | null
-          paciente_id: string
+          paciente_id: string | null
           profissional_id: string | null
           status: Database["public"]["Enums"]["status_orcamento"]
           tabela_preco_id: string | null
@@ -2228,13 +2231,16 @@ export type Database = {
         }
         Insert: {
           anotacoes_internas?: string | null
+          cliente_email?: string | null
+          cliente_nome?: string | null
+          cliente_telefone?: string | null
           clinica_id: string
           convenio_id?: string | null
           created_at?: string
           desconto?: number
           id?: string
           observacoes?: string | null
-          paciente_id: string
+          paciente_id?: string | null
           profissional_id?: string | null
           status?: Database["public"]["Enums"]["status_orcamento"]
           tabela_preco_id?: string | null
@@ -2246,13 +2252,16 @@ export type Database = {
         }
         Update: {
           anotacoes_internas?: string | null
+          cliente_email?: string | null
+          cliente_nome?: string | null
+          cliente_telefone?: string | null
           clinica_id?: string
           convenio_id?: string | null
           created_at?: string
           desconto?: number
           id?: string
           observacoes?: string | null
-          paciente_id?: string
+          paciente_id?: string | null
           profissional_id?: string | null
           status?: Database["public"]["Enums"]["status_orcamento"]
           tabela_preco_id?: string | null
@@ -3249,6 +3258,10 @@ export type Database = {
         Args: { p_insumo_id: string }
         Returns: undefined
       }
+      salvar_orcamento: {
+        Args: { p_clinica_id: string; p_itens: Json; p_orcamento: Json }
+        Returns: string
+      }
       salvar_paciente_clinica: {
         Args: {
           p_clinica_id: string
@@ -3463,9 +3476,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       classificacao_item_estoque: [
@@ -3557,4 +3567,3 @@ export const Constants = {
     },
   },
 } as const
-
