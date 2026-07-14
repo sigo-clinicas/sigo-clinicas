@@ -61,8 +61,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // marketplace | cupom → tabela lead. clinica_id do cupom (server) quando cupom.
-  let clinicaId: string | null = body.clinica_id ? String(body.clinica_id) : null;
+  // marketplace | cupom → tabela lead. O clinica_id é SEMPRE resolvido no
+  // servidor: derivado do cupom (origem cupom) ou validado contra uma clínica
+  // pública (origem marketplace). Nunca é gravado direto do corpo do request.
+  let clinicaId: string | null = null;
   const cupom_id = body.cupom_id ? String(body.cupom_id) : null;
   if (origem === "cupom" && cupom_id) {
     const { data: cup } = await admin
@@ -70,7 +72,17 @@ export async function POST(req: Request) {
       .select("clinica_id")
       .eq("id", cupom_id)
       .maybeSingle();
-    clinicaId = cup?.clinica_id ?? null; // deriva do cupom — não confia no cliente
+    clinicaId = cup?.clinica_id ?? null; // deriva do cupom
+  } else if (body.clinica_id) {
+    // marketplace: só aceita clínica existente e pública; senão lead global (null)
+    const { data: cl } = await admin
+      .from("clinica")
+      .select("id")
+      .eq("id", String(body.clinica_id))
+      .eq("ativo", true)
+      .eq("exibir_marketplace", true)
+      .maybeSingle();
+    clinicaId = cl?.id ?? null;
   }
 
   const { error } = await admin.from("lead").insert({
