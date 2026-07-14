@@ -30,6 +30,12 @@ export default async function AdminLayout({
             Especialidades
           </Link>
           <Link
+            href="/admin/destaque"
+            className="text-sidebar-foreground hover:text-white transition-colors"
+          >
+            Destaque
+          </Link>
+          <Link
             href="/admin/lgpd"
             className="text-sidebar-foreground hover:text-white transition-colors"
           >
