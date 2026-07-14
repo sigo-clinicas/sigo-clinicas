@@ -3710,6 +3710,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      consumir_rate_limit: {
+        Args: { p_chave: string; p_janela_seg: number; p_limite: number }
+        Returns: boolean
+      }
       criar_consulta_retorno: {
         Args: {
           p_data_hora: string
@@ -3736,6 +3740,10 @@ export type Database = {
       marketplace_ranking_score: {
         Args: { p_clinica_id: string }
         Returns: number
+      }
+      purgar_por_retencao: {
+        Args: { p_dry_run?: boolean; p_retencao_dias?: number }
+        Returns: Json
       }
       registrar_baixa_lancamento: {
         Args: {
