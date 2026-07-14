@@ -63,8 +63,14 @@ describe.skipIf(!temAmbiente)("Comissões: apuração (S3-5)", () => {
     const { data: pac } = await admin
       .from("paciente").insert({ nome: `Pac ${sufixo}` }).select("id").single();
     await admin.from("paciente_clinica").insert({ clinica_id: clinicaA, paciente_id: pac!.id });
-    const { data: serv } = await admin
-      .from("servico").insert({ clinica_id: clinicaA, nome: `Serv ${sufixo}` }).select("id").single();
+    const { data: servs } = await admin
+      .from("servico")
+      .insert([
+        { clinica_id: clinicaA, nome: `Serv1 ${sufixo}` },
+        { clinica_id: clinicaA, nome: `Serv2 ${sufixo}` },
+        { clinica_id: clinicaA, nome: `Serv3 ${sufixo}` },
+      ])
+      .select("id");
     const { data: conta } = await admin
       .from("conta_bancaria").insert({ clinica_id: clinicaA, nome: `Cx ${sufixo}`, tipo: "caixa", saldo_inicial: 0 }).select("id").single();
     contaA = conta!.id;
@@ -82,11 +88,13 @@ describe.skipIf(!temAmbiente)("Comissões: apuração (S3-5)", () => {
       .single();
     const { data: css } = await admin
       .from("consulta_servico")
-      .insert([
-        { clinica_id: clinicaA, consulta_id: consulta!.id, servico_id: serv!.id },
-        { clinica_id: clinicaA, consulta_id: consulta!.id, servico_id: serv!.id },
-        { clinica_id: clinicaA, consulta_id: consulta!.id, servico_id: serv!.id },
-      ])
+      .insert(
+        servs!.map((s) => ({
+          clinica_id: clinicaA,
+          consulta_id: consulta!.id,
+          servico_id: s.id,
+        }))
+      )
       .select("id");
     [cs1, cs2, cs3] = css!.map((c) => c.id);
   });
