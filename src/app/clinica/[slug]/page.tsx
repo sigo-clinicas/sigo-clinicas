@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, MapPin, Star, Stethoscope } from "lucide-react";
+import { Clock, MapPin, Star, Stethoscope } from "@/components/lucide-icons";
 
 import { Button } from "@/components/ui/button";
 import { TIPO_CLINICA_LABEL } from "@/components/marketplace/clinica-card";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin } from "@/components/lucide-icons";
 
 import type { ClinicaPublica } from "@/lib/marketplace";
 import { urlLogoPublica } from "@/lib/tipo-clinica";

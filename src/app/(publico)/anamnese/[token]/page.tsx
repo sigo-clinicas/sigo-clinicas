@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "@/components/lucide-icons";
 
 import type { Pergunta } from "@/lib/actions/anamnese";
 import { PreencherAnamnese } from "./preencher-client";
