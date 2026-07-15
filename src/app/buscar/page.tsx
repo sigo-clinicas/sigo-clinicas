@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search } from "@/components/lucide-icons";
 
 import { ClinicaCard } from "@/components/marketplace/clinica-card";
 import {
