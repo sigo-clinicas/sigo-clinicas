@@ -6,6 +6,13 @@
 //   node scripts/seed-teste.mjs            → limpa qualquer teste anterior + cria
 //   node scripts/seed-teste.mjs --teardown → só limpa (equivale ao .sql de cleanup)
 //
+// ⚠️ DESTRÓI OS DADOS DE DEMONSTRAÇÃO. Este script é idempotente por
+// teardown-and-recreate: ele APAGA a "[TESTE] Clínica Demo" e a recria com um
+// clinica_id NOVO. Tudo que o scripts/seed-demo.mjs criou (agenda, prontuário,
+// orçamentos, financeiro, comissões, marketing) vai junto no CASCADE.
+// Se for rodar antes de uma demo, rode depois:  node scripts/seed-demo.mjs
+// (o seed-demo reancora sozinho pelo slug, então funciona após o reset).
+//
 // Só INSERE dado de teste. NÃO toca no seed determinístico (66 especialidades,
 // 4 segmentos) nem no schema. Lê URL/serviço do .env (projeto remoto).
 import { readFileSync } from "node:fs";
@@ -65,6 +72,8 @@ async function listarUsuariosSigo() {
 
 async function teardown() {
   console.log("• Limpeza de qualquer teste anterior (idempotência)…");
+  console.log("  ⚠ isto REMOVE também os dados de demonstração do seed-demo.mjs");
+  console.log("    (recrie-os depois com: node scripts/seed-demo.mjs)");
   // clínicas de teste (por slug conhecido + por marca no nome), deduplicadas
   const alvo = new Map();
   const { data: porSlug } = await db.from("clinica").select("id,nome").in("slug", [SLUG, "clinica-demo"]);
