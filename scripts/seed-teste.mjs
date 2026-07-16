@@ -1,7 +1,9 @@
 // Seed de TESTE (rastreável) para homologação — service_role, server-only.
-// Cria um cenário completo na "[TESTE] Clínica Demo", com usuários de vários
-// papéis para testar o fluxo inteiro. TUDO é rastreável: marca "[TESTE] " nos
-// nomes E vínculo por clinica_id; usuários só no domínio @sigo.local.
+// Cria um cenário completo na "Clínica Bem-Estar", com usuários de vários papéis
+// para testar o fluxo inteiro. Rastreável pela FLAG is_seed_demo em clinica/
+// paciente (migration 20260716120000) + vínculo por clinica_id; usuários só no
+// domínio @sigo.local. (Antes marcava "[TESTE]" nos nomes, o que poluía a
+// apresentação pública — trocado pela flag.)
 //
 //   node scripts/seed-teste.mjs            → limpa qualquer teste anterior + cria
 //   node scripts/seed-teste.mjs --teardown → só limpa (equivale ao .sql de cleanup)
@@ -31,9 +33,8 @@ if (!URL || !SERVICE_KEY) {
 }
 const db = createClient(URL, SERVICE_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
 
-const SLUG = "teste-clinica-demo";
-const CLINICA_NOME = "[TESTE] Clínica Demo";
-const MARCA = "[TESTE]";
+const SLUG = "clinica-bem-estar";
+const CLINICA_NOME = "Clínica Bem-Estar";
 const DOMINIO = "@sigo.local";
 
 // Usuários de STAFF (viram clinica_usuario com o papel indicado)
@@ -65,11 +66,12 @@ async function listarUsuariosSigo() {
 
 async function teardown() {
   console.log("• Limpeza de qualquer teste anterior (idempotência)…");
-  // clínicas de teste (por slug conhecido + por marca no nome), deduplicadas
+  // clínicas de teste pela FLAG is_seed_demo (+ slugs conhecidos por segurança),
+  // deduplicadas
   const alvo = new Map();
-  const { data: porSlug } = await db.from("clinica").select("id,nome").in("slug", [SLUG, "clinica-demo"]);
-  const { data: porNome } = await db.from("clinica").select("id,nome").ilike("nome", `${MARCA}%`);
-  for (const c of [...(porSlug ?? []), ...(porNome ?? [])]) alvo.set(c.id, c.nome);
+  const { data: porFlag } = await db.from("clinica").select("id,nome").eq("is_seed_demo", true);
+  const { data: porSlug } = await db.from("clinica").select("id,nome").in("slug", [SLUG, "teste-clinica-demo", "clinica-demo"]);
+  for (const c of [...(porFlag ?? []), ...(porSlug ?? [])]) alvo.set(c.id, c.nome);
   const cids = [...alvo.keys()];
 
   // pacientes que estão vinculados a clínicas de teste (p/ apagar os órfãos depois)
@@ -88,10 +90,9 @@ async function teardown() {
     else console.log(`  ✓ clínica removida (cascade): ${nome} (${cid})`);
   }
 
-  // pacientes globais: os marcados [TESTE]/[DEMO] + os que ficaram órfãos (só
-  // estavam em clínica de teste) — nunca um paciente ainda vinculado a clínica real
-  await db.from("paciente").delete().ilike("nome", "[TESTE]%");
-  await db.from("paciente").delete().ilike("nome", "[DEMO]%");
+  // pacientes globais: os marcados com a flag + os que ficaram órfãos (só estavam
+  // em clínica de teste) — nunca um paciente ainda vinculado a clínica real
+  await db.from("paciente").delete().eq("is_seed_demo", true);
   for (const pid of pacTeste) {
     const { count } = await db.from("paciente_clinica").select("*", { count: "exact", head: true }).eq("paciente_id", pid);
     if ((count ?? 0) === 0) await db.from("paciente").delete().eq("id", pid);
@@ -118,9 +119,9 @@ async function seed() {
 
   // 1) clínica de teste (estética → white-label)
   const { data: clinica, error: eClin } = await db.from("clinica").insert({
-    nome: CLINICA_NOME, tipo: "estetica", slug: SLUG,
+    nome: CLINICA_NOME, tipo: "estetica", slug: SLUG, is_seed_demo: true,
     ativo: true, exibir_marketplace: true, cidade: "São Paulo", uf: "SP",
-    sobre: "Clínica de TESTE para homologação (remover antes do lançamento).",
+    sobre: "Estética avançada em São Paulo: protocolos faciais e corporais, toxina botulínica, preenchimentos e cuidados com a pele.",
   }).select("id").single();
   ok(`clínica '${CLINICA_NOME}' (estetica)`, eClin);
   const clinicaId = clinica.id;
@@ -141,8 +142,8 @@ async function seed() {
 
   // 4) profissionais + especialidade + disponibilidade. O 1º é o login profissional@.
   const profs = [
-    { nome: "[TESTE] Dra. Marina Alves", ini: "09:00", fim: "18:00", user: uid["profissional@sigo.local"] },
-    { nome: "[TESTE] Dr. Rafael Costa", ini: "08:00", fim: "17:00", user: null },
+    { nome: "Dra. Marina Alves", ini: "09:00", fim: "18:00", user: uid["profissional@sigo.local"] },
+    { nome: "Dr. Rafael Costa", ini: "08:00", fim: "17:00", user: null },
   ];
   const profIds = [];
   for (const p of profs) {
@@ -159,9 +160,9 @@ async function seed() {
 
   // 5) serviços (públicos) + tabela particular + preços
   const servicos = [
-    { nome: "[TESTE] Limpeza de Pele", dur: 60, valor: 150 },
-    { nome: "[TESTE] Peeling Químico", dur: 45, valor: 220 },
-    { nome: "[TESTE] Massagem Modeladora", dur: 50, valor: 180 },
+    { nome: "Limpeza de Pele", dur: 60, valor: 150 },
+    { nome: "Peeling Químico", dur: 45, valor: 220 },
+    { nome: "Massagem Modeladora", dur: 50, valor: 180 },
   ];
   const servIds = [];
   for (const s of servicos) {
@@ -173,9 +174,9 @@ async function seed() {
     servIds.push({ id: data.id, valor: s.valor });
   }
   const { data: tabela, error: eTab } = await db.from("tabela_preco").insert({
-    clinica_id: clinicaId, nome: "[TESTE] Particular", convenio_id: null, exibir_publico: true, ativo: true,
+    clinica_id: clinicaId, nome: "Particular", convenio_id: null, exibir_publico: true, ativo: true,
   }).select("id").single();
-  ok("tabela de preço '[TESTE] Particular'", eTab);
+  ok("tabela de preço 'Particular'", eTab);
   for (const s of servIds) {
     await db.from("item_tabela_preco").insert({
       clinica_id: clinicaId, tabela_preco_id: tabela.id, servico_id: s.id, tipo_valor: "fixo", valor: s.valor,
@@ -188,15 +189,15 @@ async function seed() {
   }
   console.log("  ✓ preços particulares (R$150/220/180) + vínculos profissional↔serviço");
 
-  // 6) pacientes globais [TESTE] + vínculo. O 1º é o login paciente@.
+  // 6) pacientes globais (flag is_seed_demo) + vínculo. O 1º é o login paciente@.
   const pacientes = [
-    { nome: "[TESTE] Ana Souza", cpf: "10000000001", nasc: "1990-04-12", user: uid["paciente@sigo.local"] },
-    { nome: "[TESTE] Bruno Lima", cpf: "10000000002", nasc: "1985-11-03", user: null },
-    { nome: "[TESTE] Carla Dias", cpf: "10000000003", nasc: "1998-07-22", user: null },
+    { nome: "Ana Souza", cpf: "10000000001", nasc: "1990-04-12", user: uid["paciente@sigo.local"] },
+    { nome: "Bruno Lima", cpf: "10000000002", nasc: "1985-11-03", user: null },
+    { nome: "Carla Dias", cpf: "10000000003", nasc: "1998-07-22", user: null },
   ];
   for (const p of pacientes) {
     const { data, error } = await db.from("paciente").insert({
-      nome: p.nome, cpf: p.cpf, data_nascimento: p.nasc, ativo: true, user_id: p.user,
+      nome: p.nome, cpf: p.cpf, data_nascimento: p.nasc, ativo: true, user_id: p.user, is_seed_demo: true,
     }).select("id").single();
     ok(`paciente ${p.nome}`, error);
     await db.from("paciente_clinica").insert({ clinica_id: clinicaId, paciente_id: data.id, ativo: true });
@@ -204,10 +205,10 @@ async function seed() {
 
   // 7) item de estoque + entrada (lote/validade → saldo 20)
   const { data: item, error: eItem } = await db.from("item_estoque").insert({
-    clinica_id: clinicaId, descricao: "[TESTE] Ampola Vitamina C",
+    clinica_id: clinicaId, descricao: "Ampola Vitamina C",
     classificacao: "produto_venda", requer_validade: true, unidade: "un", ativo: true,
   }).select("id").single();
-  ok("item de estoque '[TESTE] Ampola Vitamina C'", eItem);
+  ok("item de estoque 'Ampola Vitamina C'", eItem);
   {
     const { error } = await db.from("movimentacao_estoque").insert({
       clinica_id: clinicaId, item_id: item.id, tipo: "entrada",
@@ -225,10 +226,10 @@ async function seed() {
   ];
   {
     const { error } = await db.from("formulario_anamnese").insert({
-      clinica_id: clinicaId, nome: "[TESTE] Anamnese Estética",
-      descricao: "Formulário de teste.", perguntas, ativo: true,
+      clinica_id: clinicaId, nome: "Anamnese Estética",
+      descricao: "Formulário de anamnese.", perguntas, ativo: true,
     });
-    ok("formulário '[TESTE] Anamnese Estética'", error);
+    ok("formulário 'Anamnese Estética'", error);
   }
 
   return { clinicaId };
