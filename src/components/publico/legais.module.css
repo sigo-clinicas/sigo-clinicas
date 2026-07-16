@@ -1,0 +1,31 @@
+/* Porte do <Hero> das paginas legais do sistema antigo
+   (components/{Terms,Privacy,Cookie,Consent}Component/styles.js — todos usam o
+   mesmo styled). O form styling nao e usado nestas paginas (so titulo/texto);
+   portamos apenas o Hero + .title + .description. A tipografia de h1-h5/p vem da
+   base do antd, ja no PublicShell. */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  margin: 170px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* No antigo, o .container dentro do Hero das legais herda text-align: center
+   (medido no site rodando), o que centraliza o titulo da pagina (o primeiro h1,
+   que fica fora do .description). O .description reseta para justify, deixando o
+   corpo do texto justificado. Reproduzimos os dois. */
+.hero :global(.container) {
+  text-align: center;
+}
+
+.hero :global(.title) {
+  text-align: center;
+}
+
+.hero :global(.description) {
+  text-align: justify;
+}
