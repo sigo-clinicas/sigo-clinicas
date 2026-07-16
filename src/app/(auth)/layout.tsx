@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { PublicShell } from "@/components/publico/public-shell";
 import { getSessaoComClaims } from "@/lib/auth";
 
 export default async function AuthLayout({
@@ -7,13 +8,12 @@ export default async function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Já logado → direto ao painel
+  // Já logado → direto ao painel (LÓGICA intacta)
   const sessao = await getSessaoComClaims();
   if (sessao) redirect("/painel");
 
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-slate-50 p-4">
-      {children}
-    </main>
-  );
+  // Reskin: as telas de auth vivem dentro do shell público (Sticky + Footer),
+  // como no sistema antigo (Sticky inside={true} + Footer). Cada form traz o
+  // próprio Hero centralizado.
+  return <PublicShell inside>{children}</PublicShell>;
 }

@@ -3,25 +3,20 @@
 import { useFormState, useFormStatus } from "react-dom";
 
 import { redefinirSenha, type EstadoAuth } from "@/lib/actions/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import styles from "@/components/publico/auth.module.css";
 
 const estadoInicial: EstadoAuth = { erro: null };
+
+// Reskin visual: mesmo Hero/form do login antigo (o CreatePasswordComponent
+// antigo usava exatamente o mesmo styled). Lógica intacta (server action
+// redefinirSenha via Supabase; names senha/confirmacao preservados).
 
 function BotaoRedefinir() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? "Salvando..." : "Redefinir senha"}
-    </Button>
+    <button type="submit" className="btn-green" disabled={pending}>
+      <span>{pending ? "Salvando..." : "Redefinir senha"}</span>
+    </button>
   );
 }
 
@@ -29,41 +24,37 @@ export function RedefinirSenhaForm() {
   const [estado, dispatch] = useFormState(redefinirSenha, estadoInicial);
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <CardTitle className="text-primary">Nova senha</CardTitle>
-        <CardDescription>Defina a sua nova senha de acesso</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form action={dispatch} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="senha">Nova senha</Label>
-            <Input
-              id="senha"
-              name="senha"
-              type="password"
-              autoComplete="new-password"
-              minLength={8}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmacao">Confirme a nova senha</Label>
-            <Input
-              id="confirmacao"
-              name="confirmacao"
-              type="password"
-              autoComplete="new-password"
-              minLength={8}
-              required
-            />
-          </div>
-          {estado.erro && (
-            <p className="text-sm text-destructive">{estado.erro}</p>
-          )}
+    <header className={styles.hero}>
+      <form action={dispatch} className="login-form">
+        <div className="ant-form-item">
+          <input
+            className="ant-input"
+            name="senha"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            placeholder="Nova senha"
+            required
+          />
+        </div>
+        <div className="ant-form-item">
+          <input
+            className="ant-input"
+            name="confirmacao"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            placeholder="Confirme a nova senha"
+            required
+          />
+        </div>
+
+        {estado.erro && <p className="erro">{estado.erro}</p>}
+
+        <div className="form-actions">
           <BotaoRedefinir />
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+      </form>
+    </header>
   );
 }

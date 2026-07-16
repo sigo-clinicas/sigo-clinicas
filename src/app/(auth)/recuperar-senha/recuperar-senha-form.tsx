@@ -4,25 +4,20 @@ import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { recuperarSenha, type EstadoAuth } from "@/lib/actions/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import styles from "@/components/publico/auth.module.css";
 
 const estadoInicial: EstadoAuth = { erro: null };
+
+// Reskin visual: mesmo Hero/form do login antigo (o ForgotPasswordComponent
+// antigo usava exatamente o mesmo styled). Lógica intacta (server action
+// recuperarSenha via Supabase).
 
 function BotaoEnviar() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? "Enviando..." : "Enviar link de recuperação"}
-    </Button>
+    <button type="submit" className="btn-green" disabled={pending}>
+      <span>{pending ? "Enviando..." : "Enviar link de recuperação"}</span>
+    </button>
   );
 }
 
@@ -30,46 +25,40 @@ export function RecuperarSenhaForm() {
   const [estado, dispatch] = useFormState(recuperarSenha, estadoInicial);
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <CardTitle className="text-primary">Recuperar senha</CardTitle>
-        <CardDescription>
-          Enviaremos um link de redefinição para o seu e-mail
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <header className={styles.hero}>
+      <form action={dispatch} className="login-form">
         {estado.ok ? (
-          <p className="rounded-md bg-secondary p-3 text-sm text-secondary-foreground">
-            Se o e-mail estiver cadastrado, você receberá o link de
-            redefinição em instantes.
+          <p className="aviso">
+            Se o e-mail estiver cadastrado, você receberá o link de redefinição em
+            instantes.
           </p>
         ) : (
-          <form action={dispatch} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
-              <Input
-                id="email"
+          <>
+            <div className="ant-form-item">
+              <input
+                className="ant-input"
                 name="email"
                 type="email"
                 autoComplete="email"
+                placeholder="Email"
                 required
               />
             </div>
-            {estado.erro && (
-              <p className="text-sm text-destructive">{estado.erro}</p>
-            )}
-            <BotaoEnviar />
-          </form>
+
+            {estado.erro && <p className="erro">{estado.erro}</p>}
+
+            <div className="form-actions">
+              <BotaoEnviar />
+            </div>
+          </>
         )}
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          <Link
-            href="/login"
-            className="text-primary underline-offset-4 hover:underline"
-          >
+
+        <div className="mb-2">
+          <Link href="/login" className="utils__link">
             Voltar ao login
           </Link>
-        </p>
-      </CardContent>
-    </Card>
+        </div>
+      </form>
+    </header>
   );
 }

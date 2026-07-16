@@ -1,0 +1,130 @@
+/* Porte do <Hero> das telas de auth do sistema antigo
+   (components/{LoginComponent,ForgotPasswordComponent,CreatePasswordComponent}/
+   styles.js — os tres sao IDENTICOS). Um so module serve login, recuperar e
+   redefinir senha.
+
+   Declaracoes verbatim; base do .ant-input e .ant-form-item resolvida no valor
+   final e MEDIDA no login antigo rodando (input 32px, form-item mb5/pb8). */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  margin: 170px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero form {
+  min-width: 400px;
+  width: auto;
+  padding: 20px;
+  border: 1px solid #00000020;
+  box-shadow: 0 2px 2px #00000020;
+  border-radius: 2px;
+}
+
+/* cada campo (o antigo envolvia o <input> num .ant-form-item) */
+.hero form :global(.ant-form-item) {
+  margin-bottom: 5px;
+  padding-bottom: 8px;
+}
+
+/* input do antd (base medida: 32px, padding 4px 11px, border 1px #d9d9d9, radius 4) */
+.hero form :global(.ant-input) {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  padding: 4px 11px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.65);
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.hero form :global(.ant-input)::placeholder {
+  color: #bfbfbf;
+}
+
+.hero form :global(.ant-input):hover {
+  border-color: #00ba9e;
+}
+
+.hero form :global(.ant-input):focus {
+  border-color: #00ba9e;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(0, 186, 158, 0.2);
+}
+
+/* mensagem de erro (o antigo usava notification toast; aqui inline, discreta) */
+.hero form :global(.erro) {
+  color: #f5222d;
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+/* banner de sucesso (senha redefinida) — o antigo usava toast; inline aqui */
+.hero form :global(.aviso) {
+  background: #e6f7f4;
+  color: #00806c;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.hero form :global(.form-actions) {
+  padding-top: 1.53rem;
+  margin: 1.53rem 0 0.5rem;
+}
+
+.hero form :global(.form-actions) :global(.btn-green) {
+  height: 35px;
+  width: 100%;
+  border: 1px solid #00ba9e;
+  border-radius: 5px;
+  color: #fff;
+  background: #00ba9e;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hero form :global(.form-actions) :global(.btn-green):hover {
+  border: 1px solid #00ba9e;
+  background: #fff;
+  color: #00ba9e;
+}
+
+.hero form :global(.form-actions) :global(.btn-green):disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.hero form :global(.mb-2) {
+  text-align: center;
+}
+
+.hero form :global(.mb-2) :global(.utils__link) {
+  color: #74708d;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.hero form :global(.mb-2) :global(.utils__link):hover {
+  color: #00ba9e;
+}
+
+@media (max-width: 425px) {
+  .hero form {
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    min-width: auto;
+  }
+}
