@@ -1,0 +1,523 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/DetalhesComponent/
+   styles.js (Header -> .header, Container -> .detalhes).
+
+   Declaracoes verbatim; aninhamento achatado; classes do markup em :global()
+   penduradas na raiz. A base tipografica herdada (antd normalize) ja mora no
+   PublicShell.
+
+   OMITIDO por falta de dado no marketplace novo (decisao da lideranca — as
+   subsecoes ja eram condicionais no antigo, entao some sem quebrar o layout):
+   .carousel/.slick-* (fotos), .filter (categorias de servico), .uk-table
+   (horario de funcionamento), form .row (agendamento inline -> vai para
+   /agendar). Nao portados: ficariam sem alvo. */
+
+/* ================================================================== *
+ * Header (banner "nome da clinica" sobre medical.jpg) — igual a busca
+ * ================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 180px;
+  margin-top: 101px;
+  background-image: url(/static/medical.jpg?v=1.1);
+  background-size: cover;
+  background-position: 50% 69%;
+  background-repeat: no-repeat;
+}
+
+.header::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.header h1 {
+  background-color: rgba(0, 169, 176, 0.7);
+  padding: 0px 10px;
+  border-radius: 100px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 32px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0;
+  z-index: 1;
+}
+
+/* o h1 do detalhes usa .clinic-name -> 48px (o da busca nao tinha) */
+.header :global(.clinic-name) {
+  font-size: 48px;
+}
+
+@media (max-width: 420px) {
+  .header :global(.clinic-name) {
+    font-size: 32px !important;
+  }
+}
+
+/* ================================================================== *
+ * Container
+ * ================================================================== */
+
+.detalhes {
+  padding: 60px 0;
+}
+
+.detalhes :global(.container) {
+  display: flex;
+  width: 100%;
+}
+
+.detalhes :global(.container):global(.display-column) {
+  flex-direction: column;
+}
+
+/* --- menu de abas --- */
+.detalhes :global(.menu) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  width: 100%;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.detalhes :global(.menu)::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -5px;
+  border-bottom: 1px solid #e5e5e5;
+  z-index: 0;
+}
+
+.detalhes :global(.menu) li {
+  z-index: 2;
+}
+
+.detalhes :global(.menu) li:not(:first-child) {
+  padding-left: 20px;
+}
+
+/* no antigo o <a> era filho do <Link>; no Next 14 o <Link> ja e a ancora, entao
+   a classe vai no proprio <Link> (mesmo seletor `.menu li a`) */
+.detalhes :global(.menu) li a {
+  text-align: center;
+  padding: 7px 10px;
+  color: #999;
+  border-bottom: 1px solid transparent;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  transition: color 0.1s ease-in-out;
+  text-decoration: none;
+}
+
+.detalhes :global(.menu) li a:global(.active) {
+  color: #333;
+  border-color: #1e87f0;
+}
+
+.detalhes :global(.container) h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  margin: 0;
+}
+
+.detalhes :global(.div) {
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+  margin: 30px 0;
+}
+
+/* ================================================================== *
+ * Lista de profissionais (aba profissionais)
+ * ================================================================== */
+
+.detalhes :global(.professionals-list) {
+  list-style: none;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.detalhes :global(.professionals-list) li {
+  background: #fff;
+  color: #666;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 40px 40px;
+  width: calc(25% - 30px);
+  margin-bottom: 40px;
+}
+
+.detalhes :global(.professionals-list) li:not(:nth-child(4n + 4)) {
+  margin-right: 40px;
+}
+
+.detalhes :global(.professionals-list) li:hover {
+  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.16);
+}
+
+.detalhes :global(.professionals-list) :global(.img-professional) {
+  max-width: 120px;
+  width: 120px;
+  height: 120px;
+  text-align: center;
+  margin: 0 40px;
+}
+
+.detalhes :global(.professionals-list) :global(.img-professional) img {
+  width: 120px;
+  height: 100%;
+  padding: 5px;
+  box-shadow: 0 0 10px #00000060;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.detalhes :global(.professionals-list) :global(.card-infos) {
+  text-align: center;
+}
+
+.detalhes :global(.professionals-list) :global(.card-infos) :global(.name-professional) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  margin: 20px 0 0;
+  width: 100%;
+  display: block;
+  color: #666666;
+}
+
+.detalhes :global(.professionals-list) :global(.card-infos) :global(.registro) {
+  line-height: 0;
+}
+
+.detalhes :global(.professionals-list) :global(.card-infos) :global(.registro) span {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #666666;
+}
+
+/* .profissionais-list (PT) != .professionals-list (EN) — cuidado, sao classes
+   diferentes: esta so ajusta a margem do wrapper */
+.detalhes :global(.profissionais-list) {
+  margin-top: 50px;
+}
+
+/* ================================================================== *
+ * Coluna esquerda (aba informacoes: sobre; aba servicos: lista)
+ * ================================================================== */
+
+.detalhes :global(.left-content) {
+  width: 75%;
+  padding-right: 20px;
+  border-right: 2px solid #e5e5e5;
+}
+
+.detalhes :global(.left-content) :global(.title) {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  margin: 0;
+  margin-top: 20px;
+}
+
+.detalhes :global(.left-content) :global(.description) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  color: #666666;
+  margin: 10px 0 0;
+  line-height: 24px;
+}
+
+/* --- card de servico --- */
+.detalhes :global(.left-content) :global(.service) {
+  display: flex;
+  padding: 20px;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-img) {
+  width: 25%;
+  padding-right: 40px;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-img) img {
+  max-width: 100%;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.top-info) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-name) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  margin: 0;
+  color: #1780ca !important;
+  transition: 0.5s;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-name):hover {
+  color: #72c1f9 !important;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-time) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  margin: 0;
+  color: #666666;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-type) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-description) {
+  width: 75%;
+}
+
+.detalhes :global(.left-content) :global(.service) :global(.service-text) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  margin: 10px 0 0;
+  text-align: justify;
+  color: #999999;
+}
+
+/* ================================================================== *
+ * Coluna direita (aba informacoes: dados da clinica)
+ * .filter (categorias) e .uk-table (horario) omitidos — lacunas
+ * ================================================================== */
+
+.detalhes :global(.right-content) {
+  width: 25%;
+  padding-left: 20px;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) {
+  margin-top: 20px;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.img-clinic) {
+  text-align: center;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.img-clinic) :global(.border-circle) {
+  border-radius: 50%;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.img-clinic) img {
+  width: 140px;
+  height: 140px;
+  padding: 10px;
+  box-shadow: 0 0 40px #00000060;
+  object-fit: contain;
+}
+
+/* clinic-name aqui e o h2 azul (distinto do h1 branco do banner) */
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.clinic-name) {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1780ca;
+  margin: 20px 0 5px;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.specialties) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  line-height: 17px;
+  color: #929292;
+  margin: 0;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.m-b-0) {
+  margin-bottom: 0 !important;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.m-t-10) {
+  margin-top: 10px !important;
+}
+
+.detalhes :global(.right-content) :global(.infos-clinic) :global(.tel) {
+  font-size: 16px;
+}
+
+/* ================================================================== *
+ * Responsivo
+ * ================================================================== */
+
+@media (max-width: 990px) {
+  .detalhes :global(.container) {
+    flex-direction: column;
+  }
+
+  .detalhes :global(.menu) {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .detalhes :global(.menu)::before {
+    display: none;
+  }
+
+  .detalhes :global(.menu) li {
+    padding-left: 0 !important;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .detalhes :global(.menu) li a {
+    padding: 13px 0;
+  }
+
+  .detalhes :global(.professionals-list) li {
+    width: 100%;
+    margin: 0 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .detalhes :global(.left-content) {
+    width: 100%;
+    padding-right: 0;
+    border-right: 0;
+    margin-top: 30px;
+  }
+
+  .detalhes :global(.left-content) h2 {
+    text-align: center;
+  }
+
+  .detalhes :global(.left-content) :global(.service) {
+    flex-direction: column;
+  }
+
+  .detalhes :global(.left-content) :global(.service) :global(.service-img) {
+    display: none;
+  }
+
+  .detalhes :global(.left-content) :global(.service) :global(.service-description) {
+    width: 100%;
+  }
+
+  .detalhes :global(.right-content) {
+    width: 100%;
+    padding-left: 0;
+    order: -1;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .detalhes :global(.left-content) {
+    margin-top: 30px;
+  }
+
+  .detalhes :global(.service-img) {
+    display: none;
+  }
+
+  .detalhes :global(.service) {
+    margin: 20px 0;
+  }
+}
+
+/* ================================================================== *
+ * Icone Font Awesome do endereco (fa-map-marker-alt) — base .fas
+ * ================================================================== */
+
+.detalhes :global(.fas) {
+  display: inline-block;
+  font-style: normal;
+  line-height: 1;
+}
+
+.detalhes :global(.fas) svg {
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+.detalhes :global(.right-content) address {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  color: #666666;
+  font-style: normal;
+  margin: 5px 0 0;
+}
+
+/* ================================================================== *
+ * Avaliacoes — nao existe no antigo. Estilo coerente com as cores dele
+ * (teal/azul), decisao da lideranca (manter depoimentos + cores fixas).
+ * ================================================================== */
+
+.depoimentos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.depoimento {
+  border: 1px solid #e6e7ef;
+  border-radius: 8px;
+  padding: 15px 20px;
+}
+
+.estrelas {
+  color: #00ba9e;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.estrelasVazias {
+  color: #d9d9d9;
+}
+
+.depoimentoTexto {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  color: #666666;
+  line-height: 24px;
+  margin: 0;
+}
+
+.depoimentoAutor {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  color: #929292;
+  margin: 8px 0 0;
+}
+
+/* ================================================================== *
+ * Estado vazio (servicos/profissionais) — mensagem estatica simples
+ * (o .lds-ring/Alert do antigo era condicional a loading, que o SSR nao tem)
+ * ================================================================== */
+
+.vazio {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  color: #929292;
+  padding: 20px 0;
+}

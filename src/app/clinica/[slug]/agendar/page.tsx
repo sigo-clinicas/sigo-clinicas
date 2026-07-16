@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 
 import { clinicaPorSlug } from "@/lib/marketplace";
 import { slotsDisponiveis } from "@/lib/agenda-publica";
-import { temaDaClinica } from "@/lib/tipo-clinica";
-import type { TipoClinica } from "@/lib/terminologia";
+import { PublicShell } from "@/components/publico/public-shell";
+import estilos from "@/components/publico/detalhes.module.css";
 
 import { AgendarClient } from "./agendar-client";
 
@@ -37,12 +37,15 @@ export default async function AgendarPage({
     ? await slotsDisponiveis(dados.clinica.id, profSelecionado)
     : [];
 
-  const tema = dados.clinica.tipo
-    ? temaDaClinica(dados.clinica.tipo as TipoClinica)
-    : undefined;
-
+  // Reskin: só a moldura (PublicShell + banner) muda; o miolo funcional do
+  // AgendarClient (slots, form de lead, POST /api/publico/agendamento) fica
+  // intacto — decisão da liderança. Sem data-clinica-theme: cores fixas do tema
+  // padrão (teal ≈ #00ba9e do antigo), coerente com o mono-marca do site antigo.
   return (
-    <div data-clinica-theme={tema} className="contents">
+    <PublicShell inside>
+      <header className={estilos.header}>
+        <h1 className="clinic-name">Agende seu horário</h1>
+      </header>
       <AgendarClient
         clinicaId={dados.clinica.id}
         clinicaNome={dados.clinica.nome}
@@ -52,6 +55,6 @@ export default async function AgendarPage({
         profSelecionado={profSelecionado}
         slots={slots}
       />
-    </div>
+    </PublicShell>
   );
 }
