@@ -1,0 +1,46 @@
+/* Aviso "Em breve" dos controles que existem visualmente mas ainda nao tem
+   fluxo (Cadastrar Clinica, Registre-se, Cadastro, filtros Data/Preco).
+   Decisao da lideranca: manter o controle IDENTICO ao antigo, porem inerte.
+
+   Nada aqui altera o controle em si — o balao e posicionado por cima. */
+
+.gatilho {
+  /* ancora o balao. `relative` nao desloca o elemento, entao o visual do
+     controle nao muda. (.button do header ja e relative no CSS antigo.) */
+  position: relative;
+}
+
+.balao {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  background: #333333;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 6px 10px;
+
+  /* zera a heranca dos gatilhos (o .button do header e uppercase, 800, com
+     letter-spacing) para o balao sair sempre igual */
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: center;
+  line-height: normal;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.balao::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: #333333;
+}

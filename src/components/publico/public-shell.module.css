@@ -1,0 +1,165 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/styles/global.js.
+   As declaracoes sao verbatim; o que muda e o ESCOPO: no antigo isso era
+   createGlobalStyle (valia para o site inteiro, que so tinha telas publicas).
+   Aqui tudo pende de .shell para nao alcancar o painel, que divide o mesmo
+   globals.css e nao pode ser tocado.
+
+   O antigo usava classes globais (.container, .btn-green) no markup. Mantemos
+   os nomes via :global() para que o JSX portado siga verbatim — mas so valem
+   dentro de .shell, entao nao vazam. */
+
+/* ------------------------------------------------------------------ *
+ * 1. Neutraliza o preflight do Tailwind DENTRO do shell publico.
+ *
+ * O globals.css do painel faz @tailwind base. O preflight nao e um reset
+ * neutro: ele redefine defaults que o site antigo simplesmente herdava do
+ * navegador. Sem desfazer isso aqui, as telas publicas nao batem com as
+ * antigas — titulos sairiam sem tamanho nem negrito, listas sem marcador,
+ * imagens em block com max-width 100%, links sem cor, e todo o texto com
+ * line-height 1.5 em vez de normal.
+ *
+ * globals.css e do painel e nao pode ser tocado, entao a compensacao mora
+ * aqui. `revert` devolve o valor da folha do user-agent — exatamente o que o
+ * site antigo via. Nossa especificidade (.shell + elemento) vence a do
+ * preflight (elemento puro).
+ *
+ * NAO reverte margin/padding/box-sizing/outline: esses o global.js antigo
+ * zerava de proposito, e o reset dele vem logo abaixo.
+ * ------------------------------------------------------------------ */
+
+.shell h1,
+.shell h2,
+.shell h3,
+.shell h4,
+.shell h5,
+.shell h6 {
+  font-size: revert;
+  font-weight: revert;
+}
+
+.shell ul,
+.shell ol,
+.shell menu {
+  list-style: revert;
+}
+
+.shell img,
+.shell svg,
+.shell video,
+.shell canvas,
+.shell audio,
+.shell iframe,
+.shell embed,
+.shell object {
+  display: revert;
+  vertical-align: revert;
+}
+
+.shell img,
+.shell video {
+  max-width: revert;
+  height: revert;
+}
+
+.shell a {
+  color: revert;
+  text-decoration: revert;
+}
+
+.shell button,
+.shell input,
+.shell optgroup,
+.shell select,
+.shell textarea {
+  font-size: revert;
+  font-weight: revert;
+  line-height: revert;
+  color: revert;
+}
+
+.shell button,
+.shell [type='button'],
+.shell [type='reset'],
+.shell [type='submit'] {
+  background-color: revert;
+  background-image: revert;
+}
+
+.shell table {
+  border-collapse: revert;
+  border-color: revert;
+}
+
+.shell input::placeholder,
+.shell textarea::placeholder {
+  color: revert;
+  opacity: revert;
+}
+
+/* ------------------------------------------------------------------ *
+ * 2. O global.js antigo, verbatim (so escopado em .shell).
+ * ------------------------------------------------------------------ */
+
+.shell {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Ubuntu', sans-serif;
+
+  /* As tres abaixo NAO existiam no global.js: la o <body> nao declarava
+     background, color nem line-height, entao valia o padrao do navegador
+     (branco / preto / normal). O globals.css do projeto novo aplica
+     `bg-background` (cinza-azulado 98%) e `text-foreground` no body, e o
+     preflight poe line-height 1.5 no html. Como globals.css e do painel e nao
+     pode ser tocado, restauramos o padrao antigo aqui dentro. Sem isso, toda
+     area sem background proprio sairia levemente cinza, todo texto sem cor
+     explicita sairia azul-escuro em vez de preto, e a entrelinha ficaria
+     folgada no site inteiro. */
+  background: #ffffff;
+  color: #000000;
+  line-height: normal;
+}
+
+.shell *,
+.shell *::before,
+.shell *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* `outline: 0` e verbatim do global.js antigo. Some com o anel de foco do
+     teclado — e uma perda de acessibilidade, mas e o comportamento do site
+     que estamos reproduzindo, e so vale dentro do shell publico. */
+  outline: 0;
+}
+
+.shell input,
+.shell button {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.shell button {
+  cursor: pointer;
+}
+
+.shell :global(.container) {
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 3;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.shell :global(.btn-green) {
+  height: 35px;
+  border: 1px solid #00ba9e;
+  border-radius: 5px;
+  color: #fff;
+  background: #00ba9e;
+}
+
+.shell :global(.btn-green):hover {
+  border: 1px solid #00ba9e;
+  background: #fff;
+  color: #00ba9e;
+}

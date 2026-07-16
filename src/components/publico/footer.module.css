@@ -1,0 +1,235 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/Footer/styles.js
+   (styled.footer `Container`). Declaracoes verbatim; aninhamento achatado e
+   classes do markup em :global() penduradas em .footer (ver sticky.module.css
+   para o porque). */
+
+.footer {
+  border-top: 1px solid #dcdcdc;
+  padding: 50px 0 0;
+}
+
+.footer :global(.container) {
+  display: flex;
+}
+
+.footer :global(.grid) {
+  width: 25%;
+  padding-left: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer :global(.grid) :global(.social_media_icon) {
+  font-size: 25px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.footer :global(.grid) img {
+  width: 50%;
+}
+
+.footer :global(.grid) :global(.description) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #929292;
+  width: 90%;
+  margin-top: 20px;
+}
+
+.footer :global(.grid) :global(.title) {
+  font-weight: 500;
+  font-size: 18px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.footer :global(.grid) p {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #929292;
+  margin: 0 0 10px;
+  font-style: normal;
+}
+
+.footer :global(.grid) ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer :global(.grid) ul li {
+  margin-bottom: 5px;
+}
+
+.footer :global(.grid) ul li:last-child {
+  margin-bottom: 0;
+}
+
+.footer :global(.grid) ul li a {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #929292;
+  transition: all 0.4s ease 0s;
+  text-decoration: none;
+}
+
+.footer :global(.grid) ul li a:hover {
+  color: #333333;
+}
+
+.footer :global(.bottom) {
+  margin-top: 50px;
+  text-align: center;
+  border-top: 1px solid #dcdcdc;
+  padding: 25px;
+}
+
+.footer :global(.bottom) p {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #929292;
+  margin: 0;
+}
+
+.footer :global(.bottom) p a {
+  color: #333333;
+  text-decoration: none;
+}
+
+@media (max-width: 990px) {
+  .footer {
+    padding: 10px 0px 0px;
+  }
+
+  .footer :global(.container) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* O original declara .grid duas vezes neste media query: a primeira com
+     width/padding-left e a segunda com display/align-items/margin-top/
+     line-height. Nao conflitam — unidas aqui. */
+  .footer :global(.grid) {
+    width: 50%;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px !important;
+    line-height: 2;
+  }
+
+  .footer :global(.grid):not(:first-child) {
+    margin-top: 10px;
+  }
+
+  .footer :global(.grid) img {
+    width: 110px;
+  }
+
+  .footer :global(.grid):first-child {
+    display: none;
+  }
+
+  .footer :global(.grid) ul {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer :global(.grid):nth-child(3) {
+    order: 5;
+  }
+
+  .footer :global(.grid):nth-child(3) ul {
+    margin-top: 25px;
+  }
+
+  .footer :global(.grid):nth-child(3) ul li {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100px;
+    height: 120px;
+    justify-content: space-between;
+  }
+
+  .footer :global(.grid):nth-child(5) {
+    text-align: center;
+  }
+
+  .footer :global(.grid) address {
+    margin-bottom: 0;
+  }
+
+  .footer :global(.grid):nth-child(2) {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .footer {
+    padding: 50px 0px 0px;
+  }
+
+  .footer :global(.bottom) {
+    margin-top: 0 !important;
+  }
+
+  .footer :global(.container) {
+    flex-direction: column;
+    /* `no-wrap` e invalido de proposito — verbatim do original. O navegador
+       descarta a declaracao, entao vale o `flex-wrap: wrap` do media query de
+       990px (que tambem se aplica aqui). Escrever `nowrap` (a "correcao"
+       obvia) mudaria o layout de verdade. */
+    flex-wrap: no-wrap;
+    align-items: center;
+  }
+
+  .footer :global(.grid) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px !important;
+    line-height: 2;
+  }
+
+  .footer :global(.grid):first-child {
+    display: none;
+  }
+
+  .footer :global(.grid) ul {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer :global(.grid):nth-child(3) {
+    order: 5;
+  }
+
+  .footer :global(.grid):nth-child(3) ul li {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .footer :global(.grid):nth-child(5) {
+    text-align: center;
+  }
+
+  .footer :global(.grid) address {
+    margin-bottom: 0;
+  }
+
+  .footer :global(.grid):nth-child(2) {
+    margin-top: 0 !important;
+  }
+}

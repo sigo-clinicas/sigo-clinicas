@@ -1,0 +1,16 @@
+/* O antd 3 envolvia todo icone num <span class="anticon"> e o estilizava pelo
+   antd.css. Nao carregamos o antd.css (37 MB de vendor EOL), entao replicamos
+   aqui so o que o .anticon fazia e que afeta o layout dos icones que usamos
+   (hamburguer do header, sociais do rodape). */
+
+.anticon {
+  display: inline-block;
+  color: inherit;
+  font-style: normal;
+  line-height: 0;
+  text-align: center;
+  text-transform: none;
+  vertical-align: -0.125em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}

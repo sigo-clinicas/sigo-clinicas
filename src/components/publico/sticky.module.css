@@ -1,0 +1,224 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/Sticky/styles.js
+   (styled.div `Container`).
+
+   As DECLARACOES sao verbatim — sao elas que definem o pixel. O que muda:
+   1. Aninhamento achatado (o postcss do projeto nao tem plugin de nesting e
+      habilita-lo exigiria editar postcss.config.mjs, que e do painel tambem).
+   2. A prop `inside` do styled-component virou a classe .inside.
+   3. Classes do markup antigo (.container, .link, .button...) ficam em
+      :global() para o JSX portado seguir verbatim; como todas pendem de
+      .sticky, nao vazam para fora do shell publico.
+
+   Omitido: .ant-dropdown-link, .user-logged e .account-dropdown — so existiam
+   no estado LOGADO do header antigo, que dependia das rotas /perfil/me/* (nao
+   existem no projeto novo e seriam pos-login). O header publico renderiza
+   apenas o estado deslogado. */
+
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  padding: 10px 0;
+}
+
+.sticky :global(.hamburguerBtn) {
+  display: none;
+}
+
+.sticky :global(.socialMediaContainer) {
+  display: flex;
+}
+
+.sticky :global(.socialMediaContainer) :global(.buttonContainer) {
+  width: 100px !important;
+  max-width: 55px;
+  margin-right: 40px !important;
+}
+
+.sticky :global(.socialMediaContainer) :global(.buttonContainer) p {
+  margin-bottom: 0px;
+}
+
+.sticky :global(.socialMediaContainer) :global(.socialMediaIcon) {
+  color: white;
+  font-size: 18px;
+}
+
+.sticky :global(#logo-header) {
+  width: 160px;
+  transition: all 0.4s ease 0s;
+}
+
+.sticky.small {
+  background: #ffffff;
+  box-shadow: 0px -12px 20px 0px black;
+}
+
+.sticky.small :global(#logo-header) {
+  width: 130px;
+}
+
+.sticky :global(.container) {
+  display: flex;
+}
+
+.sticky :global(.container) div {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sticky :global(.container) div :global(.link) {
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 250ms ease-in-out;
+  position: relative;
+}
+
+/* variante `inside` do styled-component (paginas sem hero atras do header) */
+.sticky.inside :global(.container) div :global(.link) {
+  color: #333333;
+}
+
+/* `.small` depois de `.inside` de proposito: as duas tem a mesma
+   especificidade, e no original o #000 do .small prevalecia sobre o #333 do
+   inside (que vinha de uma regra menos especifica). A ordem preserva isso. */
+.sticky.small :global(.container) div :global(.link) {
+  color: #000000;
+}
+
+.sticky :global(.container) div :global(.button) {
+  text-decoration: none;
+  border: 1px solid #e4413ee0;
+
+  border-radius: 7px;
+  color: #ffffff;
+  transition: all 0.4s ease 0s;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  background: #e4413ee0;
+  margin-right: 40px;
+  cursor: pointer;
+
+  width: 180px;
+  padding: 10px 0;
+}
+
+@media (max-width: 980px) {
+  .sticky {
+    background: #ffffff;
+    padding: 20px 0;
+    box-shadow: 0px -12px 20px 0px black;
+  }
+
+  /* O original declara #logo-header duas vezes neste media query: 130px no
+     inicio do bloco e 90px de novo no fim. Vale a ultima — 90px. Colapsado
+     aqui no valor efetivo. */
+  .sticky :global(#logo-header) {
+    width: 90px;
+  }
+
+  .sticky.small :global(#logo-header) {
+    width: 90px;
+    background: #ffffff;
+  }
+
+  .sticky :global(.signNav) {
+    color: #76beac !important;
+  }
+
+  .sticky :global(.socialMediaContainer) a div p {
+    color: #76beac !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .sticky {
+    box-shadow: 0px -12px 20px 0px black;
+  }
+
+  .sticky :global(.container) {
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-height: 45.75px;
+    overflow: hidden;
+    transition: 0.3s;
+  }
+
+  .sticky :global(.collapse) {
+    max-height: 217.75px;
+  }
+
+  .sticky :global(.headerNavBar) {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sticky :global(.socialMediaContainer),
+  .sticky :global(.signNav) {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+  }
+
+  .sticky :global(.buttonContainer) {
+    color: rgb(118, 190, 172);
+  }
+
+  .sticky :global(.socialMediaContainer) :global(.buttonContainer) {
+    margin-right: 0 !important;
+    width: auto !important;
+    /* `max-width: auto` e invalido de proposito — verbatim do original. O
+       navegador descarta a declaracao, entao o `max-width: 55px` declarado
+       la em cima continua valendo em <=420px. Trocar por `none` (a "correcao"
+       obvia) removeria o limite e mudaria o layout. */
+    max-width: auto !important;
+  }
+
+  .sticky :global(.button) {
+    border: none !important;
+    background-color: transparent !important;
+    color: rgb(118, 190, 172) !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    margin-right: 0 !important;
+  }
+
+  .sticky :global(.link) {
+    color: rgb(118, 190, 172) !important;
+  }
+
+  .sticky :global(.hamburguerBtn) {
+    display: block;
+  }
+
+  .sticky.small {
+    padding: 20px 0;
+    background: #ffffff;
+    box-shadow: 0px -12px 20px 0px black;
+  }
+
+  .sticky.small :global(.container) div :global(.link) {
+    color: #000000;
+  }
+}
