@@ -16,6 +16,8 @@ const ICONES = [
   ["YoutubeFilled", "IconeYoutube"],
   ["InstagramFilled", "IconeInstagram"],
   ["MenuOutlined", "IconeMenu"],
+  // seta dos Select do hero (o antd 3 renderiza este icone no .ant-select-arrow)
+  ["DownOutlined", "IconeSeta"],
 ];
 
 function coletarPaths(no, saida = []) {
@@ -25,13 +27,25 @@ function coletarPaths(no, saida = []) {
   return saida;
 }
 
+// Icones do Font Awesome que o site antigo usava nos botoes de app
+// (<i class="fab fa-apple"> / <i class="fab fa-android">). O components/Meta.js
+// carregava a v5.5.0 por CDN; buscamos os SVGs originais dessa MESMA versao.
+const ICONES_FA = [
+  ["apple", "IconeApple"],
+  ["android", "IconeAndroid"],
+];
+
 const partes = [
-  `// Icones ORIGINAIS do sistema antigo, extraidos do @ant-design/icons que o`,
-  `// repo antigo tem instalado (os mesmos paths que o <Icon theme="filled" /> do`,
-  `// antd 3 e o <MenuOutlined /> renderizavam). Gerado por scripts/gerar-icones.mjs.`,
+  `// Icones ORIGINAIS do sistema antigo. Gerado por scripts/gerar-icones.mjs.`,
+  `//`,
+  `// - antd: extraidos do @ant-design/icons que o repo antigo tem instalado (os`,
+  `//   mesmos paths que o <Icon theme="filled" /> do antd 3 e o <MenuOutlined />`,
+  `//   renderizavam).`,
+  `// - Font Awesome: baixados da CDN v5.5.0, a mesma versao que o Meta.js antigo`,
+  `//   linkava, para os <i class="fab fa-apple|fa-android"> dos botoes de app.`,
   `//`,
   `// Reimplementados como SVG inline para nao arrastar o antd (React 16, EOL) nem`,
-  `// depender de CDN externa. O antd renderiza width/height 1em + fill currentColor,`,
+  `// depender de CDN externa em runtime. Todos renderizam 1em + fill currentColor,`,
   `// entao font-size e color continuam controlando o icone como no CSS antigo.`,
   ``,
 ];
@@ -67,8 +81,43 @@ for (const [nomeAntd, nomeReact] of ICONES) {
   );
 }
 
+for (const [nomeFa, nomeReact] of ICONES_FA) {
+  const svg = await (
+    await fetch(`https://use.fontawesome.com/releases/v5.5.0/svgs/brands/${nomeFa}.svg`)
+  ).text();
+  const viewBox = svg.match(/viewBox="([^"]+)"/);
+  const d = svg.match(/\sd="([^"]+)"/);
+  if (!viewBox || !d) throw new Error(`SVG inesperado: ${nomeFa}`);
+
+  // De proposito SEM atributo `width`: o glifo do Font Awesome nao e um quadrado
+  // de 1em — ele tem a largura do proprio icone (apple = 376.5/512 = 0.735em;
+  // medimos 19.1x26 no site antigo). Declarando so a altura, o SVG assume a
+  // proporcao do viewBox e reproduz a largura do glifo. Com width="1em" sairia
+  // 26x26, e o atributo ainda venceria um `width: auto` vindo do CSS.
+  partes.push(
+    `/** fa-${nomeFa} (Font Awesome 5.5.0, brands) */`,
+    `export function ${nomeReact}(props: React.SVGProps<SVGSVGElement>) {`,
+    `  return (`,
+    `    <svg`,
+    `      viewBox="${viewBox[1]}"`,
+    `      height="1em"`,
+    `      fill="currentColor"`,
+    `      aria-hidden="true"`,
+    `      focusable="false"`,
+    `      {...props}`,
+    `    >`,
+    `      <path d="${d[1]}" />`,
+    `    </svg>`,
+    `  );`,
+    `}`,
+    ``
+  );
+}
+
 const destino =
   "c:/Users/neemi/sigo-clinicas/sigo-clinicas/src/components/publico/icones.tsx";
 writeFileSync(destino, partes.join("\n"));
-console.log(`${ICONES.length} icones gerados em ${destino}`);
-for (const [a, r] of ICONES) console.log(`  ${a.padEnd(18)} -> ${r}`);
+const total = ICONES.length + ICONES_FA.length;
+console.log(`${total} icones gerados em ${destino}`);
+for (const [a, r] of ICONES) console.log(`  antd  ${a.padEnd(16)} -> ${r}`);
+for (const [a, r] of ICONES_FA) console.log(`  fa    ${a.padEnd(16)} -> ${r}`);

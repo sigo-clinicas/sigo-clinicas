@@ -12,6 +12,11 @@
   display: flex;
 }
 
+/* Atencao ao `display: flex` daqui: alem de ser verbatim do original, ele e o
+   que neutraliza o `.grid { display: grid }` que o Tailwind gera como utilitaria
+   global — o markup antigo usa .grid nas colunas do rodape e os nomes colidem.
+   Nossa especificidade (0,2,0) vence a dele (0,1,0). Se algum dia esta linha
+   sair, as colunas viram grid e o rodape quebra. */
 .footer :global(.grid) {
   width: 25%;
   padding-left: 40px;

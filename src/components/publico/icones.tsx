@@ -1,9 +1,13 @@
-// Icones ORIGINAIS do sistema antigo, extraidos do @ant-design/icons que o
-// repo antigo tem instalado (os mesmos paths que o <Icon theme="filled" /> do
-// antd 3 e o <MenuOutlined /> renderizavam). Gerado por scripts/gerar-icones.mjs.
+// Icones ORIGINAIS do sistema antigo. Gerado por scripts/gerar-icones.mjs.
+//
+// - antd: extraidos do @ant-design/icons que o repo antigo tem instalado (os
+//   mesmos paths que o <Icon theme="filled" /> do antd 3 e o <MenuOutlined />
+//   renderizavam).
+// - Font Awesome: baixados da CDN v5.5.0, a mesma versao que o Meta.js antigo
+//   linkava, para os <i class="fab fa-apple|fa-android"> dos botoes de app.
 //
 // Reimplementados como SVG inline para nao arrastar o antd (React 16, EOL) nem
-// depender de CDN externa. O antd renderiza width/height 1em + fill currentColor,
+// depender de CDN externa em runtime. Todos renderizam 1em + fill currentColor,
 // entao font-size e color continuam controlando o icone como no CSS antigo.
 
 /** FacebookFilled (antd) */
@@ -87,6 +91,55 @@ export function IconeMenu(props: React.SVGProps<SVGSVGElement>) {
       {...props}
     >
       <path d="M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z" />
+    </svg>
+  );
+}
+
+/** DownOutlined (antd) */
+export function IconeSeta(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="64 64 896 896"
+      width="1em"
+      height="1em"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" />
+    </svg>
+  );
+}
+
+/** fa-apple (Font Awesome 5.5.0, brands) */
+export function IconeApple(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 376.5 512"
+      height="1em"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path d="M314.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C59.3 141.2 0 184.8 0 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+    </svg>
+  );
+}
+
+/** fa-android (Font Awesome 5.5.0, brands) */
+export function IconeAndroid(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 448 512"
+      height="1em"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path d="M89.6 204.5v115.8c0 15.4-12.1 27.7-27.5 27.7-15.3 0-30.1-12.4-30.1-27.7V204.5c0-15.1 14.8-27.5 30.1-27.5 15.1 0 27.5 12.4 27.5 27.5zm10.8 157c0 16.4 13.2 29.6 29.6 29.6h19.9l.3 61.1c0 36.9 55.2 36.6 55.2 0v-61.1h37.2v61.1c0 36.7 55.5 36.8 55.5 0v-61.1h20.2c16.2 0 29.4-13.2 29.4-29.6V182.1H100.4v179.4zm248-189.1H99.3c0-42.8 25.6-80 63.6-99.4l-19.1-35.3c-2.8-4.9 4.3-8 6.7-3.8l19.4 35.6c34.9-15.5 75-14.7 108.3 0L297.5 34c2.5-4.3 9.5-1.1 6.7 3.8L285.1 73c37.7 19.4 63.3 56.6 63.3 99.4zm-170.7-55.5c0-5.7-4.6-10.5-10.5-10.5-5.7 0-10.2 4.8-10.2 10.5s4.6 10.5 10.2 10.5c5.9 0 10.5-4.8 10.5-10.5zm113.4 0c0-5.7-4.6-10.5-10.2-10.5-5.9 0-10.5 4.8-10.5 10.5s4.6 10.5 10.5 10.5c5.6 0 10.2-4.8 10.2-10.5zm94.8 60.1c-15.1 0-27.5 12.1-27.5 27.5v115.8c0 15.4 12.4 27.7 27.5 27.7 15.4 0 30.1-12.4 30.1-27.7V204.5c0-15.4-14.8-27.5-30.1-27.5z" />
     </svg>
   );
 }

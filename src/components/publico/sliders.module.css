@@ -1,0 +1,37 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/SlidersStyles.js
+   (StyledImg / StyledCard). Verbatim. */
+
+.imagem {
+}
+
+@media (max-width: 420px) {
+  .imagem {
+    height: 400px !important;
+    width: 500px !important;
+    transform: translateY(-20px);
+  }
+}
+
+.card {
+}
+
+@media (max-width: 420px) {
+  .card {
+    width: 80%;
+    margin-left: 30px;
+  }
+}
+
+/* Nao existe no original: la o card assumia que toda clinica tinha logotipo.
+   Ocupa exatamente a mesma caixa que o `.carousel .card img` (140x80). */
+.semLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 140px;
+  height: 80px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1780ca;
+}

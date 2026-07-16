@@ -1,135 +1,174 @@
-/* Porte de repositorio-antigo/sigo-clinicas-www/styles/global.js.
-   As declaracoes sao verbatim; o que muda e o ESCOPO: no antigo isso era
-   createGlobalStyle (valia para o site inteiro, que so tinha telas publicas).
-   Aqui tudo pende de .shell para nao alcancar o painel, que divide o mesmo
-   globals.css e nao pode ser tocado.
-
-   O antigo usava classes globais (.container, .btn-green) no markup. Mantemos
-   os nomes via :global() para que o JSX portado siga verbatim — mas so valem
-   dentro de .shell, entao nao vazam. */
-
-/* ------------------------------------------------------------------ *
- * 1. Neutraliza o preflight do Tailwind DENTRO do shell publico.
+/* Baseline tipografico e reset das telas publicas.
  *
- * O globals.css do painel faz @tailwind base. O preflight nao e um reset
- * neutro: ele redefine defaults que o site antigo simplesmente herdava do
- * navegador. Sem desfazer isso aqui, as telas publicas nao batem com as
- * antigas — titulos sairiam sem tamanho nem negrito, listas sem marcador,
- * imagens em block com max-width 100%, links sem cor, e todo o texto com
- * line-height 1.5 em vez de normal.
+ * IMPORTANTE — de onde vem o visual do site antigo:
+ * o `styles/global.js` (createGlobalStyle) NAO era a base sozinho. O
+ * `components/Meta.js` linkava o antd.min.css GLOBALMENTE, e o antd 3 embute um
+ * normalize completo. A tipografia herdada do site antigo vem de LA:
  *
- * globals.css e do painel e nao pode ser tocado, entao a compensacao mora
- * aqui. `revert` devolve o valor da folha do user-agent — exatamente o que o
- * site antigo via. Nossa especificidade (.shell + elemento) vence a do
- * preflight (elemento puro).
+ *   body do antigo (medido no site rodando):
+ *     font-size: 14px · line-height: 1.5 · color: rgba(0,0,0,.65) · bg: #fff
+ *     ^^^ tudo do antd.min.css — so o font-family (Ubuntu) vem do global.js
  *
- * NAO reverte margin/padding/box-sizing/outline: esses o global.js antigo
- * zerava de proposito, e o reset dele vem logo abaixo.
- * ------------------------------------------------------------------ */
+ * Ou seja, a cascata antiga era: antd normalize -> global.js por cima.
+ * Este arquivo reproduz as duas camadas, nessa ordem, escopadas em .shell para
+ * nao alcancar o painel (que divide o mesmo globals.css e nao pode mudar).
+ * Os valores vieram do proprio static/antd/antd.css do repo antigo e foram
+ * conferidos contra os estilos computados do site antigo em execucao.
+ *
+ * Nao carregamos o antd.css inteiro (37 MB de vendor EOL, e as ~centenas de
+ * regras .ant-* nao servem para nada aqui): so a base que afeta o markup
+ * portado.
+ *
+ * POR QUE `:where()`: estas regras precisam ficar ENTRE dois fogos —
+ *   - mais fortes que o preflight do Tailwind (que vem do globals.css do
+ *     painel e usa seletor de elemento puro: `h1 {...}` = (0,0,1));
+ *   - mais FRACAS que qualquer regra portada dos styles.js antigos, que sempre
+ *     tem ao menos uma classe + um elemento: `.hero h1` = (0,1,1).
+ * `:where()` nao soma especificidade, entao `.shell :where(h1)` = (0,1,0):
+ * vence o preflight e perde para o CSS portado — exatamente o necessario.
+ *
+ * Sem o :where() isto quebra de verdade: na primeira versao `.shell h1` (0,1,1)
+ * empatava com `.hero h1` e vencia por ordem de carga (h1 saiu 32px em vez de
+ * 44px), e `.shell [type='submit']` (0,1,0) ainda vencia `.hero form button`
+ * (0,1,2), apagando o gradiente do botao de busca.
+ */
 
-.shell h1,
-.shell h2,
-.shell h3,
-.shell h4,
-.shell h5,
-.shell h6 {
+/* ================================================================== *
+ * 1. Base do antd (o normalize que o site antigo carregava)
+ * ================================================================== */
+
+.shell {
+  /* antd: body */
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.65);
+  background-color: #ffffff;
+
+  /* global.js: body */
+  font-family: 'Ubuntu', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* global.js: `* { margin:0; padding:0 }`.
+ *
+ * `:where(.shell)` em vez de `.shell` para o seletor inteiro ficar em (0,0,0) —
+ * a MESMA especificidade que o `*` do global.js antigo tinha. Isso importa:
+ *   - o antd poe margens em h1-h6/p/ul/address com seletor de elemento (0,0,1),
+ *     que no site antigo venciam este reset. Com (0,0,0) aqui, continuam
+ *     vencendo, sem depender de ordem.
+ *   - o CSS portado dos componentes (.footer, .hero, .banner...) e (0,1,0)+ e
+ *     tambem vence.
+ * Com `.shell *` (0,1,0) — como estava antes — o reset EMPATAVA com o seletor
+ * raiz dos componentes e vencia por ordem de carga: o `padding: 50px 0 0` do
+ * rodape virava 0.
+ *
+ * Vem antes da base do antd apenas por legibilidade; a especificidade e que
+ * resolve, nao a ordem. */
+:where(.shell) *,
+:where(.shell) *::before,
+:where(.shell) *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* verbatim do global.js. Some com o anel de foco do teclado — e uma perda de
+     acessibilidade, mas e o comportamento do site que estamos reproduzindo, e
+     so vale dentro do shell publico. */
+  outline: 0;
+}
+
+.shell :where(h1, h2, h3, h4, h5, h6) {
+  /* o antd nao mexe no font-size dos titulos, entao valia o do navegador
+     (2em, 1.5em...). O preflight do Tailwind poe `inherit` — revert desfaz. */
   font-size: revert;
-  font-weight: revert;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
 }
 
-.shell ul,
-.shell ol,
-.shell menu {
+.shell :where(p) {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.shell :where(address) {
+  margin-bottom: 1em;
+  font-style: normal;
+  line-height: inherit;
+}
+
+.shell :where(ol, ul, dl) {
+  /* o antd nao mexe no marcador; o preflight do Tailwind zera com
+     `list-style: none` — revert devolve disc/decimal. */
   list-style: revert;
+  margin-top: 0;
+  margin-bottom: 1em;
 }
 
-.shell img,
-.shell svg,
-.shell video,
-.shell canvas,
-.shell audio,
-.shell iframe,
-.shell embed,
-.shell object {
+.shell :where(ol ol, ul ul, ol ul, ul ol) {
+  margin-bottom: 0;
+}
+
+.shell :where(blockquote) {
+  margin: 0 0 1em;
+}
+
+.shell :where(a) {
+  color: #1890ff;
+  background-color: transparent;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.shell :where(a):hover {
+  color: #40a9ff;
+}
+
+.shell :where(a):active {
+  color: #096dd9;
+}
+
+.shell :where(a):active,
+.shell :where(a):hover {
+  outline: 0;
+  text-decoration: none;
+}
+
+.shell :where(img) {
+  /* o antd deixa a imagem inline (so ajusta vertical-align); o preflight do
+     Tailwind poe display:block + max-width:100% + height:auto — revert desfaz
+     os tres. O vertical-align: middle e do antd (e por acaso o Tailwind
+     concorda). */
+  display: revert;
+  max-width: revert;
+  height: revert;
+  vertical-align: middle;
+  border-style: none;
+}
+
+.shell :where(svg, video, canvas, audio, iframe, embed, object) {
   display: revert;
   vertical-align: revert;
 }
 
-.shell img,
-.shell video {
-  max-width: revert;
-  height: revert;
+.shell :where(table) {
+  border-collapse: collapse;
 }
 
-.shell a {
-  color: revert;
-  text-decoration: revert;
-}
-
-.shell button,
-.shell input,
-.shell optgroup,
-.shell select,
-.shell textarea {
-  font-size: revert;
-  font-weight: revert;
-  line-height: revert;
-  color: revert;
-}
-
-.shell button,
-.shell [type='button'],
-.shell [type='reset'],
-.shell [type='submit'] {
-  background-color: revert;
-  background-image: revert;
-}
-
-.shell table {
-  border-collapse: revert;
-  border-color: revert;
-}
-
-.shell input::placeholder,
-.shell textarea::placeholder {
-  color: revert;
-  opacity: revert;
-}
-
-/* ------------------------------------------------------------------ *
- * 2. O global.js antigo, verbatim (so escopado em .shell).
- * ------------------------------------------------------------------ */
-
-.shell {
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  font-family: 'Ubuntu', sans-serif;
-
-  /* As tres abaixo NAO existiam no global.js: la o <body> nao declarava
-     background, color nem line-height, entao valia o padrao do navegador
-     (branco / preto / normal). O globals.css do projeto novo aplica
-     `bg-background` (cinza-azulado 98%) e `text-foreground` no body, e o
-     preflight poe line-height 1.5 no html. Como globals.css e do painel e nao
-     pode ser tocado, restauramos o padrao antigo aqui dentro. Sem isso, toda
-     area sem background proprio sairia levemente cinza, todo texto sem cor
-     explicita sairia azul-escuro em vez de preto, e a entrelinha ficaria
-     folgada no site inteiro. */
-  background: #ffffff;
-  color: #000000;
-  line-height: normal;
-}
-
-.shell *,
-.shell *::before,
-.shell *::after {
+.shell :where(input, button, select, optgroup, textarea) {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  /* `outline: 0` e verbatim do global.js antigo. Some com o anel de foco do
-     teclado — e uma perda de acessibilidade, mas e o comportamento do site
-     que estamos reproduzindo, e so vale dentro do shell publico. */
-  outline: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
+
+/* ================================================================== *
+ * 2. global.js do site antigo (verbatim, so escopado)
+ * ================================================================== */
 
 .shell input,
 .shell button {
@@ -148,6 +187,15 @@
   z-index: 3;
   padding-left: 40px;
   padding-right: 40px;
+
+  /* NAO existe no global.js antigo. O Tailwind gera `.container` como classe
+     utilitaria GLOBAL (width:100% + max-width por breakpoint) e o markup antigo
+     usa esse mesmo nome de classe — colidem. O `.container` antigo nao declarava
+     width, entao valia `auto`; sem esta linha o width:100% do Tailwind vaza e o
+     .container deixa de encolher como item flex dentro do .center do hero, o que
+     jogava o h1 e o form 200px para a esquerda. Os max-width do Tailwind ja
+     perdem para o nosso (0,2,0) acima. */
+  width: auto;
 }
 
 .shell :global(.btn-green) {

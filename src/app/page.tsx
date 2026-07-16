@@ -1,115 +1,114 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Search } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { ClinicaCard } from "@/components/marketplace/clinica-card";
-import { LeadForm } from "@/components/marketplace/lead-form";
-import { clinicasDestaque } from "@/lib/marketplace";
+import { ClinicasSlider } from "@/components/publico/clinicas-slider";
+import { ComoFunciona } from "@/components/publico/como-funciona";
+import { CookieBanner } from "@/components/publico/cookie-banner";
+import { Hero } from "@/components/publico/hero";
+import { IconeAndroid, IconeApple } from "@/components/publico/icones";
+import { PublicShell } from "@/components/publico/public-shell";
+import estilos from "@/components/publico/home.module.css";
+import {
+  clinicasDestaque,
+  listarCidades,
+  listarEspecialidades,
+} from "@/lib/marketplace";
 
 // SSR dinâmico (lê sessão/cookies via createClient). Indexável (sem noindex).
 export const dynamic = "force-dynamic";
 
+// Título verbatim do <Head> do pages/index.js antigo.
 export const metadata: Metadata = {
-  title: "Sigo Clínicas — encontre e agende na clínica ideal",
+  title: "SigoClínicas - Encontre e agende o serviço de saúde mais perto de você",
   description:
     "Marketplace de clínicas médicas, estéticas, odontológicas e de terapias. Busque por cidade e especialidade e agende online.",
 };
 
-// A7 — marketplace multi-clínica público (referência funcional: legado www;
-// visual: Base44 LandingPage). Página indexável (SSR), sem noindex.
+/**
+ * A7 — marketplace multi-clínica público.
+ *
+ * Reskin visual: porte fiel do HomeComponent do sistema antigo
+ * (repositorio-antigo/sigo-clinicas-www). Estrutura, textos e ordem das seções
+ * são verbatim.
+ *
+ * Os dados continuam vindo do marketplace NOVO (Supabase + RLS). Nenhuma
+ * chamada ao backend antigo (services/api.js, axios, PHP) foi reintroduzida:
+ * o carrossel que fazia `api.get('/clinicas?page_size=8')` agora recebe
+ * clinicasDestaque(8), e o form do hero faz GET para a /buscar nova.
+ *
+ * REMOVIDO NESTE PORTE (decisão da liderança, registrado para repactuação):
+ * a seção "Quer ajuda para encontrar a clínica ideal?" com o <LeadForm>
+ * (captação de lead, S3-8). O HomeComponent antigo não tem nada equivalente e
+ * a decisão foi por fidelidade pura. Consequência: `src/components/marketplace/
+ * lead-form.tsx` e a rota `POST /api/publico/lead` continuam no código, porém
+ * SEM nenhum ponto de entrada — a home era o único. A captação de lead do
+ * marketplace fica inativa até que se decida onde realocá-la.
+ */
 export default async function Home() {
-  const destaques = await clinicasDestaque(6);
+  const [destaques, cidades, especialidades] = await Promise.all([
+    // o antigo pedia /clinicas?page_size=8
+    clinicasDestaque(8),
+    listarCidades(),
+    listarEspecialidades(),
+  ]);
 
   return (
-    <main className="min-h-screen">
-      {/* Hero */}
-      <section className="from-primary/10 bg-gradient-to-b to-transparent px-4 py-20 text-center">
-        <div className="mx-auto max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Sua saúde e bem-estar, com a clínica certa
-          </h1>
-          <p className="text-muted-foreground mt-4 text-lg">
-            Encontre clínicas médicas, estéticas, odontológicas e de terapias
-            perto de você e agende online.
-          </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <Button asChild size="lg">
-              <Link href="/buscar">
-                <Search className="mr-2 h-4 w-4" /> Buscar clínicas
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/login">Sou uma clínica</Link>
-            </Button>
+    <PublicShell>
+      <CookieBanner />
+      <Hero cidades={cidades} especialidades={especialidades} />
+
+      <main className={estilos.conteudo}>
+        <div className="carousel">
+          <div className="container">
+            <ClinicasSlider clinicas={destaques} />
           </div>
         </div>
-      </section>
 
-      {/* Clínicas em destaque */}
-      <section className="mx-auto max-w-5xl px-4 py-12">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="text-2xl font-semibold">Clínicas em destaque</h2>
-          <Link href="/buscar" className="text-primary text-sm hover:underline">
-            Ver todas →
-          </Link>
-        </div>
-        {destaques.length === 0 ? (
-          <p className="text-muted-foreground">
-            Em breve, clínicas parceiras aparecerão aqui.
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {destaques.map((c) => (
-              <ClinicaCard key={c.id} clinica={c} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Como funciona */}
-      <section className="bg-muted/30 px-4 py-12">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-center text-2xl font-semibold">Como funciona</h2>
-          <div className="grid gap-6 sm:grid-cols-3">
-            {[
-              { t: "Busque", d: "Filtre por cidade e especialidade." },
-              { t: "Escolha", d: "Veja serviços, profissionais e avaliações." },
-              { t: "Agende", d: "Marque online, sem cadastro complicado." },
-            ].map((p, i) => (
-              <div key={p.t} className="text-center">
-                <span className="bg-primary text-primary-foreground mx-auto flex h-10 w-10 items-center justify-center rounded-full font-semibold">
-                  {i + 1}
-                </span>
-                <h3 className="mt-3 font-medium">{p.t}</h3>
-                <p className="text-muted-foreground mt-1 text-sm">{p.d}</p>
-              </div>
-            ))}
+        <div className="app-box">
+          <div className="container">
+            <div className="text">
+              <h2>
+                Manter o ritmo de vida e ainda cuidar da saúde é tudo que o Sigo
+                Clínicas faz por você!
+              </h2>
+              {/* O antigo punha só <i class="fab fa-apple"> e deixava o Font
+                  Awesome (CDN, v5.5.0) desenhar o glifo. Mantemos o <i> — é ele
+                  que o CSS posiciona — com o SVG original da mesma versão
+                  dentro, em 1em, sem depender de CDN. */}
+              <a href="#" className="btn-app">
+                <i className="fab fa-apple">
+                  <IconeApple />
+                </i>
+                <span>App Store</span>
+                <small>Disponível Agora</small>
+              </a>
+              <a href="#" className="btn-app">
+                <i className="fab fa-android">
+                  <IconeAndroid />
+                </i>
+                <span>Google Play</span>
+                <small>Acesse Agora</small>
+              </a>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/static/app.png"
+              alt="Mão segurando um iPhone com o APP SigoClínicas"
+            />
           </div>
         </div>
-      </section>
 
-      {/* Captação de lead */}
-      <section className="px-4 py-12">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-xl font-semibold">Quer ajuda para encontrar a clínica ideal?</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Deixe seu contato e retornamos com as melhores opções.
-          </p>
-          <div className="mt-4">
-            <LeadForm origem="marketplace" />
+        <div className="how-it-works">
+          <div className="container">
+            <p className="title">Como Funciona?</p>
+            <p className="description">
+              Em nossa ferramenta de busca basta indicar para qual especialidade
+              deseja encontrar atendimento, ou simplesmente digite sua localização
+              para buscarmos os profissionais de saúde mais próximos de você.
+            </p>
+            <ComoFunciona />
           </div>
         </div>
-      </section>
-
-      <footer className="border-t border-border px-4 py-8 text-center">
-        <p className="text-muted-foreground text-sm">
-          © 2026 Sigo Clínicas ·{" "}
-          <Link href="/login" className="hover:underline">
-            Área da clínica
-          </Link>
-        </p>
-      </footer>
-    </main>
+      </main>
+    </PublicShell>
   );
 }

@@ -1,0 +1,796 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/HomeComponent/styles.js
+   (Hero = styled.header, Container = styled.main, ContainerCookie = styled.div).
+
+   Declaracoes verbatim; aninhamento achatado e classes do markup em :global()
+   (ver sticky.module.css para o porque). */
+
+/* ================================================================== *
+ * Hero
+ * ================================================================== */
+
+.hero {
+  display: block;
+  max-height: 100vh;
+  min-height: 700px;
+  background: #00ba9e;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero h1 {
+  font-size: 44px;
+  color: #ffffff;
+  font-weight: bold;
+  line-height: 1.2;
+  max-width: 800px;
+  text-align: center;
+}
+
+.hero :global(.center) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.hero form {
+  display: flex;
+  width: 800px;
+  margin: 60px 0 80px;
+}
+
+.hero form button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 90px;
+  border-radius: 4px;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(90, 203, 163, 1) 0%,
+    rgba(90, 203, 163, 1) 24%,
+    rgba(0, 186, 158, 1) 100%
+  );
+}
+
+.hero form button img {
+  max-width: 100%;
+  width: 36px;
+  padding: 8px;
+}
+
+.hero h2 {
+  font-size: 24px;
+  color: #ffffff;
+  font-weight: bold;
+  line-height: 1.2;
+  max-width: 800px;
+  text-align: center;
+}
+
+.hero :global(.options-list) {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.hero :global(.options-list) li {
+  background-size: 60px;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+.hero :global(.options-list) li:nth-child(1) {
+  background-image: url(/static/tooth.svg);
+}
+
+.hero :global(.options-list) li:nth-child(2) {
+  background-image: url(/static/pharmacy.svg);
+  padding: 0 40px;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  margin: 0 40px;
+}
+
+.hero :global(.options-list) li:nth-child(3) {
+  background-image: url(/static/health.svg);
+}
+
+/* Esta regra e CODIGO MORTO tambem no original, e por isso foi portada como
+   esta. O markup antigo poe um <button>, nao um <a>, dentro do li (o <Link> do
+   Next 7 nao injetava ancora em filhos que nao fossem <a>), entao `li a` nunca
+   casava — e o h2 la dentro carrega marginTop: 70px inline justamente para
+   compensar. Trocar o <button> por <a> ativaria estas declaracoes e o
+   espacamento dobraria (70px do padding + 70px da margem). */
+.hero :global(.options-list) li a {
+  display: block;
+  width: 200px;
+  text-align: center;
+  padding-top: 70px;
+  font-size: 24px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.hero :global(.opacity) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 186, 158, 0.5);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero :global(.slick-slider) {
+  width: 100%;
+  height: 100%;
+}
+
+.hero :global(.slick-slider) img {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ *
+ * Campos de busca do hero.
+ *
+ * O antigo usava <Select> do antd 3 (showSearch). Reimplementamos com <select>
+ * nativo: o estado fechado — o unico que aparece na tela — sai identico, o form
+ * continua funcionando sem JS (GET -> /buscar) e a acessibilidade vem de graca.
+ * A lista aberta e a nativa do SO, e nao o painel do antd (decisao da lideranca).
+ *
+ * Os valores abaixo NAO sao os do styles.js antigo: la eles miravam a arvore
+ * interna do antd (.ant-select-selection__rendered etc.), que nao existe aqui.
+ * Sao os valores MEDIDOS no site antigo rodando, reancorados na nova caixa.
+ * O de-para (tudo relativo a borda esquerda/topo da caixa de 40px):
+ *
+ *   antd                                        medido      aqui
+ *   .ant-select-selection (altura/borda/raio)   40px / 1px solid #d9d9d9 / 4px
+ *   __rendered margin-left 11 + placeholder
+ *     padding-left 35 + borda 1                 texto a 47px  padding-left: 46
+ *   __rendered bg 6px 8px, 22px (especialidade) icone a 18/9  bg 17px 8px
+ *   __rendered bg 1px 7px, 24px (cidade)        icone a 13/8  bg 12px 7px
+ *   .ant-select-arrow                           right 11, top 50% -6px, 12px,
+ *                                               rgba(0,0,0,.25)
+ *   placeholder                                 #bfbfbf, Open Sans 14px
+ *   valor selecionado                           rgba(0,0,0,.65)
+ * ------------------------------------------------------------------ */
+
+/* equivalente ao .ant-form-item: e ELE o flex item do form. Com width:100% nos
+   dois campos e width:90px no botao, o flex-shrink reproduz sozinho a
+   distribuicao 369.23 / 369.23 / 41.53 medida no antigo.
+
+   O margin-bottom: 24px e o padrao do .ant-form-item no antd.css — nao aparece
+   no styles.js antigo, mas e ele que faz o form medir 64px de altura (40 do
+   campo + 24), e nao 40. Sem isto o hero inteiro sobe 12px, porque o .center
+   centraliza o bloco verticalmente. */
+.campo {
+  width: 100%;
+  margin-right: 10px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.caixaSelect {
+  position: relative;
+  height: 40px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  padding: 0 30px 0 46px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+}
+
+/* placeholder do antd: cinza claro so enquanto nada foi escolhido */
+.select:has(option[value='']:checked) {
+  color: #bfbfbf;
+}
+
+.select option {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.especialidade {
+  background-image: url(/static/search-input.svg);
+  background-size: 22px;
+  background-position: 17px 8px;
+}
+
+.cidade {
+  background-image: url(/static/placeholder-input.svg);
+  background-size: 24px;
+  background-position: 12px 7px;
+}
+
+.seta {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  margin-top: -6px;
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+  .hero {
+    min-height: 670px;
+    height: 670px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero {
+    min-height: 530px;
+    height: 530px;
+    padding-top: 48px;
+  }
+
+  .hero :global(.container) {
+    margin-top: 0;
+  }
+
+  .hero h1 {
+    font-size: 22px;
+  }
+
+  .hero form {
+    width: 100%;
+    flex-direction: column;
+    margin: 15px 0 19px;
+  }
+
+  /* O original tem aqui `form input { width: 100%; margin-bottom: 2px }`, que
+     NAO foi portado de proposito: aquele `input` era o campo de digitacao
+     interno do antd Select, que fica com display:none quando o select nao esta
+     em modo busca. A regra nunca teve efeito visual. Reancora-la no nosso
+     .campo inventaria um espacamento que o site antigo nao tem — o .campo
+     mantem o margin-bottom: 24px do .ant-form-item tambem no mobile. */
+
+  .hero form button {
+    width: 100%;
+  }
+
+  .hero h2,
+  .hero :global(.options-list) {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero {
+    min-height: 400px;
+    height: 400px;
+  }
+
+  .hero :global(.container) {
+    margin-top: 0;
+  }
+
+  .hero :global(.hero-slider-container) {
+    margin-top: 30px !important;
+  }
+}
+
+/* ================================================================== *
+ * Container (conteudo abaixo do hero)
+ * ================================================================== */
+
+.conteudo :global(.carousel) {
+  background: #f5fcfd;
+  padding: 50px 0 80px;
+}
+
+.conteudo :global(.carousel) a {
+  text-decoration: none;
+  padding: 40px;
+  display: block;
+}
+
+.conteudo :global(.carousel) :global(.slick-slide) {
+  padding-left: 40px;
+  margin: 20px 0;
+}
+
+.conteudo :global(.carousel) :global(.slick-slide)[data-index='0']:not(:global(.slick-current)) {
+  position: relative;
+  left: -20px;
+}
+
+.conteudo :global(.carousel) :global(.slick-slide):last-child {
+  position: relative;
+  left: -5px;
+}
+
+.conteudo :global(.carousel) :global(.slick-list) {
+  margin-left: -40px;
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) {
+  bottom: -50px;
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) li {
+  margin: 0;
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) li:not(:last-child) {
+  margin-right: 0;
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) li:global(.slick-active) button {
+  background: rgba(102, 102, 102, 0.6);
+  border: thin solid rgba(102, 102, 102, 0.6);
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) li button {
+  border: thin solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+}
+
+.conteudo :global(.carousel) :global(.slick-dots) li button:before {
+  content: '';
+}
+
+.conteudo :global(.carousel) :global(.card) {
+  background: #ffffff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.conteudo :global(.carousel) :global(.card):hover {
+  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.16);
+}
+
+.conteudo :global(.carousel) :global(.card) img {
+  margin: 0 auto;
+  width: 140px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.conteudo :global(.carousel) :global(.card) h3 {
+  line-height: 1.4;
+  font-weight: bold;
+  font-size: 18px;
+  color: #1780ca;
+  margin: 15px 0 0;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.conteudo :global(.carousel) :global(.card) h3 small {
+  font-size: 12px;
+  color: #929292;
+  margin: 0;
+  text-align: center;
+  font-weight: normal;
+  display: block;
+}
+
+.conteudo :global(.carousel) :global(.card) address {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+  color: #929292;
+  margin-top: 10px;
+  font-style: normal;
+}
+
+.conteudo :global(.app-box) {
+  padding-top: 70px;
+  position: relative;
+  background: url(/static/pacient.jpg);
+  background-position: center;
+  background-attachment: fixed;
+  height: 470px;
+}
+
+.conteudo :global(.app-box):before {
+  width: 100%;
+  height: 470px;
+  background: #4c5d7d;
+  opacity: 0.8;
+  left: 0;
+  top: 0;
+  content: '';
+  position: absolute;
+}
+
+.conteudo :global(.app-box) :global(.container) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.conteudo :global(.app-box) h2 {
+  max-width: 720px;
+  font-weight: 700;
+  font-size: 48px;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 50px;
+}
+
+.conteudo :global(.app-box) :global(.text) {
+  margin-top: 30px;
+}
+
+.conteudo :global(.app-box) div {
+  position: relative;
+  z-index: 3;
+}
+
+.conteudo :global(.app-box) :global(.btn-app) {
+  transition: all 0.4s ease 0s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  border: 1px solid #ffffff;
+  display: inline-block;
+  padding: 14px 28px;
+  text-decoration: none;
+  border-radius: 50px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.conteudo :global(.app-box) :global(.btn-app) i {
+  position: absolute;
+  font-size: 26px;
+  top: 15px;
+}
+
+/* Reproduz a base do `.fab` do Font Awesome 5.5, que o Meta.js antigo carregava
+   por CDN. Sem isto o <i> herda font-style: italic do navegador e line-height
+   1.5 do antd, e o icone sai torto e alto demais. */
+.conteudo :global(.fab) {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A largura vem da proporcao do viewBox (o SVG e gerado sem atributo `width`
+   justamente para isso — ver scripts/gerar-icones.mjs). `display: block` evita
+   o espaco de descida que um SVG inline criaria: no antigo o <i> continha um
+   glifo de fonte com line-height 1, e media exatos 26px de altura. */
+.conteudo :global(.fab) svg {
+  display: block;
+}
+
+.conteudo :global(.app-box) :global(.btn-app) span,
+.conteudo :global(.app-box) :global(.btn-app) small {
+  padding-left: 40px;
+}
+
+.conteudo :global(.app-box) :global(.btn-app) small {
+  display: block;
+}
+
+.conteudo :global(.app-box) :global(.btn-app):hover {
+  background: #ffffff;
+  color: #47c7a2;
+  transition: all 0.4s ease 0s;
+}
+
+.conteudo :global(.app-box) :global(.btn-app):hover i,
+.conteudo :global(.app-box) :global(.btn-app):hover small,
+.conteudo :global(.app-box) :global(.btn-app):hover span {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 203, 163, 1) 0%,
+    rgba(90, 203, 163, 1) 24%,
+    rgba(0, 186, 158, 1) 100%
+  );
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+}
+
+.conteudo :global(.app-box) :global(.btn-app):last-child {
+  margin-left: 15px;
+}
+
+.conteudo :global(.app-box) img {
+  position: relative;
+  z-index: 3;
+  width: 280px;
+}
+
+.conteudo :global(.how-it-works) {
+  padding: 70px 0;
+}
+
+/* o original declara `color` duas vezes; vale a ultima (#e4413ee0) */
+.conteudo :global(.how-it-works) :global(.title) {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 40px;
+  color: #e4413ee0;
+}
+
+.conteudo :global(.how-it-works) :global(.description) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  color: #929292;
+  width: 65%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.conteudo :global(.how-it-works) :global(.steps) {
+  display: flex;
+  margin-top: 50px;
+}
+
+.conteudo :global(.how-it-works) :global(.steps) > div {
+  width: 50%;
+}
+
+.conteudo :global(.how-it-works) :global(.history) {
+  cursor: pointer;
+  float: left;
+  width: 100%;
+  display: table;
+  margin: 0;
+  position: relative;
+  padding-left: 70px;
+  margin-bottom: 24px;
+  padding-bottom: 0;
+}
+
+.conteudo :global(.how-it-works) :global(.history) i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 58px;
+  height: 58px;
+
+  background: #ffffff;
+  content: '';
+  text-align: center;
+  border-radius: 50%;
+}
+
+.conteudo :global(.how-it-works) :global(.history) i img {
+  width: 50px;
+  position: relative;
+  top: 6px;
+}
+
+.conteudo :global(.how-it-works) :global(.history):global(.active) p:first-child {
+  color: #1780ca;
+}
+
+.conteudo :global(.how-it-works) :global(.history) :global(.info) {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.conteudo :global(.how-it-works) :global(.history) p:first-child {
+  font-weight: 500;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.conteudo :global(.how-it-works) :global(.history) p:nth-child(2) {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #929292;
+  margin-top: 0;
+  margin-bottom: 40px;
+  width: 70%;
+}
+
+.conteudo :global(.how-it-works) :global(.box-image) {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  padding-left: 40px;
+}
+
+.conteudo :global(.how-it-works) :global(.box-image) img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+@media (max-width: 1200px) {
+  .conteudo :global(.carousel) :global(.slick-list) {
+    margin-left: -20px;
+  }
+
+  .conteudo :global(.carousel) :global(.slick-slide) {
+    padding-left: 20px;
+  }
+
+  .conteudo :global(.app-box) h2 {
+    font-size: 32px;
+  }
+
+  .conteudo :global(.app-box) :global(.text) {
+    margin-top: 0;
+  }
+
+  .conteudo :global(.app-box) :global(.container) {
+    align-items: center;
+  }
+}
+
+@media (max-width: 980px) {
+  .conteudo :global(.carousel) :global(.slick-slide) {
+    padding: 0;
+  }
+
+  .conteudo :global(.carousel) :global(.slick-list) {
+    margin-left: 0;
+  }
+
+  .conteudo :global(.app-box) {
+    height: auto;
+    padding: 40px 0;
+  }
+
+  .conteudo :global(.app-box):before {
+    height: 100%;
+  }
+
+  .conteudo :global(.app-box) img {
+    display: none;
+  }
+
+  .conteudo :global(.app-box) h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .conteudo :global(.app-box) :global(.btn-app) {
+    display: block;
+  }
+
+  .conteudo :global(.app-box) :global(.btn-app):last-child {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .conteudo :global(.how-it-works) :global(.description) {
+    width: 100%;
+  }
+
+  .conteudo :global(.how-it-works) :global(.steps) {
+    flex-direction: column;
+  }
+
+  .conteudo :global(.how-it-works) :global(.steps) > div {
+    width: 100%;
+  }
+
+  .conteudo :global(.how-it-works) :global(.box-image) {
+    display: none;
+  }
+
+  .conteudo :global(.how-it-works) :global(.steps) :global(.history) p:nth-child(2) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .conteudo :global(.how-it-works) {
+    padding: 0;
+    padding-top: 50px;
+  }
+
+  .conteudo :global(.info) p {
+    margin-top: 0 !important;
+    line-height: 1.5 !important;
+  }
+
+  .conteudo :global(.description) {
+    line-height: 2;
+  }
+}
+
+/* ================================================================== *
+ * Banner de cookies (ContainerCookie / SpanCookie)
+ * ================================================================== */
+
+.banner {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  bottom: 0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  left: 0;
+  padding: 30px;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+}
+
+.banner > span {
+  display: inline-block;
+  font-size: 14px;
+}
+
+.banner > button {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 203, 163, 1) 0%,
+    rgba(90, 203, 163, 1) 24%,
+    rgba(0, 186, 158, 1) 100%
+  );
+  border: none;
+  border-radius: 4px;
+  height: 30px;
+  margin-left: 30px;
+  padding: 0 50px;
+}
+
+/* No antigo, SpanCookie era um <span> e herdava o `color: white` do banner.
+   Aqui virou <Link> (a politica agora e a pagina /cookies, no lugar do Modal do
+   antd), entao precisa recusar explicitamente a cor de link do navegador.
+   Ancorado em .banner de proposito: (0,2,0) vence o `.shell :where(a)` (0,1,0)
+   do anti-preflight sem depender de ordem de carga. */
+.banner .linkCookie {
+  cursor: pointer;
+  text-decoration: underline;
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+  }
+
+  .banner > span {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+}

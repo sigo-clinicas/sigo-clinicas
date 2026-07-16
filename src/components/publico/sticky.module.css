@@ -64,6 +64,15 @@
   display: flex;
 }
 
+/* NAO existe no CSS antigo. O Tailwind gera `.collapse { visibility: collapse }`
+   como utilitaria global, e o markup antigo usa .collapse no .container para
+   marcar o menu mobile ABERTO. Sem esta linha, abrir o menu o tornaria
+   invisivel. Fora do media query de proposito: o utilitario do Tailwind vale em
+   qualquer largura. */
+.sticky :global(.collapse) {
+  visibility: visible;
+}
+
 .sticky :global(.container) div {
   flex-grow: 1;
   display: flex;
