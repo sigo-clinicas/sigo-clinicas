@@ -1,0 +1,595 @@
+/* Porte de repositorio-antigo/sigo-clinicas-www/components/BuscaComponent/styles.js
+   (4 raizes: Header -> .headerBusca | Container -> .containerBusca |
+    CardClinica -> .cardClinica | AsideBusca -> .asideBusca).
+
+   As DECLARACOES do styles.js sao verbatim. Onde o styles.js so tinha OVERRIDES
+   de um widget do antd (Collapse, Checkbox, Slider, DatePicker), a base do antd
+   — que o site antigo carregava via antd.min.css global — foi RESOLVIDA no valor
+   final e escrita aqui. Cada valor de widget foi MEDIDO no site antigo rodando
+   (mesmo protocolo da home); os n. entre colchetes remetem a essas medicoes.
+
+   Classes do markup antigo e do antd ficam em :global(), penduradas na raiz do
+   componente (ver sticky.module.css para o porque). */
+
+/* ================================================================== *
+ * Header (faixa "Resultado das buscas")
+ * ================================================================== */
+
+.headerBusca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 180px;
+  /* compensa o Sticky fixo (mesma altura do header antigo). Se as alturas de
+     Sticky divergirem, medir e ajustar. */
+  margin-top: 101px;
+  background-image: url(/static/medical.jpg?v=1.1);
+  background-size: cover;
+  background-position: 50% 69%;
+  background-repeat: no-repeat;
+}
+
+/* overlay natimorto: opacity .5 mas SEM background nem cor — nao pinta nada.
+   Verbatim de propósito (styles.js:15-24). O contraste do h1 vem so da pilula. */
+.headerBusca::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.headerBusca h1 {
+  background-color: rgba(0, 169, 176, 0.7);
+  padding: 0px 10px;
+  border-radius: 100px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 32px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0;
+  z-index: 1;
+}
+
+/* ================================================================== *
+ * Container (main) + coluna de resultados
+ * ================================================================== */
+
+.containerBusca {
+  padding: 60px 0;
+}
+
+/* scroll da lista de checkbox — vem do Container, NAO do aside (styles.js:43-46).
+   Portar so o aside perderia isto e a lista cresceria sem limite. */
+.containerBusca :global(.list-specialties) {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.containerBusca :global(.container) {
+  display: flex;
+  width: 100%;
+}
+
+/* `aside` casa por TAG (styles.js:48): o elemento do aside PRECISA ser <aside>,
+   senao a largura some e o flex quebra. */
+.containerBusca aside {
+  width: 22.5%;
+}
+
+.containerBusca :global(.result) {
+  width: 77.5%;
+  padding-left: 40px;
+}
+
+.containerBusca :global(.result) h2 {
+  color: #333333;
+  font-size: 18px;
+  line-height: 1.4;
+  /* o styles.js declara margin-bottom:0 e logo depois margin:15px 0 — vale o
+     ultimo (margin:15px 0). O h2 tambem carrega inline marginTop:0 e flexGrow:1
+     (styles.js:56), aplicados no JSX. */
+  margin: 15px 0;
+  font-weight: 400;
+}
+
+/* `.result h2 strong` (styles.js:106, text-transform:capitalize) NUNCA casa: o
+   resumo nao tem <strong>, o negrito e <span style="font-weight:800"> inline.
+   Nao portada — capitalizar mudaria o texto. */
+
+@media (max-width: 990px) {
+  .containerBusca aside {
+    width: 100%;
+  }
+
+  .containerBusca :global(.container) {
+    flex-direction: column;
+  }
+
+  .containerBusca :global(.result) {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  /* vence o inline marginTop:0/flexGrow do h2 via !important (styles.js:136-139) */
+  .containerBusca :global(.result) h2 {
+    text-align: center;
+    margin: 30px auto !important;
+  }
+}
+
+/* ================================================================== *
+ * Card de resultado
+ * ================================================================== */
+
+.cardClinica {
+  width: 100%;
+  display: block;
+  border: 2px solid #e6e7ef;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.cardClinica:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.cardClinica :global(.head) {
+  display: flex;
+  align-items: center;
+}
+
+/* `<Link className="logo">` do App Router vira <a class="logo"> — casa por tag
+   (styles.js:166). Sem logo, o <a> fica vazio mantendo o padding:10px, igual ao
+   antigo. */
+.cardClinica :global(.head) a {
+  padding: 10px;
+}
+
+.cardClinica :global(.head) a img {
+  width: 93px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.cardClinica :global(.head) :global(.description) {
+  margin-left: 25px;
+  flex-grow: 1;
+}
+
+.cardClinica :global(.head) :global(.description) h3 a {
+  padding: 0;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  color: #1780ca;
+  /* styles.js:186 pede 800, mas a Ubuntu carregada e 400/500/700 — o antigo
+     renderiza 700. Nao adicionar Ubuntu 800. */
+  font-weight: 800;
+  margin-bottom: 0;
+  text-decoration: none;
+}
+
+.cardClinica :global(.head) :global(.description) address {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  color: #929292;
+  font-weight: 400;
+  margin: 10px 0;
+  font-style: normal;
+}
+
+.cardClinica :global(.head) :global(.description) :global(.specialties) {
+  font-size: 14px;
+  color: #1780ca;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* O bloco `.body` do card (Collapse "Servicos" + grade de horarios) NAO e
+   portado: decisao da lideranca (omitir o bloco de servicos na v1). No antigo
+   ele ja nascia FECHADO — defaultActiveKey={['']} nunca casa com key={id} — entao
+   visualmente some apenas a linha "Servicos"; o resto do card fica identico. Por
+   isso o CSS de `.body`, `.service-*`, `.timesheet`, `.img/name/btn-professional`
+   (styles.js:154-160,210-349) tambem nao vem: ficaria sem alvo. */
+
+@media (max-width: 990px) {
+  .cardClinica :global(.head) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cardClinica :global(.head) :global(.description) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardClinica :global(.head) {
+    text-align: center;
+  }
+}
+
+/* ================================================================== *
+ * Aside — cada filtro e um "card" (Collapse do antd)
+ *
+ * Base do antd + overrides do styles.js (352-475), resolvidos no valor final.
+ * Medidas conferidas no site antigo: card 270px, header 22px de alt, input
+ * 43px, checkbox inner 18x18, slider handle 18x18, datepicker input 43px.
+ * ================================================================== */
+
+/* --- card do filtro (styles.js:353-358) --- */
+.asideBusca :global(.ant-collapse) {
+  border: 2px solid #e6e7ef;
+  padding: 18px 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.asideBusca :global(.ant-collapse-item) {
+  border-bottom: 0;
+}
+
+/* --- header do filtro (base antd line-height:22px + override styles.js:363-370) --- */
+.asideBusca :global(.ant-collapse-header) {
+  position: relative;
+  padding: 0;
+  padding-right: 30px;
+  line-height: 22px;
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  color: #202020;
+  cursor: pointer;
+}
+
+.asideBusca :global(.ant-collapse-header):focus {
+  outline: none;
+}
+
+/* --- seta (RightOutlined). base antd absolute + override right:0 (styles.js:372-375).
+       o SVG e 1em; font-size 12px controla o tamanho. --- */
+.asideBusca :global(.ant-collapse-arrow) {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: auto;
+  margin-top: 2px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  line-height: 0;
+  color: #202020;
+  transition: transform 0.24s;
+}
+
+.asideBusca :global(.ant-collapse-arrow) svg {
+  transition: transform 0.24s;
+}
+
+/* aberto: a seta `right` rotaciona 90deg -> aponta para baixo */
+.asideBusca :global(.ant-collapse-item-active) :global(.ant-collapse-arrow) svg {
+  transform: rotate(90deg);
+}
+
+/* --- conteudo (base antd + overrides styles.js:379-393) --- */
+.asideBusca :global(.ant-collapse-content) {
+  overflow: hidden;
+  border-top: 0;
+  margin-top: 10px;
+}
+
+.asideBusca :global(.ant-collapse-content-inactive) {
+  display: none;
+}
+
+.asideBusca :global(.ant-collapse-content-box) {
+  padding: 0;
+}
+
+/* --- input de busca das caixas (styles.js:426-440). radius 8px de proposito:
+       `.asideBusca input[type=text]` (0,1,1) vence `.ant-input` (0,1,0). --- */
+.asideBusca input[type='text'] {
+  width: 100%;
+  font-weight: 400;
+  background: none;
+  padding: 12px 25px;
+  font-size: 15px;
+  color: #a7a7a7;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+  border: 2px solid #e8ecec;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  height: 43px;
+}
+
+.asideBusca input[type='text']::placeholder {
+  color: #a7a7a7;
+}
+
+/* --- lista de checkbox: display flex/column do aside (styles.js:442-444);
+       o max-height/overflow vem do Container (ver .containerBusca acima) --- */
+.asideBusca :global(.list-specialties) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* label = .ant-checkbox-wrapper. display:block e o que empilha (styles.js:446-452) */
+.asideBusca :global(.list-specialties) label {
+  margin: 0;
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  color: #888888;
+  margin-bottom: 7px;
+  display: block;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.asideBusca :global(.ant-checkbox-group) {
+  display: block;
+}
+
+/* caixa do checkbox (base antd; top -0.09em e o alinhamento vertical) */
+.asideBusca :global(.ant-checkbox) {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  top: -0.09em;
+  cursor: pointer;
+}
+
+/* input real escondido sob a caixa (paridade de DOM + clicavel) */
+.asideBusca :global(.ant-checkbox-input) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* inner 18x18 (override styles.js:458-461 sobre os 16 do antd) */
+.asideBusca :global(.ant-checkbox-inner) {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+/* o glifo do check: valores do antd calculados para 16px, mantidos com o inner
+   em 18px — e exatamente o que o site antigo mostra (o override 18px nao
+   reposicionou o ::after). Medido: rotate 45, border-right/bottom 2px branco. */
+.asideBusca :global(.ant-checkbox-inner)::after {
+  position: absolute;
+  top: 50%;
+  left: 21%;
+  display: table;
+  width: 5.71428571px;
+  height: 9.14285714px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg) scale(0) translate(-50%, -50%);
+  opacity: 0;
+  content: ' ';
+  transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+}
+
+/* marcado: azul #2c7dfa (override styles.js:463-466) + glifo visivel */
+.asideBusca :global(.ant-checkbox-checked) :global(.ant-checkbox-inner) {
+  background-color: #2c7dfa;
+  border-color: #2c7dfa;
+}
+
+.asideBusca :global(.ant-checkbox-checked) :global(.ant-checkbox-inner)::after {
+  transform: rotate(45deg) scale(1) translate(-50%, -50%);
+  opacity: 1;
+}
+
+/* hover: borda azul (styles.js:468-472) */
+.asideBusca :global(.list-specialties) label:hover :global(.ant-checkbox-inner) {
+  border-color: #2c7dfa;
+}
+
+/* desabilitado (base antd) */
+.asideBusca :global(.ant-checkbox-disabled) :global(.ant-checkbox-inner) {
+  border-color: #d9d9d9 !important;
+  background-color: #f5f5f5;
+}
+
+.asideBusca :global(.ant-checkbox-disabled) + span {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+
+/* texto ao lado do check (base antd: padding 8px dos dois lados) */
+.asideBusca :global(.ant-checkbox) + span {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* ================================================================== *
+ * Slider de Preco — INERTE ("Em breve")
+ *
+ * No antigo, min=max=0 (sem dados de preco): o track fica com largura 0 e os
+ * DOIS handles colados na ponta esquerda. E exatamente o que o site antigo
+ * mostra — reproduzimos esse estado, estatico. Base antd + overrides
+ * styles.js:385-408.
+ * ================================================================== */
+
+.asideBusca :global(.ant-slider) {
+  position: relative;
+  height: 12px;
+  margin: 14px 11px 10px;
+  padding: 4px 0;
+  cursor: default;
+}
+
+.asideBusca :global(.ant-slider-rail) {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background-color: #f5f5f5;
+}
+
+.asideBusca :global(.ant-slider-track) {
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #2c7dfa;
+}
+
+.asideBusca :global(.ant-slider-handle) {
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin-left: -10px;
+  margin-top: -7px;
+  border: solid 2px #2c7dfa;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+/* ================================================================== *
+ * DatePicker de Data — INERTE ("Em breve")
+ * Base antd + overrides styles.js:410-424. radius 4px (o input[type=text] de
+ * radius 8px NAO casa: o antd renderiza o campo sem type="text").
+ * ================================================================== */
+
+.asideBusca :global(.ant-calendar-picker) {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.asideBusca :global(.ant-calendar-picker) :global(.ant-input) {
+  width: 100%;
+  height: 43px;
+  padding: 12px 25px;
+  font-size: 15px;
+  color: #a7a7a7;
+  font-family: 'Source Sans Pro', sans-serif;
+  border: 2px solid #e8ecec;
+  border-radius: 4px;
+  background: #fff;
+  cursor: default;
+}
+
+.asideBusca :global(.ant-calendar-picker-icon) {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+/* ================================================================== *
+ * Popover ("+N" cidades/especialidades do resumo) — base antd
+ * ================================================================== */
+
+.popover {
+  position: absolute;
+  z-index: 1030;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  white-space: nowrap;
+}
+
+.popoverInner {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 12px 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.popoverInner p {
+  margin: 0;
+}
+
+.popoverInner p + p {
+  margin-top: 4px;
+}
+
+.popoverGatilho {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+
+.popoverSeta {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: #fff;
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.06));
+}
+
+/* ================================================================== *
+ * Alert de resultado vazio — base antd (.ant-alert-error, no-icon)
+ * Texto verbatim (com o typo "cliníca") no JSX.
+ * ================================================================== */
+
+.alerta {
+  position: relative;
+  padding: 8px 15px;
+  border-radius: 4px;
+  border: 1px solid #ffa39e;
+  background-color: #fff1f0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* wrapper do estado vazio (o antigo usa .found com width:100% inline) */
+.found {
+  width: 100%;
+}
+
+/* ================================================================== *
+ * Icones Font Awesome do card (map-marker-alt no endereco, briefcase-medical
+ * nas especialidades). Base do .fas que o site antigo carregava por CDN; os
+ * SVGs sao os originais da v5.5.0, inline (ver icones.tsx).
+ * ================================================================== */
+
+.cardClinica :global(.fas) {
+  display: inline-block;
+  font-style: normal;
+  line-height: 1;
+}
+
+/* largura pela proporcao do viewBox (SVG gerado sem atributo width) */
+.cardClinica :global(.fas) svg {
+  height: 1em;
+  vertical-align: -0.125em;
+}

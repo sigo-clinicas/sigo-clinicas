@@ -18,6 +18,10 @@ const ICONES = [
   ["MenuOutlined", "IconeMenu"],
   // seta dos Select do hero (o antd 3 renderiza este icone no .ant-select-arrow)
   ["DownOutlined", "IconeSeta"],
+  // seta dos Collapse do aside da busca (.ant-collapse-arrow; rotaciona 90 ao abrir)
+  ["RightOutlined", "IconeDireita"],
+  // icone do DatePicker (inerte) da busca (.ant-calendar-picker-icon)
+  ["CalendarOutlined", "IconeCalendario"],
 ];
 
 function coletarPaths(no, saida = []) {
@@ -33,6 +37,9 @@ function coletarPaths(no, saida = []) {
 const ICONES_FA = [
   ["apple", "IconeApple"],
   ["android", "IconeAndroid"],
+  // usados no card de resultado da busca (<i class="fas fa-...">)
+  ["map-marker-alt", "IconeMapa"],
+  ["briefcase-medical", "IconeMaleta"],
 ];
 
 const partes = [

@@ -1,111 +1,168 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Search } from "@/components/lucide-icons";
 
-import { ClinicaCard } from "@/components/marketplace/clinica-card";
+import { AsideBusca } from "@/components/publico/aside-busca";
+import { CardClinicaBusca } from "@/components/publico/card-clinica-busca";
+import { PopoverMais } from "@/components/publico/popover-mais";
+import { PublicShell } from "@/components/publico/public-shell";
+import estilos from "@/components/publico/busca.module.css";
 import {
   listarCidades,
   listarClinicas,
   listarEspecialidades,
 } from "@/lib/marketplace";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Buscar clínicas — Sigo Clínicas",
+  title: "SigoClínicas - Resultado das buscas",
   description: "Busque clínicas por cidade e especialidade e agende online.",
 };
 
-// Busca pública (A7): filtro por cidade + especialidade. Form nativo (GET) →
-// funciona sem JS (SEO). Resultado ordenado por marketplace_ranking_score.
+// aceita ?chave=a&chave=b (multi) ou ?chave=a (single) e normaliza para lista
+function comoLista(v: string | string[] | undefined): string[] {
+  if (!v) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+/**
+ * Busca pública (A7) — reskin do BuscaComponent antigo.
+ *
+ * Dados do marketplace NOVO (Supabase + RLS). Pipeline ÚNICO (o antigo tinha 3
+ * motores que se atropelavam — não reproduzimos os bugs):
+ *   1. listarClinicas() sem filtro (todas as públicas)
+ *   2. mapa clinica_id -> especialidades, composto AQUI (sem tocar src/lib),
+ *      igual ao precedente do filtro por tipo
+ *   3. filtra por tipo (dos botões do hero) AND cidade (OR) AND especialidade (OR)
+ *
+ * O aside (client) só reescreve a querystring; o SSR refaz o filtro. URL
+ * compartilhável, `tipo` preservado.
+ *
+ * Filtros Data e Preço: visíveis, porém inertes ("Em breve") — o marketplace
+ * novo não filtra por data nem preço, e tocar o backend está fora do escopo.
+ */
 export default async function BuscarPage({
   searchParams,
 }: {
-  searchParams: { cidade?: string; especialidade?: string };
+  searchParams: {
+    cidade?: string | string[];
+    especialidade?: string | string[];
+    tipo?: string;
+  };
 }) {
-  const cidade = searchParams.cidade ?? "";
-  const especialidade = searchParams.especialidade ?? "";
+  const cidadesSel = comoLista(searchParams.cidade);
+  const espSel = comoLista(searchParams.especialidade);
+  const tipo = searchParams.tipo ?? null;
 
-  const [clinicas, cidades, especialidades] = await Promise.all([
-    listarClinicas({
-      cidade: cidade || undefined,
-      especialidade: especialidade || undefined,
-    }),
+  const [todas, cidades, especialidades] = await Promise.all([
+    listarClinicas(),
     listarCidades(),
     listarEspecialidades(),
   ]);
 
-  // agrupa especialidades por segmento
-  const porSegmento = new Map<string, typeof especialidades>();
-  for (const e of especialidades) {
-    const k = e.segmento ?? "Outras";
-    porSegmento.set(k, [...(porSegmento.get(k) ?? []), e]);
+  // mapa clinica_id -> [especialidade_id] e id -> nome, compostos na página.
+  // (a view do marketplace não expõe especialidades; a RLS anon lê estas duas.)
+  const supabase = createClient();
+  const [{ data: vinculos }, { data: nomes }] = await Promise.all([
+    supabase.from("clinica_especialidade").select("clinica_id, especialidade_id"),
+    supabase.from("especialidade").select("id, nome"),
+  ]);
+
+  const nomePorId = new Map((nomes ?? []).map((e) => [e.id, e.nome]));
+  const espIdsPorClinica = new Map<string, string[]>();
+  for (const v of vinculos ?? []) {
+    espIdsPorClinica.set(v.clinica_id, [
+      ...(espIdsPorClinica.get(v.clinica_id) ?? []),
+      v.especialidade_id,
+    ]);
   }
 
+  // pipeline único: AND entre os grupos, OR dentro de cada grupo
+  const clinicas = todas.filter((c) => {
+    if (tipo && c.tipo !== tipo) return false;
+    if (cidadesSel.length && !(c.cidade && cidadesSel.includes(c.cidade))) return false;
+    if (espSel.length) {
+      const ids = espIdsPorClinica.get(c.id) ?? [];
+      if (!ids.some((id) => espSel.includes(id))) return false;
+    }
+    return true;
+  });
+
+  // data de amanhã DD/MM/YYYY (o que o campo inerte de Data mostra, como no antigo)
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  const dataAmanha = amanha.toLocaleDateString("pt-BR");
+
+  // resumo (h2): 1º item + "+N" no popover, como returnCityPopover/SpecialityPopover
+  const nomesEspSel = espSel.map((id) => nomePorId.get(id) ?? id);
+  const primeiraEsp = nomesEspSel[0] ?? "Todas especialidades";
+  const primeiraCidade = cidadesSel[0] ?? "Todas cidades";
+  const bold: React.CSSProperties = { fontWeight: 800 };
+
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8">
-      <Link href="/" className="text-muted-foreground text-sm hover:underline">
-        ← Início
-      </Link>
-      <h1 className="mt-2 text-2xl font-semibold">Buscar clínicas</h1>
+    <PublicShell inside>
+      <header className={estilos.headerBusca}>
+        <h1>Resultado das buscas</h1>
+      </header>
 
-      <form method="get" className="mt-6 flex flex-wrap items-end gap-3">
-        <label className="flex-1 space-y-1.5 min-w-[180px]">
-          <span className="text-muted-foreground text-xs">Cidade</span>
-          <select
-            name="cidade"
-            defaultValue={cidade}
-            className="border-border bg-background h-10 w-full rounded-md border px-3 text-sm"
-          >
-            <option value="">Todas as cidades</option>
-            {cidades.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex-1 space-y-1.5 min-w-[180px]">
-          <span className="text-muted-foreground text-xs">Especialidade</span>
-          <select
-            name="especialidade"
-            defaultValue={especialidade}
-            className="border-border bg-background h-10 w-full rounded-md border px-3 text-sm"
-          >
-            <option value="">Todas as especialidades</option>
-            {[...porSegmento.entries()].map(([seg, lista]) => (
-              <optgroup key={seg} label={seg}>
-                {lista.map((e) => (
-                  <option key={e.id} value={e.id}>
-                    {e.nome}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        </label>
-        <button
-          type="submit"
-          className="bg-primary text-primary-foreground inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium"
-        >
-          <Search className="h-4 w-4" /> Buscar
-        </button>
-      </form>
+      <main className={estilos.containerBusca}>
+        <div className="container">
+          <AsideBusca
+            cidades={cidades}
+            especialidades={especialidades.map((e) => ({ label: e.nome, value: e.id }))}
+            cidadesSelecionadas={cidadesSel}
+            especialidadesSelecionadas={espSel}
+            tipo={tipo}
+            dataAmanha={dataAmanha}
+          />
 
-      <p className="text-muted-foreground mt-6 text-sm">
-        {clinicas.length} clínica(s) encontrada(s)
-      </p>
-      {clinicas.length === 0 ? (
-        <p className="text-muted-foreground mt-4">
-          Nenhuma clínica para os filtros escolhidos.
-        </p>
-      ) : (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {clinicas.map((c) => (
-            <ClinicaCard key={c.id} clinica={c} />
-          ))}
+          <div className="result">
+            <h2 style={{ marginTop: 0, flexGrow: 1 }}>
+              Resultados para{" "}
+              <span style={bold}>
+                {primeiraEsp}{" "}
+                {nomesEspSel.length > 1 && (
+                  <PopoverMais
+                    rotulo={`+${nomesEspSel.length - 1} `}
+                    itens={nomesEspSel.slice(1)}
+                  />
+                )}
+              </span>
+              próximos a{" "}
+              <span style={bold}>
+                {primeiraCidade}{" "}
+                {cidadesSel.length > 1 && (
+                  <PopoverMais
+                    rotulo={`+${cidadesSel.length - 1}`}
+                    itens={cidadesSel.slice(1)}
+                  />
+                )}
+              </span>{" "}
+              <span style={bold}>no dia {dataAmanha} </span>
+              <span style={bold}>com qualquer valor</span>
+            </h2>
+
+            {clinicas.length > 0 ? (
+              clinicas.map((c) => (
+                <CardClinicaBusca
+                  key={c.id}
+                  clinica={c}
+                  especialidades={(espIdsPorClinica.get(c.id) ?? [])
+                    .map((id) => nomePorId.get(id))
+                    .filter((n): n is string => Boolean(n))}
+                />
+              ))
+            ) : (
+              <div className={estilos.found}>
+                <div className={estilos.alerta} role="alert">
+                  Não foi encontrado nenhuma cliníca de acordo com os valores
+                  filtrados!
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      )}
-    </main>
+      </main>
+    </PublicShell>
   );
 }
