@@ -33,3 +33,5 @@ Thumbs.db
 
 # Screenshots locais de verificacao
 *.png
+# ...exceto os assets ORIGINAIS do site publico (produto, nao screenshot)
+!public/static/**/*.png
