@@ -128,6 +128,9 @@ export async function salvarConsulta(
     observacoes: input.observacoes || null,
   };
 
+  // S6 — a constraint EXCLUDE (consulta_sem_overlap_profissional) é o backstop
+  // do double-booking (fecha a corrida que o check-then-insert acima deixava).
+  // 23P01 = exclusion_violation → é choque de horário, não falta de permissão.
   let consultaId = input.id;
   if (consultaId) {
     const { error } = await supabase
@@ -135,6 +138,9 @@ export async function salvarConsulta(
       .update(dados)
       .eq("id", consultaId)
       .eq("clinica_id", clinicaId);
+    if (error?.code === "23P01") {
+      return { erro: "Já existe um agendamento neste horário para o profissional." };
+    }
     if (error) return { erro: "Sem permissão para editar o agendamento." };
   } else {
     const { data, error } = await supabase
@@ -142,6 +148,9 @@ export async function salvarConsulta(
       .insert(dados)
       .select("id")
       .single();
+    if (error?.code === "23P01") {
+      return { erro: "Já existe um agendamento neste horário para o profissional." };
+    }
     if (error) return { erro: "Sem permissão para criar o agendamento." };
     consultaId = data.id;
   }

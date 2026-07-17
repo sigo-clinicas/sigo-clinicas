@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { clinicaPorSlug } from "@/lib/marketplace";
-import { slotsDisponiveis } from "@/lib/agenda-publica";
 import { PublicShell } from "@/components/publico/public-shell";
 import estilos from "@/components/publico/detalhes.module.css";
 
@@ -15,8 +14,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true }, // fluxo de conversão, não precisa indexar
 };
 
-// S3-8 — Agendamento público escopado à clínica (porta Base44 PortalAgendamento,
-// agora multi-clínica). Slots calculados no servidor (service_role).
+// S3-8 / S6 — Agendamento público escopado à clínica. Os slots são calculados no
+// servidor (service_role) via Server Action `carregarSlots`, recalculados quando
+// o usuário troca de profissional ou de serviços (passo = duração somada, no fuso
+// da clínica).
 export default async function AgendarPage({
   params,
   searchParams,
@@ -33,14 +34,7 @@ export default async function AgendarPage({
     profissionais[0]?.id ??
     null;
 
-  const slots = profSelecionado
-    ? await slotsDisponiveis(dados.clinica.id, profSelecionado)
-    : [];
-
-  // Reskin: só a moldura (PublicShell + banner) muda; o miolo funcional do
-  // AgendarClient (slots, form de lead, POST /api/publico/agendamento) fica
-  // intacto — decisão da liderança. Sem data-clinica-theme: cores fixas do tema
-  // padrão (teal ≈ #00ba9e do antigo), coerente com o mono-marca do site antigo.
+  // Reskin: só a moldura (PublicShell + banner) muda; o miolo funcional fica.
   return (
     <PublicShell inside>
       <header className={estilos.header}>
@@ -50,11 +44,11 @@ export default async function AgendarPage({
         clinicaId={dados.clinica.id}
         clinicaNome={dados.clinica.nome}
         slug={params.slug}
+        timezone={dados.clinica.timezone}
         profissionais={profissionais.map((p) => ({ id: p.id, nome: p.nome }))}
         servicos={dados.servicos.map((s) => ({ id: s.id, nome: s.nome }))}
         vinculos={dados.vinculos}
         profSelecionado={profSelecionado}
-        slots={slots}
       />
     </PublicShell>
   );

@@ -140,6 +140,8 @@ export type PaginaClinica = {
     cep: string | null;
     // S2 — única coluna nova da fase
     formas_pagamento: string[] | null;
+    // S6 — fuso da clínica (formatação dos slots no horário local)
+    timezone: string;
   };
   servicos: {
     id: string;
@@ -188,7 +190,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     // coluna — nunca colunas internas (cnpj/config/razao_social).
     supabase
       .from("clinica")
-      .select("telefone,email,logradouro,numero,complemento,cep,formas_pagamento")
+      .select("telefone,email,logradouro,numero,complemento,cep,formas_pagamento,timezone")
       .eq("id", base.id)
       .maybeSingle(),
     supabase
@@ -256,6 +258,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
       complemento: extra?.complemento ?? null,
       cep: extra?.cep ?? null,
       formas_pagamento: (extra?.formas_pagamento as string[] | null) ?? null,
+      timezone: extra?.timezone ?? "America/Sao_Paulo",
     },
     servicos: (servicos ?? []).map((s) => ({
       ...s,
