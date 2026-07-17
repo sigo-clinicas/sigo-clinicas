@@ -17,6 +17,7 @@ import {
   Trash2,
   Leaf,
   GraduationCap,
+  Clock,
 } from "lucide-react";
 
 import type { Papel } from "@/lib/auth";
@@ -24,9 +25,11 @@ import type { TipoClinica } from "@/lib/terminologia";
 import {
   atualizarConfigClinica,
   atualizarDadosClinica,
+  salvarHorarios,
   uploadLogoClinica,
   type EstadoClinica,
 } from "@/lib/actions/clinica";
+import { DIAS_SEMANA } from "@/lib/horario";
 import { urlLogoPublica } from "@/lib/tipo-clinica";
 import { salvarEspecialidadesClinica } from "@/lib/actions/especialidades";
 import { Switch } from "@/components/ui/switch";
@@ -116,6 +119,7 @@ export function ConfiguracoesClient({
   segmentos,
   especialidades,
   especialidadesSelecionadas,
+  horarios,
   usuario,
 }: {
   clinica: ConfigClinica;
@@ -124,6 +128,7 @@ export function ConfiguracoesClient({
   segmentos: { id: string; nome: string }[];
   especialidades: { id: string; segmento_id: string; nome: string }[];
   especialidadesSelecionadas: string[];
+  horarios: { dia_semana: number; abertura: string; fechamento: string }[];
   usuario: { nome: string; email: string; papel: Papel };
 }) {
   const cfg = clinica.config ?? {};
@@ -147,6 +152,39 @@ export function ConfiguracoesClient({
   });
   const [origens, setOrigens] = useState(cfg.origens_pacientes ?? ORIGENS_PADRAO);
   const [novaOrigem, setNovaOrigem] = useState("");
+  // S5 — editor de horário: 7 linhas fixas (dia 0-6). Dia sem `aberto` = fechado.
+  const [horas, setHoras] = useState(() =>
+    Array.from({ length: 7 }, (_, dia) => {
+      const h = horarios.find((x) => x.dia_semana === dia);
+      return {
+        aberto: Boolean(h),
+        abertura: h ? h.abertura.slice(0, 5) : "09:00",
+        fechamento: h ? h.fechamento.slice(0, 5) : "18:00",
+      };
+    })
+  );
+  const [salvoHorario, setSalvoHorario] = useState(false);
+  const [erroHorario, setErroHorario] = useState<string | null>(null);
+  const [pendenteHorario, startHorario] = useTransition();
+
+  function setDia(dia: number, patch: Partial<{ aberto: boolean; abertura: string; fechamento: string }>) {
+    setHoras((prev) => prev.map((h, i) => (i === dia ? { ...h, ...patch } : h)));
+  }
+
+  function salvarHorariosClick() {
+    startHorario(async () => {
+      const payload = horas
+        .map((h, dia) => ({ dia, h }))
+        .filter(({ h }) => h.aberto)
+        .map(({ dia, h }) => ({ dia_semana: dia, abertura: h.abertura, fechamento: h.fechamento }));
+      const r = await salvarHorarios(payload);
+      setErroHorario(r.erro);
+      if (!r.erro) {
+        setSalvoHorario(true);
+        setTimeout(() => setSalvoHorario(false), 2000);
+      }
+    });
+  }
   const [selecionadas, setSelecionadas] = useState<Set<string>>(
     new Set(especialidadesSelecionadas)
   );
@@ -180,6 +218,7 @@ export function ConfiguracoesClient({
     { id: "perfil", label: "Perfil", icon: User },
     { id: "clinica", label: "Clínica", icon: Settings },
     { id: "especialidades", label: "Especialidades", icon: GraduationCap },
+    { id: "horarios", label: "Horários", icon: Clock },
     { id: "financeiro", label: "Financeiro", icon: DollarSign },
     { id: "notificacoes", label: "Notificações", icon: Bell },
     { id: "origens", label: "Origens", icon: Tag },
@@ -657,6 +696,65 @@ export function ConfiguracoesClient({
                   {erroConfig && <p className="text-sm text-destructive">{erroConfig}</p>}
                   <Button onClick={() => salvarConfig({ origens_pacientes: origens })} disabled={pendente}>
                     {pendente ? "Salvando..." : salvo ? "✓ Salvo!" : "Salvar Origens"}
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
+
+          {tab === "horarios" && (
+            <div className="space-y-6 max-w-lg">
+              <div>
+                <h2 className="text-base font-semibold">Horário de funcionamento</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Aparece na página pública da clínica. Dias fechados não são exibidos.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                {horas.map((h, dia) => (
+                  <div
+                    key={dia}
+                    className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/20"
+                  >
+                    <div className="flex items-center gap-2 w-40">
+                      <Switch
+                        checked={h.aberto}
+                        onCheckedChange={(v) => setDia(dia, { aberto: v })}
+                        disabled={!podeEditarEspecialidades}
+                      />
+                      <span className="text-sm font-medium">{DIAS_SEMANA[dia]}</span>
+                    </div>
+                    {h.aberto ? (
+                      <div className="flex items-center gap-2 flex-1">
+                        <Input
+                          type="time"
+                          value={h.abertura}
+                          onChange={(e) => setDia(dia, { abertura: e.target.value })}
+                          disabled={!podeEditarEspecialidades}
+                          className="w-28"
+                        />
+                        <span className="text-muted-foreground">–</span>
+                        <Input
+                          type="time"
+                          value={h.fechamento}
+                          onChange={(e) => setDia(dia, { fechamento: e.target.value })}
+                          disabled={!podeEditarEspecialidades}
+                          className="w-28"
+                        />
+                      </div>
+                    ) : (
+                      <span className="flex-1 text-sm text-muted-foreground">Fechado</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {podeEditarEspecialidades && (
+                <>
+                  {erroHorario && <p className="text-sm text-destructive">{erroHorario}</p>}
+                  <Button onClick={salvarHorariosClick} disabled={pendenteHorario}>
+                    {pendenteHorario ? "Salvando..." : salvoHorario ? "✓ Salvo!" : "Salvar Horários"}
                   </Button>
                 </>
               )}

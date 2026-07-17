@@ -161,6 +161,8 @@ export type PaginaClinica = {
   // profissional_servico_select_marketplace). A comissão fica de fora por
   // allowlist de coluna. O cliente cruza nos dois sentidos em memória.
   vinculos: { servico_id: string; profissional_id: string }[];
+  // S5 — horário de funcionamento (clinica_horario). dia_semana getDay (0=dom).
+  horarios: { dia_semana: number; abertura: string; fechamento: string }[];
 };
 
 export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null> {
@@ -180,6 +182,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     { data: depoimentos },
     { data: precos },
     { data: vinculos },
+    { data: horarios },
   ] = await Promise.all([
     // Base da clínica: colunas públicas já liberadas ao anon (S0/S2), coluna a
     // coluna — nunca colunas internas (cnpj/config/razao_social).
@@ -221,6 +224,12 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
       .from("profissional_servico")
       .select("servico_id,profissional_id")
       .eq("clinica_id", base.id),
+    // S5 — horário de funcionamento (clinica_horario, policy anon de marketplace).
+    supabase
+      .from("clinica_horario")
+      .select("dia_semana,abertura,fechamento")
+      .eq("clinica_id", base.id)
+      .order("dia_semana"),
   ]);
 
   // Agrupa itens PÚBLICOS por serviço preservando tipo_valor + nome da tabela;
@@ -255,5 +264,6 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     profissionais: profissionais ?? [],
     depoimentos: depoimentos ?? [],
     vinculos: vinculos ?? [],
+    horarios: horarios ?? [],
   };
 }

@@ -246,10 +246,6 @@ async function main() {
           "Clínica de TESTE para demonstração. Estética avançada em São Paulo: " +
           "protocolos faciais e corporais, toxina botulínica, preenchimentos e " +
           "cuidados com a pele. (Dados fictícios — remover antes do lançamento.)",
-        horarios: {
-          seg: "09:00-18:00", ter: "09:00-18:00", qua: "09:00-18:00",
-          qui: "09:00-18:00", sex: "09:00-17:00", sab: "09:00-13:00", dom: null,
-        },
         // S2 — formas de pagamento (vitrine pública) e fotos do carrossel.
         formas_pagamento: ["pix", "dinheiro", "cartao_credito", "cartao_debito", "convenio"],
       })
@@ -277,6 +273,25 @@ async function main() {
       erro("fotos do carrossel", error);
       console.log(`  ✓ ${fotos.length} fotos no carrossel (bucket público 'logos')`);
     }
+  }
+
+  // ── 1.2) Horário de funcionamento (S5, tabela clinica_horario; dia 0-6=dom-sáb)
+  {
+    const HORARIOS = [
+      { dia_semana: 1, abertura: "09:00", fechamento: "18:00" },
+      { dia_semana: 2, abertura: "09:00", fechamento: "18:00" },
+      { dia_semana: 3, abertura: "09:00", fechamento: "18:00" },
+      { dia_semana: 4, abertura: "09:00", fechamento: "18:00" },
+      { dia_semana: 5, abertura: "09:00", fechamento: "17:00" },
+      { dia_semana: 6, abertura: "09:00", fechamento: "13:00" },
+      // domingo (0) ausente = fechado
+    ];
+    await db.from("clinica_horario").delete().eq("clinica_id", CLINICA_ID);
+    const { error } = await db
+      .from("clinica_horario")
+      .insert(HORARIOS.map((h) => ({ clinica_id: CLINICA_ID, ...h })));
+    erro("horário de funcionamento", error);
+    console.log("  ✓ horário de funcionamento (seg-sáb)");
   }
 
   // Especialidades do marketplace (LÊ as 66; NÃO altera). Sem estas linhas o

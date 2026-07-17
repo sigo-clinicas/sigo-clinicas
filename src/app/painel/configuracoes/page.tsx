@@ -14,26 +14,36 @@ export default async function ConfiguracoesPage() {
   if (!sessao?.clinicaAtual || !sessao.papel) redirect("/login");
 
   const supabase = createClient();
-  const [{ data: clinica }, { data: segmentos }, { data: especialidades }, { data: selecionadas }] =
-    await Promise.all([
-      supabase
-        .from("clinica")
-        .select(
-          "id,nome,tipo,razao_social,cnpj,telefone,email,cep,uf,cidade,bairro,logradouro,numero,complemento,sobre,slug,logo_path,exibir_marketplace,config"
-        )
-        .eq("id", sessao.clinicaAtual)
-        .single(),
-      supabase.from("segmento").select("id,nome").eq("ativo", true).order("nome"),
-      supabase
-        .from("especialidade")
-        .select("id,segmento_id,nome")
-        .eq("ativo", true)
-        .order("nome"),
-      supabase
-        .from("clinica_especialidade")
-        .select("especialidade_id")
-        .eq("clinica_id", sessao.clinicaAtual),
-    ]);
+  const [
+    { data: clinica },
+    { data: segmentos },
+    { data: especialidades },
+    { data: selecionadas },
+    { data: horarios },
+  ] = await Promise.all([
+    supabase
+      .from("clinica")
+      .select(
+        "id,nome,tipo,razao_social,cnpj,telefone,email,cep,uf,cidade,bairro,logradouro,numero,complemento,sobre,slug,logo_path,exibir_marketplace,config"
+      )
+      .eq("id", sessao.clinicaAtual)
+      .single(),
+    supabase.from("segmento").select("id,nome").eq("ativo", true).order("nome"),
+    supabase
+      .from("especialidade")
+      .select("id,segmento_id,nome")
+      .eq("ativo", true)
+      .order("nome"),
+    supabase
+      .from("clinica_especialidade")
+      .select("especialidade_id")
+      .eq("clinica_id", sessao.clinicaAtual),
+    supabase
+      .from("clinica_horario")
+      .select("dia_semana,abertura,fechamento")
+      .eq("clinica_id", sessao.clinicaAtual)
+      .order("dia_semana"),
+  ]);
 
   if (!clinica) redirect("/painel");
 
@@ -51,6 +61,11 @@ export default async function ConfiguracoesPage() {
       especialidadesSelecionadas={(selecionadas ?? []).map(
         (s) => s.especialidade_id
       )}
+      horarios={(horarios ?? []).map((h) => ({
+        dia_semana: h.dia_semana,
+        abertura: h.abertura,
+        fechamento: h.fechamento,
+      }))}
       usuario={{
         nome:
           (sessao.user.user_metadata?.nome as string | undefined) ??

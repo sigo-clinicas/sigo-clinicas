@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { PaginaClinica } from "@/lib/marketplace";
 import { urlLogoPublica } from "@/lib/tipo-clinica";
 import { rotulosFormasPagamento } from "@/lib/formas-pagamento";
+import { formatarHorarios } from "@/lib/horario";
 import { PublicShell } from "./public-shell";
 import { IconeMapa } from "./icones";
 import styles from "./detalhes.module.css";
@@ -70,6 +71,7 @@ export function ClinicaShell({
  */
 export function AbaInformacoes({ dados }: { dados: PaginaClinica }) {
   const { clinica, depoimentos } = dados;
+  const horarios = formatarHorarios(dados.horarios);
   const logo = urlLogoPublica(clinica.logo_path) ?? "/static/logo_icon.png";
   const fotos = (clinica.fotos ?? [])
     .map((p) => urlLogoPublica(p))
@@ -156,6 +158,20 @@ export function AbaInformacoes({ dados }: { dados: PaginaClinica }) {
                   <strong>{endereco}</strong>
                   {clinica.cep && <span className={styles.cep}>CEP {clinica.cep}</span>}
                 </address>
+              </>
+            )}
+
+            {horarios.length > 0 && (
+              <>
+                <p className="m-t-10 m-b-0">Horário de funcionamento:</p>
+                <ul className={styles.horarios}>
+                  {horarios.map((h) => (
+                    <li key={h.dia} className={styles.horarioLinha}>
+                      <span className={styles.horarioDia}>{h.dia}</span>
+                      <span className={styles.horarioIntervalo}>{h.intervalo}</span>
+                    </li>
+                  ))}
+                </ul>
               </>
             )}
           </div>

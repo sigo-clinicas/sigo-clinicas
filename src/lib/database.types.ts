@@ -648,6 +648,51 @@ export type Database = {
           },
         ]
       }
+      clinica_horario: {
+        Row: {
+          abertura: string
+          clinica_id: string
+          created_at: string
+          dia_semana: number
+          fechamento: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          abertura: string
+          clinica_id: string
+          created_at?: string
+          dia_semana: number
+          fechamento: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          abertura?: string
+          clinica_id?: string
+          created_at?: string
+          dia_semana?: number
+          fechamento?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinica_horario_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "clinica"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinica_horario_clinica_id_fkey"
+            columns: ["clinica_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_clinica"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinica_usuario: {
         Row: {
           ativo: boolean
