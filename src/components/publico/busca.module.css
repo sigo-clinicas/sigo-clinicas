@@ -593,3 +593,20 @@
   height: 1em;
   vertical-align: -0.125em;
 }
+
+/* S7 — selo de destaque no card de resultado da busca */
+.selo {
+  display: inline-block;
+  margin-left: 8px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: #00a9b0; /* parceiro */
+  vertical-align: middle;
+}
+.selo[data-nivel="premium"] {
+  background-color: #c9a227; /* premium (dourado) */
+}

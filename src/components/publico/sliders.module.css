@@ -13,6 +13,7 @@
 }
 
 .card {
+  position: relative; /* S7 — âncora do selo de destaque */
 }
 
 @media (max-width: 420px) {
@@ -34,4 +35,22 @@
   font-size: 32px;
   font-weight: bold;
   color: #1780ca;
+}
+
+/* S7 — selo de destaque no card do slider da home */
+.selo {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: #00a9b0; /* parceiro */
+}
+.selo[data-nivel="premium"] {
+  background-color: #c9a227; /* premium (dourado) */
 }
