@@ -53,26 +53,32 @@ describe.skipIf(!temAmbiente)("S6 — agendar_publico v2 + EXCLUDE", () => {
       .single();
     clinica = c!.id;
 
-    const { data: profs } = await admin
+    // chaves uniformes em todas as linhas (PostgREST exige no bulk insert)
+    const { data: profs, error: eProf } = await admin
       .from("profissional")
       .insert([
-        { clinica_id: clinica, nome: `Livre ${sufixo}`, ativo: true },
+        {
+          clinica_id: clinica, nome: `Livre ${sufixo}`, ativo: true,
+          dias_atendimento: [], horario_inicio: null, horario_fim: null,
+        },
         {
           clinica_id: clinica, nome: `Janela ${sufixo}`, ativo: true,
           dias_atendimento: [1, 2, 3, 4, 5], horario_inicio: "09:00", horario_fim: "12:00",
         },
       ])
       .select("id,nome");
+    if (eProf) throw eProf;
     profLivre = profs!.find((p) => p.nome.startsWith("Livre"))!.id;
     profJanela = profs!.find((p) => p.nome.startsWith("Janela"))!.id;
 
-    const { data: servs } = await admin
+    const { data: servs, error: eServ } = await admin
       .from("servico")
       .insert([
         { clinica_id: clinica, nome: `S30 ${sufixo}`, ativo: true, exibir_publico: true, duracao_minutos: 30 },
         { clinica_id: clinica, nome: `S45 ${sufixo}`, ativo: true, exibir_publico: true, duracao_minutos: 45 },
       ])
       .select("id,duracao_minutos");
+    if (eServ) throw eServ;
     serv30 = servs!.find((s) => s.duracao_minutos === 30)!.id;
     serv45 = servs!.find((s) => s.duracao_minutos === 45)!.id;
   });
