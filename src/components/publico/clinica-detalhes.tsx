@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { PaginaClinica } from "@/lib/marketplace";
 import { urlLogoPublica } from "@/lib/tipo-clinica";
+import { rotulosFormasPagamento } from "@/lib/formas-pagamento";
 import { PublicShell } from "./public-shell";
 import { IconeMapa } from "./icones";
 import styles from "./detalhes.module.css";
@@ -67,21 +68,50 @@ export function ClinicaShell({
 
 /**
  * Aba Informações. Porte de index.js:519-659.
- * Omitido (lacuna de dado, decisão da liderança): carrossel de fotos, formas de
- * pagamento, funcionalidades, especialidades, segmentos, horário de
- * funcionamento. Telefone e endereço (parcial) são exibidos (já vêm do
- * marketplace). Avaliações mantidas (feature nova, visual antigo).
+ * S2 — religados: carrossel de fotos, endereço completo e formas de pagamento.
+ * Ainda omitido (lacuna de dado): funcionalidades, especialidades, segmentos,
+ * horário de funcionamento (S5). Avaliações mantidas (feature nova, visual antigo).
  */
 export function AbaInformacoes({ dados }: { dados: PaginaClinica }) {
   const { clinica, depoimentos } = dados;
   const logo = urlLogoPublica(clinica.logo_path) ?? "/static/logo_icon.png";
-  const endereco = [clinica.bairro, clinica.cidade, clinica.uf].filter(Boolean).join(" - ");
+  const fotos = (clinica.fotos ?? [])
+    .map((p) => urlLogoPublica(p))
+    .filter((u): u is string => Boolean(u));
+  // endereço completo: "Logradouro, nº compl — Bairro, Cidade - UF"
+  const linha1 = [clinica.logradouro, clinica.numero].filter(Boolean).join(", ");
+  const linha1c = [linha1, clinica.complemento].filter(Boolean).join(" ");
+  const linha2 = [clinica.bairro, clinica.cidade, clinica.uf].filter(Boolean).join(", ");
+  const endereco = [linha1c, linha2].filter(Boolean).join(" — ");
+  const formas = rotulosFormasPagamento(clinica.formas_pagamento);
 
   return (
     <div className="container">
       <div className="left-content">
+        {fotos.length > 0 && (
+          <div className={styles.galeria} aria-label="Fotos da clínica">
+            {fotos.map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={i} className={styles.galeriaFoto} src={src} alt={`${clinica.nome} — foto ${i + 1}`} />
+            ))}
+          </div>
+        )}
+
         <p className="title">Sobre a clínica</p>
         <p className="description">{clinica.sobre ?? "—"}</p>
+
+        {formas.length > 0 && (
+          <>
+            <p className="title">Formas de pagamento</p>
+            <ul className={styles.formasPagamento}>
+              {formas.map((f) => (
+                <li key={f} className={styles.formaPagamento}>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {depoimentos.length > 0 && (
           <>
@@ -128,6 +158,7 @@ export function AbaInformacoes({ dados }: { dados: PaginaClinica }) {
                     <IconeMapa />
                   </i>{" "}
                   <strong>{endereco}</strong>
+                  {clinica.cep && <span className={styles.cep}>CEP {clinica.cep}</span>}
                 </address>
               </>
             )}
@@ -181,9 +212,9 @@ export function AbaServicos({ dados, slug }: { dados: PaginaClinica; slug: strin
 
 /**
  * Aba Profissionais. Porte de index.js:737-810.
- * Omitido: Modal e botão "Horários" (agendamento inline -> /agendar, decisão da
- * liderança) e os chips de especialidade (lacuna). Foto: user.svg (fallback do
- * antigo, que caía nele quando não havia foto).
+ * S2 — foto real do profissional (foto_path, bucket público `logos`), com
+ * fallback user.svg. Omitido: Modal/botão "Horários" (agendamento inline ->
+ * /agendar) e os chips de especialidade (lacuna).
  */
 export function AbaProfissionais({ dados }: { dados: PaginaClinica }) {
   const { profissionais } = dados;
@@ -195,7 +226,7 @@ export function AbaProfissionais({ dados }: { dados: PaginaClinica }) {
             <li key={p.id}>
               <div className="img-professional">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/static/user.svg" alt={p.nome} />
+                <img src={urlLogoPublica(p.foto_path) ?? "/static/user.svg"} alt={p.nome} />
               </div>
               <div className="card-infos">
                 <h3 className="name-professional">{p.nome}</h3>

@@ -521,3 +521,55 @@
   color: #929292;
   padding: 20px 0;
 }
+
+/* ================================================================== *
+ * S2 — dados ricos: galeria de fotos, formas de pagamento, CEP.
+ * Faixa de fotos com scroll-snap (server-rendered, sem JS). Cores/tipografia
+ * seguem a pele existente (teal ~#00a9b0, Source Sans Pro).
+ * ================================================================== */
+
+.galeria {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.galeriaFoto {
+  flex: 0 0 auto;
+  width: 280px;
+  max-width: 80%;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 8px;
+  scroll-snap-align: start;
+}
+
+.formasPagamento {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.formaPagamento {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  color: #00767c;
+  background-color: rgba(0, 169, 176, 0.1);
+  border: 1px solid rgba(0, 169, 176, 0.3);
+  border-radius: 16px;
+  padding: 4px 12px;
+}
+
+.cep {
+  display: block;
+  font-size: 13px;
+  color: #929292;
+  font-weight: normal;
+}

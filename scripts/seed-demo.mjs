@@ -250,10 +250,33 @@ async function main() {
           seg: "09:00-18:00", ter: "09:00-18:00", qua: "09:00-18:00",
           qui: "09:00-18:00", sex: "09:00-17:00", sab: "09:00-13:00", dom: null,
         },
+        // S2 — formas de pagamento (vitrine pública) e fotos do carrossel.
+        formas_pagamento: ["pix", "dinheiro", "cartao_credito", "cartao_debito", "convenio"],
       })
       .eq("id", CLINICA_ID);
     erro("perfil da clínica", error);
     console.log("  ✓ perfil público da clínica atualizado");
+  }
+
+  // ── 1.1) Carrossel de fotos (Storage bucket 'logos', PÚBLICO) ──────────────
+  {
+    const CORES = [
+      [0, 169, 176], [30, 135, 240], [16, 185, 129],
+    ];
+    const fotos = [];
+    for (let i = 0; i < CORES.length; i++) {
+      const path = `${CLINICA_ID}/demo/foto-${i + 1}.png`;
+      const { error } = await db.storage
+        .from("logos")
+        .upload(path, pngSolido(640, 420, CORES[i]), { contentType: "image/png", upsert: true });
+      if (error) { avisos.push(`upload ${path}: ${error.message}`); continue; }
+      fotos.push(path);
+    }
+    if (fotos.length > 0) {
+      const { error } = await db.from("clinica").update({ fotos }).eq("id", CLINICA_ID);
+      erro("fotos do carrossel", error);
+      console.log(`  ✓ ${fotos.length} fotos no carrossel (bucket público 'logos')`);
+    }
   }
 
   // Especialidades do marketplace (LÊ as 66; NÃO altera). Sem estas linhas o
