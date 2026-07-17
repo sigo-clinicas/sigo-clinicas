@@ -127,6 +127,10 @@ export type PaginaClinica = {
   }[];
   profissionais: { id: string; nome: string; nome_conselho: string | null; numero_registro: string | null }[];
   depoimentos: { id: string; paciente_nome: string; texto: string; nota: number | null }[];
+  // S1 — adjacência serviço↔profissional (só vínculos públicos, via a policy
+  // profissional_servico_select_marketplace). A comissão fica de fora por
+  // allowlist de coluna. O cliente cruza nos dois sentidos em memória.
+  vinculos: { servico_id: string; profissional_id: string }[];
 };
 
 export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null> {
@@ -139,35 +143,47 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
   const base = baseRow ? toClinica(baseRow) : null;
   if (!base) return null;
 
-  const [{ data: extra }, { data: servicos }, { data: profissionais }, { data: depoimentos }, { data: precos }] =
-    await Promise.all([
-      supabase.from("clinica").select("telefone,email").eq("id", base.id).maybeSingle(),
-      supabase
-        .from("servico")
-        .select("id,nome,descricao,duracao_minutos")
-        .eq("clinica_id", base.id)
-        .eq("ativo", true)
-        .eq("exibir_publico", true)
-        .order("nome"),
-      supabase
-        .from("profissional")
-        .select("id,nome,nome_conselho,numero_registro")
-        .eq("clinica_id", base.id)
-        .eq("ativo", true)
-        .order("nome"),
-      supabase
-        .from("depoimento")
-        .select("id,paciente_nome,texto,nota")
-        .eq("clinica_id", base.id)
-        .eq("status", "aprovado")
-        .eq("publicar_no_site", true)
-        .order("destaque", { ascending: false })
-        .limit(12),
-      supabase
-        .from("item_tabela_preco")
-        .select("servico_id,valor,tipo_valor")
-        .eq("clinica_id", base.id),
-    ]);
+  const [
+    { data: extra },
+    { data: servicos },
+    { data: profissionais },
+    { data: depoimentos },
+    { data: precos },
+    { data: vinculos },
+  ] = await Promise.all([
+    supabase.from("clinica").select("telefone,email").eq("id", base.id).maybeSingle(),
+    supabase
+      .from("servico")
+      .select("id,nome,descricao,duracao_minutos")
+      .eq("clinica_id", base.id)
+      .eq("ativo", true)
+      .eq("exibir_publico", true)
+      .order("nome"),
+    supabase
+      .from("profissional")
+      .select("id,nome,nome_conselho,numero_registro")
+      .eq("clinica_id", base.id)
+      .eq("ativo", true)
+      .order("nome"),
+    supabase
+      .from("depoimento")
+      .select("id,paciente_nome,texto,nota")
+      .eq("clinica_id", base.id)
+      .eq("status", "aprovado")
+      .eq("publicar_no_site", true)
+      .order("destaque", { ascending: false })
+      .limit(12),
+    supabase
+      .from("item_tabela_preco")
+      .select("servico_id,valor,tipo_valor")
+      .eq("clinica_id", base.id),
+    // Coluna a coluna: a policy expõe a linha, mas a allowlist já barra a
+    // comissão — selecionar só o par do cruzamento é defesa em profundidade.
+    supabase
+      .from("profissional_servico")
+      .select("servico_id,profissional_id")
+      .eq("clinica_id", base.id),
+  ]);
 
   // menor preço público por serviço (item_tabela_preco só expõe tabelas públicas via RLS)
   const precoPorServico = new Map<string, number>();
@@ -186,5 +202,6 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     })),
     profissionais: profissionais ?? [],
     depoimentos: depoimentos ?? [],
+    vinculos: vinculos ?? [],
   };
 }
