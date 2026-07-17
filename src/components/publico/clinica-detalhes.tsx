@@ -9,10 +9,6 @@ import styles from "./detalhes.module.css";
 
 type Aba = "informacoes" | "servicos" | "profissionais";
 
-function brl(v: number) {
-  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
-}
-
 /**
  * Moldura da página da clínica: header-banner + menu de 4 abas, dentro do
  * PublicShell. Porte do DetalhesComponent antigo (index.js:481-518). As abas
@@ -171,9 +167,9 @@ export function AbaInformacoes({ dados }: { dados: PaginaClinica }) {
 
 /**
  * Aba Serviços. Porte de index.js:661-735.
- * Omitido: coluna de filtro por categoria (o marketplace não expõe categoria) e
- * o `.service-type` (categoria). A `.service-img` usa o ícone fixo do antigo
- * (logo_icon.png). O preço vai no `.service-time` (como o viewPreco do antigo).
+ * S3 — rótulo de preço determinístico (@/lib/preco, reproduz o viewPreco sem os
+ * 2 defeitos) e duração do serviço. Omitido: filtro por categoria (o marketplace
+ * não expõe categoria); `.service-img` usa o ícone fixo do antigo.
  */
 export function AbaServicos({ dados, slug }: { dados: PaginaClinica; slug: string }) {
   const { servicos } = dados;
@@ -194,9 +190,11 @@ export function AbaServicos({ dados, slug }: { dados: PaginaClinica; slug: strin
                     <p className="service-name">{s.nome}</p>
                   </Link>
                 </div>
-                {/* viewPreco: número -> brl; nulo -> "Valor sob consulta" (fallback do antigo) */}
                 <p className="service-time">
-                  {s.preco != null ? brl(s.preco) : "Valor sob consulta"}
+                  {s.precoLabel}
+                  {s.duracao_minutos != null && (
+                    <span className={styles.duracao}> · {s.duracao_minutos} min</span>
+                  )}
                 </p>
                 {s.descricao && <p className="service-text">{s.descricao}</p>}
               </div>

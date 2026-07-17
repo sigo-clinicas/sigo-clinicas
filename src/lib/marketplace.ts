@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import { rotuloPreco, type ItemPreco } from "@/lib/preco";
 
 /**
  * S3-7 — Consultas públicas do marketplace. Leem via client da sessão (anon
@@ -136,7 +137,8 @@ export type PaginaClinica = {
     nome: string;
     descricao: string | null;
     duracao_minutos: number | null;
-    preco: number | null;
+    // S3 — rótulo pronto (fixo/a partir de/gratuito/sob consulta), determinístico
+    precoLabel: string;
   }[];
   profissionais: {
     id: string;
@@ -198,9 +200,11 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
       .eq("publicar_no_site", true)
       .order("destaque", { ascending: false })
       .limit(12),
+    // tabela_preco(nome) p/ desempate determinístico do rótulo (S3). A RLS de
+    // item_tabela_preco/tabela_preco só expõe tabelas públicas ao anon.
     supabase
       .from("item_tabela_preco")
-      .select("servico_id,valor,tipo_valor")
+      .select("servico_id,valor,tipo_valor,tabela_preco(nome)")
       .eq("clinica_id", base.id),
     // Coluna a coluna: a policy expõe a linha, mas a allowlist já barra a
     // comissão — selecionar só o par do cruzamento é defesa em profundidade.
@@ -210,13 +214,18 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
       .eq("clinica_id", base.id),
   ]);
 
-  // menor preço público por serviço (item_tabela_preco só expõe tabelas públicas via RLS)
-  const precoPorServico = new Map<string, number>();
+  // Agrupa itens PÚBLICOS por serviço preservando tipo_valor + nome da tabela;
+  // o rótulo determinístico é decidido em @/lib/preco (corrige os 2 defeitos do
+  // legado: "Gratuito" dead code e tabelaSite[0] sem ORDER BY).
+  const itensPorServico = new Map<string, ItemPreco[]>();
   for (const p of precos ?? []) {
-    if (p.tipo_valor === "gratuito") continue;
-    const atual = precoPorServico.get(p.servico_id);
-    const v = Number(p.valor);
-    if (atual === undefined || v < atual) precoPorServico.set(p.servico_id, v);
+    const lista = itensPorServico.get(p.servico_id) ?? [];
+    lista.push({
+      tipo_valor: p.tipo_valor,
+      valor: p.valor == null ? null : Number(p.valor),
+      tabela_nome: (p.tabela_preco as { nome: string } | null)?.nome ?? null,
+    });
+    itensPorServico.set(p.servico_id, lista);
   }
 
   return {
@@ -232,7 +241,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     },
     servicos: (servicos ?? []).map((s) => ({
       ...s,
-      preco: precoPorServico.get(s.id) ?? null,
+      precoLabel: rotuloPreco(itensPorServico.get(s.id) ?? []),
     })),
     profissionais: profissionais ?? [],
     depoimentos: depoimentos ?? [],
