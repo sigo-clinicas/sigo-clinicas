@@ -28,7 +28,7 @@ serem reintroduzidas:
 | Premissa original | Veredito | Realidade |
 |---|---|---|
 | Espelhar `profissional_especialidade_select_marketplace` em `profissional_servico` | **Refutada** | `profissional_servico` carrega `tipo_comissao`/`valor_comissao` ([cadastros_nucleo.sql:137-138](../../../supabase/migrations/20260711090400_cadastros_nucleo.sql)). RLS é row-level. O padrão da casa é `to anon, authenticated`, e policies PERMISSIVE fazem OR entre roles → staff da clínica A leria comissão da B. |
-| "Nunca `select *` nas queries públicas" fecha o vazamento | **Refutada** | Já está feito (zero `select *` em `marketplace.ts`) e o vazamento persiste: o vetor é o anon batendo direto no PostgREST com a chave publishable. Só `revoke select (col) from anon` resolve. |
+| "Nunca `select *` nas queries públicas" fecha o vazamento | **Refutada** | Já está feito (zero `select *` em `marketplace.ts`) e o vazamento persiste: o vetor é o anon batendo direto no PostgREST com a chave publishable. Só fechar o privilégio de coluna resolve — ver §4.1. |
 | Corrigir teto de 25 / filtros que não compõem / N+1 | **Refutada** | Ficaram no legado; não foram portados. `buscar/page.tsx:81-89` já é pipeline único URL-state. O que sobrou é o `max_rows = 1000` do PostgREST com a arquitetura "traz tudo e filtra em memória". |
 | Duas migrations aditivas bastam | **Parcial** | São 6. `formas_pagamento` auto-publica ao anon e **não** entra na view (colunas listadas uma a uma → precisa `drop`/recria/**regrant**). |
 | RPC anti double-booking já resolve | **Parcial** | Existe e é transacional, mas detecta conflito por **igualdade exata** de instante e grava `duracao_minutos = 30` literal. Vira bug ativo quando o passo virar a duração do serviço. |
@@ -37,12 +37,44 @@ serem reintroduzidas:
 
 | # | Slice | Conteúdo | Painel |
 |---|---|---|---|
-| A | S0 | `revoke select (col) from anon` em `clinica`, `profissional`, `profissional_servico` | intocado |
-| B | S1 | `profissional_servico_select_marketplace` **`to anon`** + gate estrito | intocado |
+| A | S0 | Allowlist de coluna para `anon` em `clinica` e `profissional` (§4.1) | intocado |
+| B | S1 | `profissional_servico_select_marketplace` **`to anon`** + gate estrito + allowlist (§4.1) | intocado |
 | C | S2 | `clinica.formas_pagamento` + recria `marketplace_clinica` + regrant | intocado |
 | D | S5 | `clinica_horario (clinica_id, dia_semana, abertura, fechamento)` + RLS | **tela nova** |
 | E | S6 | `clinica.timezone` default `America/Sao_Paulo` | intocado |
 | F | S6 | `agendar_publico` v2 + `EXCLUDE` com `btree_gist` em `consulta` | **muda comportamento** |
+
+### 4.1 Mecanismo: ALLOWLIST, não `revoke select (col)`
+
+> Descoberto durante o S0, **depois** da aprovação do plano. O plano dizia
+> `revoke select (cnpj) ... from anon`. **Isso é no-op.**
+
+O `anon` tem SELECT no nível da **tabela** (default do Supabase — confirmado em
+`clinica`, `profissional`, `profissional_servico`, `profissional_especialidade`,
+`servico`). O Postgres é explícito:
+
+> *"if a role has been granted privileges on a table, then revoking the same
+> privileges from individual columns will have no effect."*
+
+Ou seja: um `revoke select (col)` passaria no review, o CI ficaria verde se o teste
+fosse fraco, e **nada teria sido fechado**. O padrão correto, usado no S0 e a ser
+usado em toda migration desta fase que toque privilégio de anon:
+
+```sql
+revoke select on public.<tabela> from anon;
+grant select (<só as colunas públicas>) on public.<tabela> to anon;
+```
+
+**Efeito colateral desejado:** coluna nova nasce **fechada** ao anon. Publicar passa a
+exigir grant explícito — o que resolve **por construção** o risco levantado contra a
+Migration C (`formas_pagamento` auto-publicando ao anon no instante em que a migration
+rodasse). Na Migration C o grant de `formas_pagamento` a anon é agora uma linha
+deliberada, não um efeito colateral.
+
+**Consequência direta para o S1:** a Migration B **não** pode usar
+`revoke select (tipo_comissao, valor_comissao) ... from anon` — seria no-op e a policy
+nova exporia a comissão ao anon. Usar allowlist:
+`grant select (id, clinica_id, profissional_id, servico_id) on public.profissional_servico to anon`.
 
 ## 5. Slices
 
@@ -51,10 +83,15 @@ serem reintroduzidas:
 Vulnerabilidade **viva em produção**: `has_column_privilege('anon', 'public.clinica',
 'cnpj', 'SELECT')` = `true` no remoto. Sai sozinho, antes da fase.
 
-Migration A: `revoke select (razao_social, cnpj, config, retencao_prontuario_meses,
-retencao_fiscal_meses, retencao_marketing_meses, is_seed_demo) on public.clinica from anon`
-e `revoke select (cpf, data_nascimento, user_id) on public.profissional from anon`.
-Só `from anon` — `authenticated` intocado.
+Migration A (allowlist, §4.1): fecham em `clinica` — `razao_social`, `cnpj`, `config`,
+`retencao_*`, `is_seed_demo`, `validade_*` e timestamps; em `profissional` — `cpf`,
+`data_nascimento`, `email`, `telefone`, `user_id`, `sexo`, a janela de atendimento e `cor`.
+Só `anon` — `authenticated` intocado.
+
+Preservar explicitamente: `clinica.telefone`/`email` (lidos por `clinicaPorSlug`,
+`marketplace.ts:144`) e `clinica.ativo`/`exibir_marketplace` (exigidos pelo WHERE da view
+`marketplace_clinica`, que é `security_invoker` → roda com o privilégio do anon; sem eles
+a busca inteira cai).
 
 **DoD:** teste anon: `select("cnpj")` e `select("config")` **erram 42501**;
 `select("nome,slug")` funciona. Semântica que importa: RLS bloqueada **filtra sem
@@ -65,9 +102,16 @@ erro**; privilégio de coluna ausente **erra**.
 Migration B: policy **`to anon` apenas** (mínimo privilégio, quebra o padrão das
 outras 16 de propósito), gate mais estrito que o original — clínica pública ∧
 `profissional.ativo` ∧ `servico.exibir_publico` (o original só checa a clínica, o que
-exporia vínculos de profissionais inativos e serviços não públicos). Mais
-`revoke select (tipo_comissao, valor_comissao) ... from anon` — **só de anon**;
-incluir `authenticated` quebraria `comissoes.ts:90` e `profissionais-client.tsx:276`.
+exporia vínculos de profissionais inativos e serviços não públicos). Mais a allowlist
+de coluna (§4.1) — **`revoke select (tipo_comissao, valor_comissao)` seria no-op**:
+
+```sql
+revoke select on public.profissional_servico from anon;
+grant select (id, clinica_id, profissional_id, servico_id) on public.profissional_servico to anon;
+```
+
+Só `anon`: `authenticated` precisa de `tipo_comissao`/`valor_comissao`
+(`comissoes.ts:90`, `profissionais-client.tsx:276`).
 
 **DoD:** isolamento; anon lê `servico_id` e **erra** em `valor_comissao`; regressão
 cross-tenant com fixture **`exibir_marketplace: true`** (a atual usa `false` e nunca
