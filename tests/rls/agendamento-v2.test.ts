@@ -100,31 +100,45 @@ describe.skipIf(!temAmbiente)("S6 — agendar_publico v2 + EXCLUDE", () => {
     expect(consulta!.duracao_minutos).toBe(75);
   });
 
+  // paciente já vinculado à clínica (o trigger app.garantir_paciente_da_clinica
+  // exige o vínculo — senão barra com 23514 antes da EXCLUDE)
+  async function pacienteLigado(nome: string): Promise<string> {
+    const { data, error } = await admin.from("paciente").insert({ nome }).select("id").single();
+    if (error) throw error;
+    const { error: eV } = await admin
+      .from("paciente_clinica")
+      .insert({ clinica_id: clinica, paciente_id: data!.id });
+    if (eV) throw eV;
+    return data!.id;
+  }
+
   it("barra SOBREPOSIÇÃO PARCIAL (não só igualdade exata de instante)", async () => {
     // consulta de 60min às 14:00 (via service_role, duracao real 60)
     const base = futuroLocal(2, 14); // terça 14:00
-    await admin.from("consulta").insert({
+    const { error: eBase } = await admin.from("consulta").insert({
       clinica_id: clinica, profissional_id: profLivre,
-      paciente_id: (await admin.from("paciente").insert({ nome: `Base ${sufixo}` }).select("id").single()).data!.id,
+      paciente_id: await pacienteLigado(`Base ${sufixo}`),
       data_hora: base, duracao_minutos: 60, status: "agendado",
     });
+    expect(eBase).toBeNull();
     // agendar às 14:30 (30min) → [14:30,15:00) sobrepõe [14:00,15:00) → recusa
-    const meia = futuroLocal(2, 14, 30);
-    const { error } = await admin.rpc("agendar_publico", args({ p_data_hora: meia }));
-    expect(error!.code).toBe("23514"); // 'horario ja ocupado' (traduzido do 23P01)
+    const { error } = await admin.rpc("agendar_publico", args({ p_data_hora: futuroLocal(2, 14, 30) }));
+    expect(error?.code).toBe("23514"); // 'horario ja ocupado' (traduzido do 23P01)
+    expect(error?.message ?? "").toContain("ocupado");
   });
 
   it("corrida público×painel: a constraint barra o overlap por insert direto (23P01)", async () => {
     const base = futuroLocal(3, 15); // quarta 15:00, 30min via RPC
     const { error: e1 } = await admin.rpc("agendar_publico", args({ p_data_hora: base }));
     expect(e1).toBeNull();
-    // insert DIRETO (caminho painel) sobrepondo → a EXCLUDE dispara 23P01
-    const pac = await admin.from("paciente").insert({ nome: `Dir ${sufixo}` }).select("id").single();
+    // insert DIRETO (caminho painel) sobrepondo, com paciente JÁ vinculado → a
+    // EXCLUDE (não o trigger de tenant) dispara 23P01
     const { error: e2 } = await admin.from("consulta").insert({
-      clinica_id: clinica, profissional_id: profLivre, paciente_id: pac.data!.id,
+      clinica_id: clinica, profissional_id: profLivre,
+      paciente_id: await pacienteLigado(`Dir ${sufixo}`),
       data_hora: futuroLocal(3, 15, 15), duracao_minutos: 30, status: "agendado",
     });
-    expect(e2!.code).toBe("23P01");
+    expect(e2?.code).toBe("23P01");
   });
 
   it("revalida a JANELA do profissional na escrita (fora do expediente é recusado)", async () => {
