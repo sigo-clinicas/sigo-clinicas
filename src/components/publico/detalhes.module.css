@@ -573,3 +573,9 @@
   color: #929292;
   font-weight: normal;
 }
+
+/* S3 — duração do serviço ao lado do preço */
+.duracao {
+  color: #929292;
+  font-weight: normal;
+}
