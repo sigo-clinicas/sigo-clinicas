@@ -2,6 +2,14 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { rotuloPreco, type ItemPreco } from "@/lib/preco";
+import { agruparCidades } from "@/lib/busca";
+
+// S4 — teto EXPLÍCITO das coleções do marketplace. O PostgREST já corta em
+// `max_rows` (config.toml = 1000) de forma SILENCIOSA; deixamos o limite visível
+// no código para o truncamento ser explícito, não uma surpresa de config. Além
+// deste volume, o correto é paginação por keyset + push-down no Postgres (Fase 2
+// — exige materializar o ranking, hoje função por linha na view).
+const MAX_MARKETPLACE = 1000;
 
 /**
  * S3-7 — Consultas públicas do marketplace. Leem via client da sessão (anon
@@ -77,7 +85,8 @@ export async function listarClinicas(filtros?: {
 
   let query = supabase
     .from("marketplace_clinica")
-    .select("id,slug,nome,tipo,cidade,uf,bairro,sobre,logo_path,ranking");
+    .select("id,slug,nome,tipo,cidade,uf,bairro,sobre,logo_path,ranking")
+    .limit(MAX_MARKETPLACE);
   if (filtros?.cidade) query = query.eq("cidade", filtros.cidade);
   if (ids) query = query.in("id", ids);
 
@@ -98,10 +107,10 @@ export async function listarCidades(): Promise<string[]> {
   const { data } = await supabase
     .from("marketplace_clinica")
     .select("cidade")
-    .not("cidade", "is", null);
-  return [...new Set((data ?? []).map((c) => c.cidade as string))].sort((a, b) =>
-    a.localeCompare(b, "pt-BR")
-  );
+    .not("cidade", "is", null)
+    .limit(MAX_MARKETPLACE);
+  // S4 — agrupa grafias divergentes (acento/caixa) numa cidade canônica.
+  return agruparCidades((data ?? []).map((c) => c.cidade as string));
 }
 
 export type EspecialidadeOpcao = { id: string; nome: string; segmento: string | null };

@@ -7,6 +7,7 @@ import { CaixaCheckbox, type OpcaoCheckbox } from "./caixa-checkbox";
 import { Colapso } from "./colapso";
 import { EmBreveArea } from "./em-breve";
 import { IconeCalendario } from "./icones";
+import { chaveCidade } from "@/lib/busca";
 import styles from "./busca.module.css";
 
 /**
@@ -46,18 +47,18 @@ export function AsideBusca({
   const [buscaCidade, setBuscaCidade] = useState("");
   const [buscaEsp, setBuscaEsp] = useState("");
 
-  const cidadesFiltradas = useMemo(
-    () =>
-      cidades
-        .filter((c) => c.toLowerCase().includes(buscaCidade.toLowerCase()))
-        .map((c) => ({ label: c, value: c })),
-    [cidades, buscaCidade]
-  );
+  // busca das OPÇÕES acento/caixa-insensível (chaveCidade serve p/ ambas)
+  const cidadesFiltradas = useMemo(() => {
+    const q = chaveCidade(buscaCidade);
+    return cidades
+      .filter((c) => chaveCidade(c).includes(q))
+      .map((c) => ({ label: c, value: c }));
+  }, [cidades, buscaCidade]);
 
-  const espFiltradas = useMemo(
-    () => especialidades.filter((e) => e.label.toLowerCase().includes(buscaEsp.toLowerCase())),
-    [especialidades, buscaEsp]
-  );
+  const espFiltradas = useMemo(() => {
+    const q = chaveCidade(buscaEsp);
+    return especialidades.filter((e) => chaveCidade(e.label).includes(q));
+  }, [especialidades, buscaEsp]);
 
   // reescreve a querystring preservando tipo; multi-valor = chave repetida
   const navegar = (novasCidades: string[], novasEsp: string[]) => {

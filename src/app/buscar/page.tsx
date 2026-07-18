@@ -10,7 +10,12 @@ import {
   listarClinicas,
   listarEspecialidades,
 } from "@/lib/marketplace";
+import { filtrarClinicas } from "@/lib/busca";
 import { createClient } from "@/lib/supabase/server";
+
+// S4 — teto explícito das coleções auxiliares (mesmo motivo do MAX_MARKETPLACE):
+// o PostgREST corta em max_rows silenciosamente; tornamos o limite visível.
+const MAX_AUX = 1000;
 
 export const dynamic = "force-dynamic";
 
@@ -64,8 +69,8 @@ export default async function BuscarPage({
   // (a view do marketplace não expõe especialidades; a RLS anon lê estas duas.)
   const supabase = createClient();
   const [{ data: vinculos }, { data: nomes }] = await Promise.all([
-    supabase.from("clinica_especialidade").select("clinica_id, especialidade_id"),
-    supabase.from("especialidade").select("id, nome"),
+    supabase.from("clinica_especialidade").select("clinica_id, especialidade_id").limit(MAX_AUX),
+    supabase.from("especialidade").select("id, nome").limit(MAX_AUX),
   ]);
 
   const nomePorId = new Map((nomes ?? []).map((e) => [e.id, e.nome]));
@@ -77,16 +82,13 @@ export default async function BuscarPage({
     ]);
   }
 
-  // pipeline único: AND entre os grupos, OR dentro de cada grupo
-  const clinicas = todas.filter((c) => {
-    if (tipo && c.tipo !== tipo) return false;
-    if (cidadesSel.length && !(c.cidade && cidadesSel.includes(c.cidade))) return false;
-    if (espSel.length) {
-      const ids = espIdsPorClinica.get(c.id) ?? [];
-      if (!ids.some((id) => espSel.includes(id))) return false;
-    }
-    return true;
-  });
+  // S4 — pipeline único, testável (@/lib/busca): AND entre grupos, OR dentro;
+  // cidade acento/caixa-insensível (uma clínica em "SÃO PAULO" casa com "São Paulo").
+  const clinicas = filtrarClinicas(
+    todas,
+    { tipo, cidades: cidadesSel, especialidades: espSel },
+    espIdsPorClinica
+  );
 
   // data de amanhã DD/MM/YYYY (o que o campo inerte de Data mostra, como no antigo)
   const amanha = new Date();
