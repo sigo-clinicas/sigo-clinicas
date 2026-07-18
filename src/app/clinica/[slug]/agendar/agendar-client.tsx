@@ -3,13 +3,20 @@
 // S3-8 — Porta de reference/base44 PortalAgendamento.jsx (escopado à clínica).
 // Picker de profissional (navega por ?prof=), slots livres e formulário de
 // contato → POST /api/publico/agendamento (service_role no servidor).
-import { useState } from "react";
+// S1 — cruzamento serviço↔profissional nos dois sentidos, em memória, a partir
+// da adjacência `vinculos` (profissional_servico público).
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  profissionaisParaServicos,
+  servicosParaProfissional,
+  type Vinculo,
+} from "@/lib/cruzamento";
 
 type Opcao = { id: string; nome: string };
 
@@ -19,6 +26,7 @@ export function AgendarClient({
   slug,
   profissionais,
   servicos,
+  vinculos,
   profSelecionado,
   slots,
 }: {
@@ -27,6 +35,7 @@ export function AgendarClient({
   slug: string;
   profissionais: Opcao[];
   servicos: Opcao[];
+  vinculos: Vinculo[];
   profSelecionado: string | null;
   slots: string[];
 }) {
@@ -36,6 +45,19 @@ export function AgendarClient({
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState(false);
+
+  // Cruzamento nos dois sentidos (lógica pura em @/lib/cruzamento):
+  //  - serviço → profissional: quem faz TODOS os serviços marcados (AND);
+  //  - profissional → serviço: os serviços do profissional selecionado.
+  // Ausência de adjacência nunca esconde — degrada para "mostrar tudo".
+  const profissionaisVisiveis = useMemo(
+    () => profissionaisParaServicos(profissionais, vinculos, servicoIds),
+    [profissionais, vinculos, servicoIds]
+  );
+  const servicosVisiveis = useMemo(
+    () => servicosParaProfissional(servicos, vinculos, profSelecionado),
+    [servicos, vinculos, profSelecionado]
+  );
 
   // agrupa slots por dia
   const porDia = new Map<string, string[]>();
@@ -96,11 +118,11 @@ export function AgendarClient({
         <p className="text-muted-foreground mt-6">Esta clínica ainda não tem profissionais disponíveis.</p>
       ) : (
         <>
-          {/* Profissional */}
+          {/* Profissional — filtrado pelos serviços marcados */}
           <section className="mt-6">
             <Label className="text-muted-foreground text-xs uppercase">Profissional</Label>
             <div className="mt-2 flex flex-wrap gap-2">
-              {profissionais.map((p) => (
+              {profissionaisVisiveis.map((p) => (
                 <Link
                   key={p.id}
                   href={`/clinica/${slug}/agendar?prof=${p.id}`}
@@ -113,15 +135,20 @@ export function AgendarClient({
                   {p.nome}
                 </Link>
               ))}
+              {servicoIds.length > 0 && profissionaisVisiveis.length === 0 && (
+                <p className="text-muted-foreground text-sm">
+                  Nenhum profissional faz todos os serviços selecionados.
+                </p>
+              )}
             </div>
           </section>
 
-          {/* Serviços (opcional) */}
-          {servicos.length > 0 && (
+          {/* Serviços (opcional) — só os que o profissional selecionado faz */}
+          {servicosVisiveis.length > 0 && (
             <section className="mt-6">
               <Label className="text-muted-foreground text-xs uppercase">Serviços (opcional)</Label>
               <div className="mt-2 flex flex-wrap gap-2">
-                {servicos.map((s) => {
+                {servicosVisiveis.map((s) => {
                   const sel = servicoIds.includes(s.id);
                   return (
                     <button

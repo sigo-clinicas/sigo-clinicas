@@ -52,6 +52,7 @@ export default async function AgendarPage({
         slug={params.slug}
         profissionais={profissionais.map((p) => ({ id: p.id, nome: p.nome }))}
         servicos={dados.servicos.map((s) => ({ id: s.id, nome: s.nome }))}
+        vinculos={dados.vinculos}
         profSelecionado={profSelecionado}
         slots={slots}
       />
