@@ -32,7 +32,6 @@ import { logout } from "@/lib/actions/auth";
 import { definirClinicaAtual } from "@/lib/actions/usuarios";
 import type { Papel } from "@/lib/auth";
 import type { Terminologia, TipoClinica } from "@/lib/terminologia";
-import { iconeDaClinica } from "@/lib/tipo-clinica";
 
 type NavChild = { label: string; path: string };
 type NavItemDef = {
@@ -197,7 +196,6 @@ const PAPEL_LABEL: Record<Papel, string> = {
 export function PainelShell({
   nomeClinica,
   tipoClinicaLabel,
-  tipo,
   logoUrl,
   nomeUsuario,
   papel,
@@ -217,7 +215,6 @@ export function PainelShell({
   clinicaAtualId: string;
   children: React.ReactNode;
 }) {
-  const IconeVertical = iconeDaClinica(tipo);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -253,7 +250,13 @@ export function PainelShell({
               // eslint-disable-next-line @next/next/no-img-element
               <img src={logoUrl} alt={nomeClinica} className="h-full w-full object-cover" />
             ) : (
-              <IconeVertical className={collapsed ? "h-4 w-4" : "h-5 w-5"} />
+              // Clínica sem logo própria → marca SigoClínicas (fallback do produto)
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/static/logo_icon.png"
+                alt="Sigo Clínicas"
+                className="h-full w-full object-contain p-1.5"
+              />
             )}
           </div>
           {!collapsed && (
