@@ -5,7 +5,7 @@
 // contato → POST /api/publico/agendamento (service_role no servidor).
 // S1 — cruzamento serviço↔profissional nos dois sentidos, em memória, a partir
 // da adjacência `vinculos` (profissional_servico público).
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
@@ -17,6 +17,7 @@ import {
   servicosParaProfissional,
   type Vinculo,
 } from "@/lib/cruzamento";
+import { carregarSlots } from "@/lib/actions/slots-publicos";
 
 type Opcao = { id: string; nome: string };
 
@@ -24,24 +25,26 @@ export function AgendarClient({
   clinicaId,
   clinicaNome,
   slug,
+  timezone,
   profissionais,
   servicos,
   vinculos,
   profSelecionado,
-  slots,
 }: {
   clinicaId: string;
   clinicaNome: string;
   slug: string;
+  timezone: string;
   profissionais: Opcao[];
   servicos: Opcao[];
   vinculos: Vinculo[];
   profSelecionado: string | null;
-  slots: string[];
 }) {
   const [slot, setSlot] = useState<string | null>(null);
   const [form, setForm] = useState({ nome: "", telefone: "", email: "", cpf: "", observacoes: "" });
   const [servicoIds, setServicoIds] = useState<string[]>([]);
+  const [slots, setSlots] = useState<string[]>([]);
+  const [carregandoSlots, setCarregandoSlots] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState(false);
@@ -59,10 +62,36 @@ export function AgendarClient({
     [servicos, vinculos, profSelecionado]
   );
 
-  // agrupa slots por dia
+  // S6 — recarrega os slots quando muda o profissional ou os serviços (passo =
+  // soma das durações). Cálculo TZ-aware no servidor; aqui só formatamos no fuso
+  // da clínica.
+  const chaveServicos = servicoIds.join(",");
+  useEffect(() => {
+    let vivo = true;
+    if (!profSelecionado) {
+      setSlots([]);
+      return;
+    }
+    setCarregandoSlots(true);
+    setSlot(null);
+    carregarSlots(clinicaId, profSelecionado, chaveServicos ? chaveServicos.split(",") : [])
+      .then((s) => {
+        if (vivo) setSlots(s);
+      })
+      .finally(() => {
+        if (vivo) setCarregandoSlots(false);
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [clinicaId, profSelecionado, chaveServicos]);
+
+  // agrupa slots por dia (no fuso da clínica)
   const porDia = new Map<string, string[]>();
   for (const s of slots) {
-    const dia = new Date(s).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" });
+    const dia = new Date(s).toLocaleDateString("pt-BR", {
+      weekday: "short", day: "2-digit", month: "2-digit", timeZone: timezone,
+    });
     porDia.set(dia, [...(porDia.get(dia) ?? []), s]);
   }
 
@@ -174,7 +203,9 @@ export function AgendarClient({
           {/* Slots */}
           <section className="mt-6">
             <Label className="text-muted-foreground text-xs uppercase">Horário</Label>
-            {slots.length === 0 ? (
+            {carregandoSlots ? (
+              <p className="text-muted-foreground mt-2 text-sm">Carregando horários…</p>
+            ) : slots.length === 0 ? (
               <p className="text-muted-foreground mt-2 text-sm">
                 Sem horários livres nos próximos dias. Tente outro profissional.
               </p>
@@ -195,7 +226,9 @@ export function AgendarClient({
                               : "border-border hover:bg-muted"
                           }`}
                         >
-                          {new Date(s).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(s).toLocaleTimeString("pt-BR", {
+                            hour: "2-digit", minute: "2-digit", timeZone: timezone,
+                          })}
                         </button>
                       ))}
                     </div>

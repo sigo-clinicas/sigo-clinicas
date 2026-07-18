@@ -482,6 +482,7 @@ export type Database = {
           slug: string | null
           sobre: string | null
           telefone: string | null
+          timezone: string
           tipo: Database["public"]["Enums"]["tipo_clinica"]
           uf: string | null
           updated_at: string
@@ -514,6 +515,7 @@ export type Database = {
           slug?: string | null
           sobre?: string | null
           telefone?: string | null
+          timezone?: string
           tipo?: Database["public"]["Enums"]["tipo_clinica"]
           uf?: string | null
           updated_at?: string
@@ -546,6 +548,7 @@ export type Database = {
           slug?: string | null
           sobre?: string | null
           telefone?: string | null
+          timezone?: string
           tipo?: Database["public"]["Enums"]["tipo_clinica"]
           uf?: string | null
           updated_at?: string
