@@ -26,11 +26,21 @@ type Linha = {
     nivel: Nivel;
     score_manual: number;
     ativo: boolean;
+    vigencia_inicio?: string | null;
+    vigencia_fim?: string | null;
   } | null;
 };
 
+type EstadoLinha = {
+  nivel: Nivel;
+  score: number;
+  ativo: boolean;
+  vigencia_inicio: string;
+  vigencia_fim: string;
+};
+
 export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
-  const [estado, setEstado] = useState<Record<string, { nivel: Nivel; score: number; ativo: boolean }>>(
+  const [estado, setEstado] = useState<Record<string, EstadoLinha>>(
     Object.fromEntries(
       linhas.map((l) => [
         l.id,
@@ -38,6 +48,8 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
           nivel: l.destaque?.nivel ?? "neutro",
           score: l.destaque?.score_manual ?? 0,
           ativo: l.destaque?.ativo ?? true,
+          vigencia_inicio: l.destaque?.vigencia_inicio ?? "",
+          vigencia_fim: l.destaque?.vigencia_fim ?? "",
         },
       ])
     )
@@ -46,7 +58,7 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  function set(id: string, patch: Partial<{ nivel: Nivel; score: number; ativo: boolean }>) {
+  function set(id: string, patch: Partial<EstadoLinha>) {
     setEstado((e) => ({ ...e, [id]: { ...e[id], ...patch } }));
   }
 
@@ -60,6 +72,8 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
         nivel: v.nivel,
         score_manual: v.score,
         ativo: v.ativo,
+        vigencia_inicio: v.vigencia_inicio || null,
+        vigencia_fim: v.vigencia_fim || null,
       });
       setSalvandoId(null);
       setMsg(r.erro ?? "Destaque atualizado.");
@@ -83,6 +97,7 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
               <th className="p-2 text-right">Ranking</th>
               <th className="p-2 text-left">Nível</th>
               <th className="p-2 text-left">Score</th>
+              <th className="p-2 text-left">Vigência</th>
               <th className="p-2 text-center">Ativo</th>
               <th className="p-2"></th>
             </tr>
@@ -90,7 +105,7 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
           <tbody className="divide-y divide-border">
             {linhas.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-muted-foreground p-4 text-center">
+                <td colSpan={7} className="text-muted-foreground p-4 text-center">
                   Nenhuma clínica pública no marketplace.
                 </td>
               </tr>
@@ -121,6 +136,23 @@ export function DestaqueClient({ linhas }: { linhas: Linha[] }) {
                       value={v.score}
                       onChange={(e) => set(l.id, { score: Number(e.target.value) })}
                     />
+                  </td>
+                  <td className="p-2">
+                    <div className="flex items-center gap-1">
+                      <Input
+                        type="date"
+                        className="h-8 w-[130px] text-xs"
+                        value={v.vigencia_inicio}
+                        onChange={(e) => set(l.id, { vigencia_inicio: e.target.value })}
+                      />
+                      <span className="text-muted-foreground text-xs">–</span>
+                      <Input
+                        type="date"
+                        className="h-8 w-[130px] text-xs"
+                        value={v.vigencia_fim}
+                        onChange={(e) => set(l.id, { vigencia_fim: e.target.value })}
+                      />
+                    </div>
                   </td>
                   <td className="p-2 text-center">
                     <input

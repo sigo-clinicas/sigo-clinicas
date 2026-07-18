@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { ClinicaPublica } from "@/lib/marketplace";
 import { urlLogoPublica } from "@/lib/tipo-clinica";
+import { rotuloNivel } from "@/lib/destaque";
 import { IconeMapa, IconeMaleta } from "./icones";
 import styles from "./busca.module.css";
 
@@ -30,6 +31,7 @@ export function CardClinicaBusca({
   const logo = urlLogoPublica(clinica.logo_path);
   const href = clinica.slug ? `/clinica/${clinica.slug}` : "#";
   const endereco = [clinica.bairro, clinica.cidade, clinica.uf].filter(Boolean).join(" - ");
+  const selo = rotuloNivel(clinica.nivel);
 
   return (
     <div className={styles.cardClinica}>
@@ -43,6 +45,7 @@ export function CardClinicaBusca({
         <div className="description">
           <h3>
             <Link href={href}>{clinica.nome}</Link>
+            {selo && <span className={styles.selo} data-nivel={clinica.nivel}>{selo}</span>}
           </h3>
           {endereco && (
             <address>

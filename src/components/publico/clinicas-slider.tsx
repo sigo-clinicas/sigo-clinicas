@@ -6,6 +6,7 @@ import Slider from "react-slick";
 
 import type { ClinicaPublica } from "@/lib/marketplace";
 import { urlLogoPublica } from "@/lib/tipo-clinica";
+import { rotuloNivel } from "@/lib/destaque";
 import styles from "./sliders.module.css";
 
 import "slick-carousel/slick/slick.css";
@@ -61,8 +62,10 @@ export function ClinicasSlider({ clinicas }: { clinicas: ClinicaPublica[] }) {
       {clinicas.map((clinica) => {
         const logo = urlLogoPublica(clinica.logo_path);
         const local = [clinica.cidade, clinica.uf].filter(Boolean).join(" - ");
+        const selo = rotuloNivel(clinica.nivel);
         return (
           <div className={`card ${styles.card}`} key={clinica.id}>
+            {selo && <span className={styles.selo} data-nivel={clinica.nivel}>{selo}</span>}
             <Link href={clinica.slug ? `/clinica/${clinica.slug}` : "#"}>
               {logo ? (
                 // eslint-disable-next-line @next/next/no-img-element

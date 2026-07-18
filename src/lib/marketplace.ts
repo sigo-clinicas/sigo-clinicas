@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { rotuloPreco, type ItemPreco } from "@/lib/preco";
 import { agruparCidades } from "@/lib/busca";
+import { destaqueVigente } from "@/lib/destaque";
 
 // S4 — teto EXPLÍCITO das coleções do marketplace. O PostgREST já corta em
 // `max_rows` (config.toml = 1000) de forma SILENCIOSA; deixamos o limite visível
@@ -29,6 +30,9 @@ export type ClinicaPublica = {
   logo_path: string | null;
   fotos: string[] | null; // paths no bucket público `logos` (carrossel)
   ranking: number | null;
+  // S7 — nível de destaque (rótulo comercial parceiro/premium; null = neutro).
+  // Só populado por listarClinicas (home/busca); no detalhe fica null.
+  nivel: string | null;
 };
 
 const ordenar = (a: ClinicaPublica, b: ClinicaPublica) =>
@@ -64,6 +68,7 @@ function toClinica(r: LinhaView): ClinicaPublica | null {
     logo_path: r.logo_path,
     fotos: Array.isArray(r.fotos) ? (r.fotos as string[]) : null,
     ranking: r.ranking,
+    nivel: null,
   };
 }
 
@@ -91,10 +96,31 @@ export async function listarClinicas(filtros?: {
   if (ids) query = query.in("id", ids);
 
   const { data } = await query;
-  return (data ?? [])
+  const clinicas = (data ?? [])
     .map(toClinica)
     .filter((c): c is ClinicaPublica => c !== null)
     .sort(ordenar);
+
+  // S7 — marca o nível de destaque (selo). O anon lê clinica_destaque via policy
+  // de marketplace; respeitamos ativo + vigência (o nível NÃO altera a ordem —
+  // isso é o modelo de cobrança, decisão pendente).
+  if (clinicas.length > 0) {
+    const hoje = new Date().toISOString().slice(0, 10);
+    const { data: destaques } = await supabase
+      .from("clinica_destaque")
+      .select("clinica_id,nivel,vigencia_inicio,vigencia_fim")
+      .in("clinica_id", clinicas.map((c) => c.id))
+      .eq("ativo", true)
+      .neq("nivel", "neutro");
+    const nivelPorClinica = new Map(
+      (destaques ?? [])
+        .filter((d) => destaqueVigente(hoje, d.vigencia_inicio, d.vigencia_fim))
+        .map((d) => [d.clinica_id, d.nivel])
+    );
+    for (const c of clinicas) c.nivel = nivelPorClinica.get(c.id) ?? null;
+  }
+
+  return clinicas;
 }
 
 export async function clinicasDestaque(limite = 6): Promise<ClinicaPublica[]> {
