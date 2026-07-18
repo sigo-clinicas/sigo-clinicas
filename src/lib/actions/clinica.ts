@@ -28,6 +28,53 @@ async function exigirProprietario() {
   return { sessao, erro: null } as const;
 }
 
+export type HorarioInput = { dia_semana: number; abertura: string; fechamento: string };
+
+/**
+ * S5 — salva o horário de funcionamento (clinica_horario). É config FILHA da
+ * clínica: proprietário OU gerente (mesmo gate da policy RLS, diferente do
+ * cadastro da clínica que é só do proprietário). Substitui o conjunto inteiro
+ * (delete-all + insert), padrão de salvarProfissional — não-transacional, como
+ * os demais cadastros da casa. A RLS + os CHECK do banco são a barreira final.
+ */
+export async function salvarHorarios(horarios: HorarioInput[]): Promise<EstadoClinica> {
+  const sessao = await getSessaoComClaims();
+  if (!sessao?.clinicaAtual) return { erro: "Sessão inválida." };
+  const podeEditar =
+    sessao.papel === "proprietario" || sessao.papel === "gerente" || sessao.isAdmin;
+  if (!podeEditar) return { erro: "Sem permissão para alterar o horário." };
+
+  for (const h of horarios) {
+    if (h.dia_semana < 0 || h.dia_semana > 6) return { erro: "Dia inválido." };
+    if (!(h.abertura < h.fechamento)) {
+      return { erro: "O fechamento deve ser após a abertura." };
+    }
+  }
+
+  const supabase = createClient();
+  const clinicaId = sessao.clinicaAtual;
+  const { error: eDel } = await supabase
+    .from("clinica_horario")
+    .delete()
+    .eq("clinica_id", clinicaId);
+  if (eDel) return { erro: "Sem permissão para alterar o horário." };
+
+  if (horarios.length > 0) {
+    const { error: eIns } = await supabase.from("clinica_horario").insert(
+      horarios.map((h) => ({
+        clinica_id: clinicaId,
+        dia_semana: h.dia_semana,
+        abertura: h.abertura,
+        fechamento: h.fechamento,
+      }))
+    );
+    if (eIns) return { erro: "Não foi possível salvar o horário." };
+  }
+
+  revalidatePath("/painel/configuracoes");
+  return { erro: null, ok: true };
+}
+
 export async function atualizarDadosClinica(
   _estado: EstadoClinica,
   formData: FormData

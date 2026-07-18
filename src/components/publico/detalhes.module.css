@@ -579,3 +579,28 @@
   color: #929292;
   font-weight: normal;
 }
+
+/* S5 — horário de funcionamento (coluna direita, após endereço) */
+.horarios {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+}
+
+.horarioLinha {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 0;
+  color: #666666;
+}
+
+.horarioDia {
+  font-weight: 600;
+}
+
+.horarioIntervalo {
+  color: #333333;
+}
