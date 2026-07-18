@@ -18,6 +18,7 @@ export type ClinicaPublica = {
   bairro: string | null;
   sobre: string | null;
   logo_path: string | null;
+  fotos: string[] | null; // paths no bucket público `logos` (carrossel)
   ranking: number | null;
 };
 
@@ -36,6 +37,7 @@ type LinhaView = {
   bairro: string | null;
   sobre: string | null;
   logo_path: string | null;
+  fotos?: unknown; // jsonb; só clinicaPorSlug seleciona (nas cartas fica null)
   ranking: number | null;
 };
 
@@ -51,6 +53,7 @@ function toClinica(r: LinhaView): ClinicaPublica | null {
     bairro: r.bairro,
     sobre: r.sobre,
     logo_path: r.logo_path,
+    fotos: Array.isArray(r.fotos) ? (r.fotos as string[]) : null,
     ranking: r.ranking,
   };
 }
@@ -117,7 +120,17 @@ export async function listarEspecialidades(): Promise<EspecialidadeOpcao[]> {
 }
 
 export type PaginaClinica = {
-  clinica: ClinicaPublica & { telefone: string | null; email: string | null };
+  clinica: ClinicaPublica & {
+    telefone: string | null;
+    email: string | null;
+    // S2 — endereço completo (colunas já liberadas ao anon na allowlist do S0)
+    logradouro: string | null;
+    numero: string | null;
+    complemento: string | null;
+    cep: string | null;
+    // S2 — única coluna nova da fase
+    formas_pagamento: string[] | null;
+  };
   servicos: {
     id: string;
     nome: string;
@@ -125,7 +138,13 @@ export type PaginaClinica = {
     duracao_minutos: number | null;
     preco: number | null;
   }[];
-  profissionais: { id: string; nome: string; nome_conselho: string | null; numero_registro: string | null }[];
+  profissionais: {
+    id: string;
+    nome: string;
+    nome_conselho: string | null;
+    numero_registro: string | null;
+    foto_path: string | null; // S2 — foto real (bucket público `logos`)
+  }[];
   depoimentos: { id: string; paciente_nome: string; texto: string; nota: number | null }[];
   // S1 — adjacência serviço↔profissional (só vínculos públicos, via a policy
   // profissional_servico_select_marketplace). A comissão fica de fora por
@@ -137,7 +156,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
   const supabase = createClient();
   const { data: baseRow } = await supabase
     .from("marketplace_clinica")
-    .select("id,slug,nome,tipo,cidade,uf,bairro,sobre,logo_path,ranking")
+    .select("id,slug,nome,tipo,cidade,uf,bairro,sobre,logo_path,fotos,ranking")
     .eq("slug", slug)
     .maybeSingle();
   const base = baseRow ? toClinica(baseRow) : null;
@@ -151,7 +170,13 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
     { data: precos },
     { data: vinculos },
   ] = await Promise.all([
-    supabase.from("clinica").select("telefone,email").eq("id", base.id).maybeSingle(),
+    // Base da clínica: colunas públicas já liberadas ao anon (S0/S2), coluna a
+    // coluna — nunca colunas internas (cnpj/config/razao_social).
+    supabase
+      .from("clinica")
+      .select("telefone,email,logradouro,numero,complemento,cep,formas_pagamento")
+      .eq("id", base.id)
+      .maybeSingle(),
     supabase
       .from("servico")
       .select("id,nome,descricao,duracao_minutos")
@@ -161,7 +186,7 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
       .order("nome"),
     supabase
       .from("profissional")
-      .select("id,nome,nome_conselho,numero_registro")
+      .select("id,nome,nome_conselho,numero_registro,foto_path")
       .eq("clinica_id", base.id)
       .eq("ativo", true)
       .order("nome"),
@@ -195,7 +220,16 @@ export async function clinicaPorSlug(slug: string): Promise<PaginaClinica | null
   }
 
   return {
-    clinica: { ...base, telefone: extra?.telefone ?? null, email: extra?.email ?? null },
+    clinica: {
+      ...base,
+      telefone: extra?.telefone ?? null,
+      email: extra?.email ?? null,
+      logradouro: extra?.logradouro ?? null,
+      numero: extra?.numero ?? null,
+      complemento: extra?.complemento ?? null,
+      cep: extra?.cep ?? null,
+      formas_pagamento: (extra?.formas_pagamento as string[] | null) ?? null,
+    },
     servicos: (servicos ?? []).map((s) => ({
       ...s,
       preco: precoPorServico.get(s.id) ?? null,

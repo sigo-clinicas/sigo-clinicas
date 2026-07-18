@@ -467,6 +467,7 @@ export type Database = {
           created_at: string
           email: string | null
           exibir_marketplace: boolean
+          formas_pagamento: Database["public"]["Enums"]["forma_pagamento"][] | null
           fotos: Json
           horarios: Json
           id: string
@@ -498,6 +499,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           exibir_marketplace?: boolean
+          formas_pagamento?: Database["public"]["Enums"]["forma_pagamento"][] | null
           fotos?: Json
           horarios?: Json
           id?: string
@@ -529,6 +531,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           exibir_marketplace?: boolean
+          formas_pagamento?: Database["public"]["Enums"]["forma_pagamento"][] | null
           fotos?: Json
           horarios?: Json
           id?: string
